@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using PetIdServer.Core.Exceptions;
 
 namespace PetIdServer.RestApi.Response.Error;
 
@@ -48,7 +49,7 @@ public class ServerProblemDetailsFactory : ProblemDetailsFactory
             Instance = instance,
             Code = code,
             StackTrace = stackTrace,
-            // Metadata = (_exception as CoreException)?.Metadata,
+            Metadata = (_exception as CoreException)?.Metadata,
         };
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
@@ -110,21 +111,16 @@ public class ServerProblemDetailsFactory : ProblemDetailsFactory
 
     private string GetCodeFromException()
     {
-        // if (_exception is not ScopedException scopedException) return ServerProblemDetailsDefaults.DefaultErrorCode;
-        
-        // scopedException.ApplyScope("HTTP");
-        // return scopedException.Code;
-        return ServerProblemDetailsDefaults.DefaultErrorCode;
+        return _exception is not ScopedException scopedException
+            ? ServerProblemDetailsDefaults.DefaultErrorCode
+            : scopedException.Code;
     }
     
     private int GetStatusCodeFromException()
     {
-        // if (_exception is CoreException coreException)
-        //     return ServerProblemDetailsDefaults.HttpErrorCodesByErrorKind[
-        //         coreException.Kind ?? CoreExceptionKind.Default];
-        //
-        // if (_exception is IntegrationException)
-        //     return ServerProblemDetailsDefaults.DefaultIntegrationErrorStatusCode;
+        if (_exception is CoreException coreException)
+            return ServerProblemDetailsDefaults.HttpErrorCodesByErrorKind[
+                coreException.Kind ?? CoreExceptionKind.Default];
 
         return ServerProblemDetailsDefaults.DefaultServerErrorStatusCode;
     }

@@ -21,4 +21,8 @@
 
 
 
+    <ItemGroup>
+      <ProjectReference Include="..\PetIdServer.Core\PetIdServer.Core.csproj" />
+    </ItemGroup>
+
 </Project>
