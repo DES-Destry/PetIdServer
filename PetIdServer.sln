@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetIdServer.RestApi", "PetI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetIdServer.Core", "PetIdServer.Core\PetIdServer.Core.csproj", "{A49BEFBA-A9EB-4D4E-8AF1-589B0A6DD0FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetIdServer.Application", "PetIdServer.Application\PetIdServer.Application.csproj", "{616A00D7-4A57-4825-8C5C-295AAC831B82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A49BEFBA-A9EB-4D4E-8AF1-589B0A6DD0FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A49BEFBA-A9EB-4D4E-8AF1-589B0A6DD0FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A49BEFBA-A9EB-4D4E-8AF1-589B0A6DD0FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{616A00D7-4A57-4825-8C5C-295AAC831B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{616A00D7-4A57-4825-8C5C-295AAC831B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{616A00D7-4A57-4825-8C5C-295AAC831B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{616A00D7-4A57-4825-8C5C-295AAC831B82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
