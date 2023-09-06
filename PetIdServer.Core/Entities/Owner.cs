@@ -6,6 +6,9 @@ namespace PetIdServer.Core.Entities;
 public class Owner : Entity<Guid>
 {
     public string Email { get; set; }
+    /// <summary>
+    /// Storing only as hash
+    /// </summary>
     public string Password { get; set; }
 
     public string Name { get; set; }
