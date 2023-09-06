@@ -3,9 +3,9 @@ using PetIdServer.Core.ValueObjects;
 
 namespace PetIdServer.Core.Entities;
 
-public class Owner : Entity<Guid>
+public class Owner : Entity<string>
 {
-    public string Email { get; set; }
+    public string Email => Id;
     /// <summary>
     /// Storing only as hash
     /// </summary>
@@ -17,20 +17,18 @@ public class Owner : Entity<Guid>
     public IList<OwnerContact> Contacts { get; set; } = new List<OwnerContact>();
 
     public record CreationAttributes(
-        Guid Id,
         string Email,
         string Password,
         string Name
     );
 
-    public Owner(CreationAttributes creationAttributes) : base(creationAttributes.Id)
+    public Owner(CreationAttributes creationAttributes) : base(creationAttributes.Email)
     {
-        Email = creationAttributes.Email;
         Password = creationAttributes.Password;
         Name = creationAttributes.Name;
     }
 
-    public Owner(Guid id) : base(id)
+    public Owner(string id) : base(id)
     {
     }
 }

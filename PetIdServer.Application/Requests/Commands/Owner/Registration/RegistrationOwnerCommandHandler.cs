@@ -10,25 +10,21 @@ public class RegistrationOwnerCommandHandler : IRequestHandler<RegistrationOwner
     private readonly ITokenService _tokenService;
     private readonly IPasswordService _passwordService;
     private readonly IOwnerRepository _ownerRepository;
-    
+
     public async Task<TokenPairDto> Handle(RegistrationOwnerCommand request, CancellationToken cancellationToken)
     {
         var ownerCandidate = await _ownerRepository.GetOwnerByEmail(request.Email);
 
         if (ownerCandidate is not null)
             throw new Exception(); // Owner with this email already registered, try to login
-        
+
         var passwordHash = await _passwordService.HashPassword(request.Password);
 
         var creationAttributes =
-            new Core.Entities.Owner.CreationAttributes(Guid.NewGuid(), request.Email, passwordHash, request.Name);
+            new Core.Entities.Owner.CreationAttributes(request.Email, passwordHash, request.Name);
         var owner = new Core.Entities.Owner(creationAttributes);
 
-        var createdOwner = await _ownerRepository.CreateOwner(owner);
-
-        if (createdOwner is null)
-            throw new Exception(); // Something went wrong
-        
+        var createdOwner = await _ownerRepository.CreateOwner(owner) ?? throw new Exception(); // Something went wrong
         return await _tokenService.GenerateTokens(createdOwner);
     }
 }
