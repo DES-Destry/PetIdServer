@@ -1,4 +1,5 @@
 using PetIdServer.Core.Common;
+using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Core.Entities;
 
@@ -14,8 +15,8 @@ public class Tag : Entity<int>
 
     public void SetupPet(Pet pet)
     {
-        if (IsAlreadyInUse) throw new Exception(); // TAG_IS_ALREADY_IN_USE
-        
+        if (IsAlreadyInUse) throw new TagAlreadyInUseException("Tag {Id} is already in use", new {Id, Pet});
+
         Pet = pet;
     }
 }
