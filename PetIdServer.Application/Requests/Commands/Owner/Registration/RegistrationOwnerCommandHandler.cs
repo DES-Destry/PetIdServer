@@ -11,6 +11,13 @@ public class RegistrationOwnerCommandHandler : IRequestHandler<RegistrationOwner
     private readonly IPasswordService _passwordService;
     private readonly IOwnerRepository _ownerRepository;
 
+    public RegistrationOwnerCommandHandler(ITokenService tokenService, IPasswordService passwordService, IOwnerRepository ownerRepository)
+    {
+        _tokenService = tokenService;
+        _passwordService = passwordService;
+        _ownerRepository = ownerRepository;
+    }
+
     public async Task<TokenPairDto> Handle(RegistrationOwnerCommand request, CancellationToken cancellationToken)
     {
         var ownerCandidate = await _ownerRepository.GetOwnerByEmail(request.Email);

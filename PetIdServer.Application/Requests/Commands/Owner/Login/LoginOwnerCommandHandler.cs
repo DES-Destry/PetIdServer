@@ -11,7 +11,9 @@ public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, Token
     private readonly IPasswordService _passwordService;
     private readonly IOwnerRepository _ownerRepository;
 
-    public LoginOwnerCommandHandler(ITokenService tokenService, IPasswordService passwordService, IOwnerRepository ownerRepository)
+    public LoginOwnerCommandHandler(ITokenService tokenService,
+        IPasswordService passwordService,
+        IOwnerRepository ownerRepository)
     {
         _tokenService = tokenService;
         _passwordService = passwordService;

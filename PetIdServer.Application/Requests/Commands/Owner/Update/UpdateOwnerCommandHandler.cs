@@ -9,7 +9,13 @@ public class UpdateOwnerCommandHandler : IRequestHandler<UpdateOwnerCommand, Voi
 {
     private readonly IMapper _mapper;
     private readonly IOwnerRepository _ownerRepository;
-    
+
+    public UpdateOwnerCommandHandler(IMapper mapper, IOwnerRepository ownerRepository)
+    {
+        _mapper = mapper;
+        _ownerRepository = ownerRepository;
+    }
+
     public async Task<VoidResponseDto> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
         // Owner Id is a email
