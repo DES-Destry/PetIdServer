@@ -20,6 +20,6 @@ public class CreatePetCommandHandler : IRequestHandler<CreatePetCommand, VoidRes
 
         await _petRepository.CreatePet(pet);
 
-        return new VoidResponseDto() { Executed = true };
+        return VoidResponseDto.Executed;
     }
 }
