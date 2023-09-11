@@ -10,7 +10,7 @@ namespace PetIdServer.RestApi.Response.Error;
 
 public class ServerProblemDetailsFactory : ProblemDetailsFactory
 {
-     private readonly ApiBehaviorOptions _options;
+    private readonly ApiBehaviorOptions _options;
     private Exception? _exception;
 
     public ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
@@ -115,7 +115,7 @@ public class ServerProblemDetailsFactory : ProblemDetailsFactory
             ? ServerProblemDetailsDefaults.DefaultErrorCode
             : scopedException.Code;
     }
-    
+
     private int GetStatusCodeFromException()
     {
         if (_exception is CoreException coreException)
