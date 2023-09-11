@@ -15,6 +15,7 @@ public class Owner : Entity<string>
     public string? Address { get; set; }
     public string? Description { get; set; }
     public IList<OwnerContact> Contacts { get; set; } = new List<OwnerContact>();
+    public IList<Pet> Pets { get; set; } = new List<Pet>();
 
     public record CreationAttributes(
         string Email,
