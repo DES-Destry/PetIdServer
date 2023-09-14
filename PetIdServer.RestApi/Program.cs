@@ -1,3 +1,5 @@
+using PetIdServer.Application.Extensions;
+using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Response.Error.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
+    .AddApplication()
+    .AddInfrastructure(configuration, environment)
     .AddServerErrorHandling();
 
 
