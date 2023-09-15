@@ -6,6 +6,9 @@ public static class CoreExceptionCode
 
     public const string IncorrectCredentials = DefaultScope + "INCORRECT_CREDENTIALS";
 
+    public const string AccessTokenMalformed = DefaultScope + "ACCESS_TOKEN_MALFORMED";
+    public const string RefreshTokenMalformed = DefaultScope + "REFRESH_TOKEN_MALFORMED";
+
     public const string OwnerNotFound = DefaultScope + "OWNER_NOT_FOUND";
     public const string OwnerAlreadyRegistered = DefaultScope + "OWNER_ALREADY_REGISTERED";
 

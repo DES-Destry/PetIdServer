@@ -9,13 +9,13 @@ namespace PetIdServer.Application.Requests.Commands.Owner.Registration;
 
 public class RegistrationOwnerCommandHandler : IRequestHandler<RegistrationOwnerCommand, TokenPairDto>
 {
-    private readonly ITokenService _tokenService;
+    private readonly IOwnerTokenService _ownerTokenService;
     private readonly IPasswordService _passwordService;
     private readonly IOwnerRepository _ownerRepository;
 
-    public RegistrationOwnerCommandHandler(ITokenService tokenService, IPasswordService passwordService, IOwnerRepository ownerRepository)
+    public RegistrationOwnerCommandHandler(IOwnerTokenService ownerTokenService, IPasswordService passwordService, IOwnerRepository ownerRepository)
     {
-        _tokenService = tokenService;
+        _ownerTokenService = ownerTokenService;
         _passwordService = passwordService;
         _ownerRepository = ownerRepository;
     }
@@ -36,6 +36,6 @@ public class RegistrationOwnerCommandHandler : IRequestHandler<RegistrationOwner
 
         var createdOwner = await _ownerRepository.CreateOwner(owner) ?? throw new SomethingWentWrongException(new
             {Reason = "Owner created successfully in core, but not saved in infrastructure", Email = owner.Id});
-        return await _tokenService.GenerateTokens(createdOwner);
+        return await _ownerTokenService.GenerateTokens(createdOwner);
     }
 }

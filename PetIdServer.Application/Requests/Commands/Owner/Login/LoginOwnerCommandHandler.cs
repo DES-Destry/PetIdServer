@@ -8,15 +8,15 @@ namespace PetIdServer.Application.Requests.Commands.Owner.Login;
 
 public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, TokenPairDto>
 {
-    private readonly ITokenService _tokenService;
+    private readonly IOwnerTokenService _ownerTokenService;
     private readonly IPasswordService _passwordService;
     private readonly IOwnerRepository _ownerRepository;
 
-    public LoginOwnerCommandHandler(ITokenService tokenService,
+    public LoginOwnerCommandHandler(IOwnerTokenService ownerTokenService,
         IPasswordService passwordService,
         IOwnerRepository ownerRepository)
     {
-        _tokenService = tokenService;
+        _ownerTokenService = ownerTokenService;
         _passwordService = passwordService;
         _ownerRepository = ownerRepository;
     }
@@ -32,6 +32,6 @@ public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, Token
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
                 new {request.Email});
 
-        return await _tokenService.GenerateTokens(ownerCandidate);
+        return await _ownerTokenService.GenerateTokens(ownerCandidate);
     }
 }
