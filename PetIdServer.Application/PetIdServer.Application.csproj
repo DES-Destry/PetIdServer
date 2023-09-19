@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Requests\Commands\Owner\ChangePassword\" />
+      <Folder Include="Requests\Commands\Owner\ForgotPassword\" />
+      <Folder Include="Requests\Commands\Owner\RestorePassword\" />
       <Folder Include="Requests\Queries\" />
     </ItemGroup>
 
