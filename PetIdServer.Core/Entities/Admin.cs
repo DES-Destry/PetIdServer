@@ -12,6 +12,8 @@ public class Admin : Entity<Guid>
 
     public DateTime? PasswordLastChangedAt { get; set; }
 
+    public bool IsNotCapable => Password is null;
+
     public record CreationAttributes(Guid Id, string Username, string Password);
     
     public Admin(CreationAttributes creationAttributes) : base(creationAttributes.Id)
