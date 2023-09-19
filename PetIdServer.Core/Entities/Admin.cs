@@ -2,9 +2,9 @@ using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Entities;
 
-public class Admin : Entity<Guid>
+public class Admin : Entity<string>
 {
-    public string Username { get; set; }
+    public string Username => Id;
 
     public string? Password { get; set; }
 
@@ -14,18 +14,17 @@ public class Admin : Entity<Guid>
 
     public bool IsNotCapable => Password is null;
 
-    public record CreationAttributes(Guid Id, string Username, string Password);
+    public record CreationAttributes(string Username, string Password);
     
-    public Admin(CreationAttributes creationAttributes) : base(creationAttributes.Id)
+    public Admin(CreationAttributes creationAttributes) : base(creationAttributes.Username)
     {
-        Username = creationAttributes.Username;
         Password = creationAttributes.Password;
         
         CreatedAt = DateTime.UtcNow;
         PasswordLastChangedAt = DateTime.UtcNow;
     }
 
-    public Admin(Guid id) : base(id)
+    public Admin(string id) : base(id)
     {
     }
 }
