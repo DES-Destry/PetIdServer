@@ -9,6 +9,8 @@ public class PetIdContext : DbContext
     public DbSet<OwnerContactModel> OwnerContacts { get; set; }
     public DbSet<PetModel> Pets { get; set; }
     public DbSet<TagModel> Tags { get; set; }
+
+    public DbSet<AdminModel> Admins { get; set; }
     
     public PetIdContext(DbContextOptions<PetIdContext> options) : base(options) { }
 

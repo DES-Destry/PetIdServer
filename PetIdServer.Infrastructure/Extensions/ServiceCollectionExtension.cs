@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
 using PetIdServer.Infrastructure.Database;
@@ -45,6 +47,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddScoped<IPetRepository, PetRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IAdminRepository, AdminRepository>();
         
         return services;
     }
@@ -53,6 +56,7 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
+        services.AddScoped<IAdminTokenService, AdminTokenService>();
         
         return services;
     }

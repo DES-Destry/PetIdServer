@@ -15,7 +15,7 @@ public class OwnerTokenService : IOwnerTokenService
 {
     private readonly TokenValidationParameters _tokenValidation;
     private readonly JwtSecurityTokenHandler _tokenHandler;
-    
+
     private readonly string _atSecret;
     private readonly string _rtSecret;
     private readonly string _issuer;
@@ -26,11 +26,11 @@ public class OwnerTokenService : IOwnerTokenService
     public OwnerTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
-        
+
         _atSecret = configuration["Jwt:Owner:Access:Secret"] ?? throw new ArgumentException(nameof(configuration));
         _rtSecret = configuration["Jwt:Owner:Refresh:Secret"] ?? throw new ArgumentException(nameof(configuration));
-        _issuer = configuration["Jwt:Owner:Issuer"] ?? throw new ArgumentException(nameof(configuration));
-        _audience = configuration["Jwt:Owner:Audience"] ?? throw new ArgumentException(nameof(configuration));
+        _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentException(nameof(configuration));
+        _audience = configuration["Jwt:Audience"] ?? throw new ArgumentException(nameof(configuration));
         _atTtl = configuration["Jwt:Owner:Access:Ttl"] ?? throw new ArgumentException(nameof(configuration));
         _rtTtl = configuration["Jwt:Owner:Refresh:Ttl"] ?? throw new ArgumentException(nameof(configuration));
 
@@ -64,10 +64,10 @@ public class OwnerTokenService : IOwnerTokenService
     public async Task<Owner> DecryptOwner(string accessToken)
     {
         await ValidateAccessToken(accessToken);
-        
+
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
-        
+
         return JsonSerializer.Deserialize<Owner>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
     }
 
@@ -77,8 +77,8 @@ public class OwnerTokenService : IOwnerTokenService
 
         var claims = new List<Claim>
         {
-            new (ClaimTypes.Email, owner.Email),
-            new (ClaimTypes.UserData, ownerString)
+            new(ClaimTypes.Email, owner.Email),
+            new(ClaimTypes.UserData, ownerString)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
 
@@ -99,7 +99,7 @@ public class OwnerTokenService : IOwnerTokenService
     {
         var claims = new List<Claim>
         {
-            new (ClaimTypes.Hash, accessToken),
+            new(ClaimTypes.Hash, accessToken),
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_rtSecret));
 
@@ -115,21 +115,21 @@ public class OwnerTokenService : IOwnerTokenService
         var token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
     }
-    
+
     private async Task<Owner> DecryptExpiredOwner(string accessToken)
     {
         await ValidateExpiredAccessToken(accessToken);
-        
+
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
-        
+
         return JsonSerializer.Deserialize<Owner>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
     }
 
     private async Task<string> DecryptAccessToken(string refreshToken)
     {
         await ValidateRefreshToken(refreshToken);
-        
+
         var jwtToken = _tokenHandler.ReadJwtToken(refreshToken);
         return jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Hash).Value;
     }
@@ -138,33 +138,36 @@ public class OwnerTokenService : IOwnerTokenService
     {
         _tokenValidation.IssuerSigningKey = new JsonWebKey(_atSecret);
         _tokenValidation.ValidateLifetime = true;
-        
+
         var validated = await ValidateTokens(accessToken);
 
         if (!validated)
-            throw new AccessTokenMalformedException();
+            throw new AccessTokenMalformedException("Access token is not valid!",
+                new {Class = nameof(OwnerTokenService)});
     }
 
     private async Task ValidateExpiredAccessToken(string accessToken)
     {
         _tokenValidation.IssuerSigningKey = new JsonWebKey(_atSecret);
         _tokenValidation.ValidateLifetime = false;
-        
-        var validated =  await ValidateTokens(accessToken);
+
+        var validated = await ValidateTokens(accessToken);
 
         if (!validated)
-            throw new AccessTokenMalformedException();
+            throw new AccessTokenMalformedException("Access token is not valid!",
+                new {Class = nameof(OwnerTokenService)});
     }
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
         _tokenValidation.IssuerSigningKey = new JsonWebKey(_rtSecret);
         _tokenValidation.ValidateLifetime = true;
-        
-        var validated =  await ValidateTokens(refreshToken);
-        
+
+        var validated = await ValidateTokens(refreshToken);
+
         if (!validated)
-            throw new RefreshTokenMalformedException();
+            throw new RefreshTokenMalformedException("Refresh token is not valid!",
+                new {Class = nameof(OwnerTokenService)});
     }
 
     private async Task<bool> ValidateTokens(string token)
@@ -174,9 +177,9 @@ public class OwnerTokenService : IOwnerTokenService
             var validatedToken = await _tokenHandler.ValidateTokenAsync(token, _tokenValidation);
             return validatedToken != null;
         }
-        catch(SecurityTokenException)
+        catch (SecurityTokenException)
         {
-            return false; 
+            return false;
         }
     }
 }
