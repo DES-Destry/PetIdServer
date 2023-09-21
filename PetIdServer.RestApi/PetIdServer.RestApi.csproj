@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Carter" Version="7.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
@@ -26,5 +27,21 @@
       <ProjectReference Include="..\PetIdServer.Core\PetIdServer.Core.csproj" />
       <ProjectReference Include="..\PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj" />
     </ItemGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </Project>
