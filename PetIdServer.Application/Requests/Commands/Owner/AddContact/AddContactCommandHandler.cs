@@ -1,6 +1,7 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Core.Exceptions.Owner;
 using PetIdServer.Core.ValueObjects;
 
@@ -17,9 +18,10 @@ public class AddContactCommandHandler : IRequestHandler<AddContactCommand, VoidR
 
     public async Task<VoidResponseDto> Handle(AddContactCommand request, CancellationToken cancellationToken)
     {
-        var owner = await _ownerRepository.GetOwnerByEmail(request.OwnerEmail) ??
-                    throw new OwnerNotFoundException($"Owner with email {request.OwnerEmail} not found",
-                        new {Email = request.OwnerEmail});
+        var owner = await _ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
+                    throw new OwnerNotFoundException($"Owner with id(email) {request.OwnerId} not found",
+                        new {Id = request.OwnerId});
+
         var contact = new OwnerContact
         {
             Contact = request.Contact,
@@ -28,8 +30,8 @@ public class AddContactCommandHandler : IRequestHandler<AddContactCommand, VoidR
 
         owner.Contacts.Add(contact);
 
-        await _ownerRepository.UpdateOwner(owner.Email, owner);
-        
+        await _ownerRepository.UpdateOwner(owner.Id, owner);
+
         return VoidResponseDto.Executed;
     }
 }

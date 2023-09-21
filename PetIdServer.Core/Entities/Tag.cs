@@ -1,15 +1,16 @@
 using PetIdServer.Core.Common;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Core.Entities;
 
-public class Tag : Entity<int>
+public class Tag : Entity<TagId>
 {
     public Pet? Pet { get; private set; }
 
     public bool IsAlreadyInUse => Pet is not null;
 
-    public Tag(int id) : base(id)
+    public Tag(TagId id) : base(id)
     {
     }
 

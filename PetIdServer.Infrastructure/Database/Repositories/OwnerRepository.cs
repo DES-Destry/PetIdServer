@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Entities;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -15,6 +16,12 @@ public class OwnerRepository : IOwnerRepository
     {
         _mapper = mapper;
         _database = database;
+    }
+    
+    public async Task<Owner?> GetOwnerById(OwnerId id)
+    {
+        var model = await _database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Id == id.Value);
+        return model is null ? null : _mapper.Map<OwnerModel, Owner>(model);
     }
 
     public async Task<Owner?> GetOwnerByEmail(string email)
@@ -32,10 +39,10 @@ public class OwnerRepository : IOwnerRepository
         return _mapper.Map<OwnerModel, Owner>(saved.Entity);
     }
 
-    public async Task UpdateOwner(string ownerEmail, Owner owner)
+    public async Task UpdateOwner(OwnerId id, Owner owner)
     {
         var incomingData = _mapper.Map<Owner, OwnerModel>(owner);
-        var model = await _database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Id == ownerEmail);
+        var model = await _database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Id == id.Value);
         
         if (model is null) return;
 

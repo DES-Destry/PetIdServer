@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Entities;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -15,6 +16,12 @@ public class AdminRepository : IAdminRepository
     {
         _mapper = mapper;
         _database = database;
+    }
+
+    public async Task<Admin?> GetAdminById(AdminId id)
+    {
+        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Id == id.Value);
+        return model is null ? null : _mapper.Map<AdminModel, Admin>(model);
     }
 
     public async Task<Admin?> GetAdminByUsername(string username)
@@ -32,10 +39,10 @@ public class AdminRepository : IAdminRepository
         return _mapper.Map<AdminModel, Admin>(saved.Entity);
     }
 
-    public async Task UpdateAdmin(string username, Admin admin)
+    public async Task UpdateAdmin(AdminId id, Admin admin)
     {
         var incomingData = _mapper.Map<Admin, AdminModel>(admin);
-        var model = await _database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Id == username);
+        var model = await _database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Id == id.Value);
         
         if (model is null) return;
 

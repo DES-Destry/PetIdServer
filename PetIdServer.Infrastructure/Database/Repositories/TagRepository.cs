@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Entities;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -23,9 +24,9 @@ public class TagRepository : ITagRepository
         return models.Select(model => _mapper.Map<TagModel, Tag>(model));
     }
 
-    public async Task<Tag?> GetTagById(int id)
+    public async Task<Tag?> GetTagById(TagId id)
     {
-        var model = await _database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.Id == id);
+        var model = await _database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.Id == id.Value);
         return model is null ? null : _mapper.Map<TagModel, Tag>(model);
     }
 
@@ -37,12 +38,12 @@ public class TagRepository : ITagRepository
         return _mapper.Map<TagModel, Tag>(saved.Entity);
     }
 
-    public async Task AttachPet(int tagId, Pet pet)
+    public async Task AttachPet(TagId id, Pet pet)
     {
-        var model = await _database.Tags.FirstOrDefaultAsync(tag => tag.Id == tagId);
+        var model = await _database.Tags.FirstOrDefaultAsync(tag => tag.Id == id.Value);
         if (model is null) return;
 
-        var petModel = await _database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id);
+        var petModel = await _database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id.Value);
         if (petModel is null) return;
 
         model.Pet = petModel;

@@ -1,5 +1,6 @@
 using AutoMapper;
 using PetIdServer.Core.Entities;
+using PetIdServer.Core.Entities.Id;
 using PetIdServer.Core.ValueObjects;
 using PetIdServer.Infrastructure.Database.Models;
 
@@ -19,6 +20,8 @@ public class InfrastructureMappingProfile : Profile
             .ReverseMap();
         CreateMap<TagModel, Tag>().ReverseMap();
 
-        CreateMap<AdminModel, Admin>().ReverseMap();
+        CreateMap<AdminModel, Admin>()
+            .ForCtorParam("id", expression => expression.MapFrom(model => new AdminId(model.Id)))
+            .ReverseMap();
     }
 }

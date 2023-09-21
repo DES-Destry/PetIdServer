@@ -1,6 +1,7 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
+using PetIdServer.Core.Entities.Id;
 
 namespace PetIdServer.Application.Requests.Commands.Pet.Create;
 
@@ -16,7 +17,7 @@ public class CreatePetCommandHandler : IRequestHandler<CreatePetCommand, VoidRes
     public async Task<VoidResponseDto> Handle(CreatePetCommand request, CancellationToken cancellationToken)
     {
         var creationAttributes = new Core.Entities.Pet.CreationAttributes(
-            Guid.NewGuid(),
+            new PetId(Guid.NewGuid()),
             request.Type,
             request.Name,
             request.Sex,

@@ -1,11 +1,15 @@
 using PetIdServer.Core.Common;
+using PetIdServer.Core.Entities.Id;
 
 namespace PetIdServer.Core.Entities;
 
-public class Admin : Entity<string>
+public class Admin : Entity<AdminId>
 {
-    public string Username => Id;
+    public string Username => Id.Value;
 
+    /// <summary>
+    /// Storing only as a hash or empty value
+    /// </summary>
     public string? Password { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -14,9 +18,10 @@ public class Admin : Entity<string>
 
     public bool IsNotCapable => Password is null;
 
+    public record EntityId(string Value);
     public record CreationAttributes(string Username, string Password);
     
-    public Admin(CreationAttributes creationAttributes) : base(creationAttributes.Username)
+    public Admin(CreationAttributes creationAttributes) : base(new AdminId(creationAttributes.Username))
     {
         Password = creationAttributes.Password;
         
@@ -24,7 +29,7 @@ public class Admin : Entity<string>
         PasswordLastChangedAt = DateTime.UtcNow;
     }
 
-    public Admin(string id) : base(id)
+    public Admin(AdminId id) : base(id)
     {
     }
 }

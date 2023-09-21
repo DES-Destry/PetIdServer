@@ -1,11 +1,12 @@
 using PetIdServer.Core.Entities;
+using PetIdServer.Core.Entities.Id;
 
 namespace PetIdServer.Application.Repositories;
 
 public interface IPetRepository
 {
-    Task<Pet?> GetPetById(Guid id);
+    Task<Pet?> GetPetById(PetId id);
     Task<Pet?> CreatePet(Pet pet);
     
-    Task UpdatePet(Guid petId, Pet pet);
+    Task UpdatePet(PetId petId, Pet pet);
 }
