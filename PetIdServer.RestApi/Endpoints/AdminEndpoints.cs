@@ -14,7 +14,11 @@ public class AdminEndpoints : ICarterModule
     {
         var group = app.MapGroup(EndpointBase);
 
-        group.MapPost("login", LoginAdmin).WithName(nameof(LoginAdmin));
+        group.MapPost("login", LoginAdmin).WithName(nameof(LoginAdmin)).WithOpenApi(op =>
+        {
+            op.Summary = "Login existed administrator in system";
+            return op;
+        });
     }
 
     private static async Task<IResult> LoginAdmin(LoginAdminDto dto, ISender sender, IMapper mapper)

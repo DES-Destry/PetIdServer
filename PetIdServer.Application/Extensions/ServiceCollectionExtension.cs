@@ -9,7 +9,10 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddMediatR(typeof(ServiceCollectionExtension).GetTypeInfo().Assembly);
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
+        });
         services.AddAutoMapper(typeof(MappingProfile));
         
         return services;

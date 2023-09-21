@@ -18,6 +18,7 @@ public static class ServiceCollectionExtension
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
+        // TODO: MisconfigurationException : ArgumentNullException
         var connectionString = configuration.GetConnectionString("Postgres") ??
                                throw new ArgumentNullException(nameof(configuration));
 
