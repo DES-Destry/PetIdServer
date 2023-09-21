@@ -6,9 +6,7 @@ namespace PetIdServer.Infrastructure.Database.Models;
 [Table("owners")]
 public class OwnerModel
 {
-    // Owner's email
-    [Column("id"), Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    [Column("email"), Required, Key] public string Email { get; set; }
 
     [Column("password"), Required] public string Password { get; set; }
 

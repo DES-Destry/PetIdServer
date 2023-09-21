@@ -20,13 +20,13 @@ public class AdminRepository : IAdminRepository
 
     public async Task<Admin?> GetAdminById(AdminId id)
     {
-        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Id == id.Value);
+        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Username == id.Value);
         return model is null ? null : _mapper.Map<AdminModel, Admin>(model);
     }
 
     public async Task<Admin?> GetAdminByUsername(string username)
     {
-        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Id == username);
+        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Username == username);
         return model is null ? null : _mapper.Map<AdminModel, Admin>(model);
     }
 
@@ -42,7 +42,7 @@ public class AdminRepository : IAdminRepository
     public async Task UpdateAdmin(AdminId id, Admin admin)
     {
         var incomingData = _mapper.Map<Admin, AdminModel>(admin);
-        var model = await _database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Id == id.Value);
+        var model = await _database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Username == id.Value);
         
         if (model is null) return;
 

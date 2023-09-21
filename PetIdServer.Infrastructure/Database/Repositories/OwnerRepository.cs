@@ -20,13 +20,13 @@ public class OwnerRepository : IOwnerRepository
     
     public async Task<Owner?> GetOwnerById(OwnerId id)
     {
-        var model = await _database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Id == id.Value);
+        var model = await _database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Email == id.Value);
         return model is null ? null : _mapper.Map<OwnerModel, Owner>(model);
     }
 
     public async Task<Owner?> GetOwnerByEmail(string email)
     {
-        var model = await _database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Id == email);
+        var model = await _database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Email == email);
         return model is null ? null : _mapper.Map<OwnerModel, Owner>(model);
     }
 
@@ -42,7 +42,7 @@ public class OwnerRepository : IOwnerRepository
     public async Task UpdateOwner(OwnerId id, Owner owner)
     {
         var incomingData = _mapper.Map<Owner, OwnerModel>(owner);
-        var model = await _database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Id == id.Value);
+        var model = await _database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Email == id.Value);
         
         if (model is null) return;
 

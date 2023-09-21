@@ -11,17 +11,20 @@ public class InfrastructureMappingProfile : Profile
     public InfrastructureMappingProfile()
     {
         CreateMap<OwnerModel, Owner>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => new OwnerId(model.Email)))
             .ReverseMap();
         CreateMap<OwnerContactModel, OwnerContact>().ReverseMap();
 
         CreateMap<PetModel, Pet>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => new PetId(model.Id)))
             .ReverseMap();
-        CreateMap<TagModel, Tag>().ReverseMap();
+        
+        CreateMap<TagModel, Tag>()
+            .ForCtorParam("id", expression => expression.MapFrom(model => new TagId(model.Id)))
+            .ReverseMap();
 
         CreateMap<AdminModel, Admin>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => new AdminId(model.Id)))
+            .ForCtorParam("id", expression => expression.MapFrom(model => new AdminId(model.Username)))
             .ReverseMap();
     }
 }

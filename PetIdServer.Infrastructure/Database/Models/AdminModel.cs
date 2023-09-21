@@ -6,8 +6,8 @@ namespace PetIdServer.Infrastructure.Database.Models;
 [Table("admins")]
 public class AdminModel
 {
-    [Column("id"), Required, Key, MaxLength(32)]
-    public string Id { get; set; }
+    [Column("username"), Required, Key, MaxLength(32)]
+    public string Username { get; set; }
 
     [Column("password")] public string? Password { get; set; }
 
