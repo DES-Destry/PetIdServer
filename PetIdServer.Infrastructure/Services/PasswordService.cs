@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
+using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Services;
 
 namespace PetIdServer.Infrastructure.Services;
@@ -10,7 +11,13 @@ public class PasswordService : IPasswordService
 
     public PasswordService(IConfiguration configuration)
     {
-        _salt = configuration["Security:Salt"] ?? throw new ArgumentException(nameof(configuration));
+        _salt = configuration["Security:Salt"] ??
+                throw new MisconfigurationException().WithMeta(new
+                {
+                    configuration,
+                    value = "Security:Salt",
+                    @class = nameof(PasswordService),
+                });
     }
 
     // Code from MS Guide: https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/consumer-apis/password-hashing?view=aspnetcore-7.0

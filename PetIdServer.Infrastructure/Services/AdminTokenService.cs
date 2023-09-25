@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Services;
 using PetIdServer.Core.Entities;
 using PetIdServer.Core.Exceptions.Auth;
@@ -24,10 +25,34 @@ public class AdminTokenService : IAdminTokenService
     {
         _tokenHandler = new JwtSecurityTokenHandler();
 
-        _jwtSecret = configuration["Jwt:Admin:Secret"] ?? throw new ArgumentException(nameof(configuration));
-        _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentException(nameof(configuration));
-        _audience = configuration["Jwt:Audience"] ?? throw new ArgumentException(nameof(configuration));
-        _jwtTtl = configuration["Jwt:Admin:Ttl"] ?? throw new ArgumentException(nameof(configuration));
+        _jwtSecret = configuration["Jwt:Admin:Secret"] ??
+                     throw new MisconfigurationException().WithMeta(new
+                     {
+                         configuration,
+                         value = "Jwt:Admin:Secret",
+                         @class = nameof(AdminTokenService),
+                     });
+        _issuer = configuration["Jwt:Issuer"] ??
+                  throw new MisconfigurationException().WithMeta(new
+                  {
+                      configuration,
+                      value = "Jwt:Issuer",
+                      @class = nameof(AdminTokenService),
+                  });
+        _audience = configuration["Jwt:Audience"] ??
+                    throw new MisconfigurationException().WithMeta(new
+                    {
+                        configuration,
+                        value = "Jwt:Audience",
+                        @class = nameof(AdminTokenService),
+                    });
+        _jwtTtl = configuration["Jwt:Admin:Ttl"] ??
+                  throw new MisconfigurationException().WithMeta(new
+                  {
+                      configuration,
+                      value = "Jwt:Admin:Ttl",
+                      @class = nameof(AdminTokenService),
+                  });
 
         _tokenValidation = new TokenValidationParameters
         {

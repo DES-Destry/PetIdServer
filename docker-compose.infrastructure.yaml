@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  pet-id-db:
+    container_name: pet-id-db
+    image: postgres:15-alpine
+    ports:
+      - '5535:5432'
+    environment:
+      - POSTGRES_DB=pet-id
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - quantum-war_pgdata:/var/lib/postgresql/data
+
+volumes:
+  pet-id_pgdata:
+    driver: local

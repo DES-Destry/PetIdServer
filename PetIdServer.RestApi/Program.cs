@@ -18,7 +18,6 @@ builder.Services
     .AddAutoMapper(typeof(RestApiMappingProfile))
     .AddCarter();
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

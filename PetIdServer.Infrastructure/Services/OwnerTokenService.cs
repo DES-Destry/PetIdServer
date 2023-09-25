@@ -5,6 +5,7 @@ using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using PetIdServer.Application.Dto;
+using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Services;
 using PetIdServer.Core.Entities;
 using PetIdServer.Core.Exceptions.Auth;
@@ -27,12 +28,48 @@ public class OwnerTokenService : IOwnerTokenService
     {
         _tokenHandler = new JwtSecurityTokenHandler();
 
-        _atSecret = configuration["Jwt:Owner:Access:Secret"] ?? throw new ArgumentException(nameof(configuration));
-        _rtSecret = configuration["Jwt:Owner:Refresh:Secret"] ?? throw new ArgumentException(nameof(configuration));
-        _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentException(nameof(configuration));
-        _audience = configuration["Jwt:Audience"] ?? throw new ArgumentException(nameof(configuration));
-        _atTtl = configuration["Jwt:Owner:Access:Ttl"] ?? throw new ArgumentException(nameof(configuration));
-        _rtTtl = configuration["Jwt:Owner:Refresh:Ttl"] ?? throw new ArgumentException(nameof(configuration));
+        _atSecret = configuration["Jwt:Owner:Access:Secret"] ??
+                    throw new MisconfigurationException().WithMeta(new
+                    {
+                        configuration,
+                        value = "Jwt:Owner:Access:Secret",
+                        @class = nameof(OwnerTokenService),
+                    });;
+        _rtSecret = configuration["Jwt:Owner:Refresh:Secret"] ??
+                    throw new MisconfigurationException().WithMeta(new
+                    {
+                        configuration,
+                        value = "Jwt:Owner:Refresh:Secret",
+                        @class = nameof(OwnerTokenService),
+                    });;
+        _issuer = configuration["Jwt:Issuer"] ?? 
+                  throw new MisconfigurationException().WithMeta(new
+                  {
+                      configuration,
+                      value = "Jwt:Issuer",
+                      @class = nameof(OwnerTokenService),
+                  });;
+        _audience = configuration["Jwt:Audience"] ??
+                    throw new MisconfigurationException().WithMeta(new
+                    {
+                        configuration,
+                        value = "Jwt:Audience",
+                        @class = nameof(OwnerTokenService),
+                    });;
+        _atTtl = configuration["Jwt:Owner:Access:Ttl"] ?? 
+                 throw new MisconfigurationException().WithMeta(new
+                 {
+                     configuration,
+                     value = "Jwt:Owner:Access:Ttl",
+                     @class = nameof(OwnerTokenService),
+                 });;
+        _rtTtl = configuration["Jwt:Owner:Refresh:Ttl"] ?? 
+                 throw new MisconfigurationException().WithMeta(new
+                 {
+                     configuration,
+                     value = "Jwt:Owner:Refresh:Ttl",
+                     @class = nameof(OwnerTokenService),
+                 });;
 
         _tokenValidation = new TokenValidationParameters
         {

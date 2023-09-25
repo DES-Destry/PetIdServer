@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
 using PetIdServer.Infrastructure.Database;
@@ -20,7 +21,12 @@ public static class ServiceCollectionExtension
     {
         // TODO: MisconfigurationException : ArgumentNullException
         var connectionString = configuration.GetConnectionString("Postgres") ??
-                               throw new ArgumentNullException(nameof(configuration));
+                               throw new MisconfigurationException().WithMeta(new
+                               {
+                                   configuration,
+                                   value = "ConnectionStrings:Postgres",
+                                   @class = "Infrastructure.Extensions",
+                               });;;
 
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));
 
