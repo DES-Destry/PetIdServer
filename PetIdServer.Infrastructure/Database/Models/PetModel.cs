@@ -8,7 +8,7 @@ public class PetModel
 {
     [Column("id"), Required, Key] public Guid Id { get; set; }
 
-    [Column("owner_id"), Required] public Guid OwnerId { get; set; }
+    [Column("owner_id"), Required] public string OwnerId { get; set; }
 
     [Column("type"), Required, MaxLength(16)]
     public string Type { get; set; }
