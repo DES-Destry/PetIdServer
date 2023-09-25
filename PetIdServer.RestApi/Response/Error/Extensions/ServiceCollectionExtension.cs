@@ -7,8 +7,7 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddServerErrorHandling(this IServiceCollection collection)
     {
-        collection.AddSingleton<ProblemDetails, ServerProblemDetails>();
-        collection.AddSingleton<ProblemDetailsFactory, ServerProblemDetailsFactory>();
+        collection.AddTransient<ProblemDetailsFactory, ServerProblemDetailsFactory>();
 
         return collection;
     }
