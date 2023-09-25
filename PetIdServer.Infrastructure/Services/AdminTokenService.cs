@@ -56,7 +56,7 @@ public class AdminTokenService : IAdminTokenService
 
         _tokenValidation = new TokenValidationParameters
         {
-            IssuerSigningKey = new JsonWebKey(_jwtSecret),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret)),
             ValidAudience = _audience,
             ValidIssuer = _issuer,
             ValidateLifetime = true,

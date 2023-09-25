@@ -173,7 +173,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new JsonWebKey(_atSecret);
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(accessToken);
@@ -185,7 +185,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateExpiredAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new JsonWebKey(_atSecret);
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
         _tokenValidation.ValidateLifetime = false;
 
         var validated = await ValidateTokens(accessToken);
@@ -197,7 +197,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
-        _tokenValidation.IssuerSigningKey = new JsonWebKey(_rtSecret);
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_rtSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(refreshToken);
