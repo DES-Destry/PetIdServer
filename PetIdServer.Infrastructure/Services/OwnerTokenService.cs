@@ -122,7 +122,7 @@ public class OwnerTokenService : IOwnerTokenService
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Parse(_atTtl),
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_atTtl)),
             Audience = _audience,
             Issuer = _issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
@@ -143,7 +143,7 @@ public class OwnerTokenService : IOwnerTokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Parse(_rtTtl),
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_rtTtl)),
             Audience = _audience,
             Issuer = _issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),

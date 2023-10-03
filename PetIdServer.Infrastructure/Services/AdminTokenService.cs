@@ -80,7 +80,7 @@ public class AdminTokenService : IAdminTokenService
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Parse(_jwtTtl),
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_jwtTtl)),
             Audience = _audience,
             Issuer = _issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
