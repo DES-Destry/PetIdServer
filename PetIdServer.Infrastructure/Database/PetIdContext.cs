@@ -22,6 +22,14 @@ public class PetIdContext : DbContext
         modelBuilder.Entity<OwnerModel>().Navigation(owner => owner.Contacts).AutoInclude();
         
         modelBuilder.Entity<TagModel>().Navigation(owner => owner.Pet).AutoInclude();
+
+        modelBuilder.Entity<AdminModel>().HasData(new AdminModel
+        {
+            Username = "Andrey.Kirik",
+            Password = null,
+            CreatedAt = DateTime.UtcNow,
+            PasswordLastChangedAt = null,
+        });
         
         base.OnModelCreating(modelBuilder);
     }
