@@ -4,10 +4,10 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Services;
 using PetIdServer.Core.Entities;
 using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
@@ -15,50 +15,18 @@ public class AdminTokenService : IAdminTokenService
 {
     private readonly TokenValidationParameters _tokenValidation;
     private readonly JwtSecurityTokenHandler _tokenHandler;
-
-    private readonly string _jwtSecret;
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly string _jwtTtl;
+    private readonly AdminTokenParameters _parameters;
 
     public AdminTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
-
-        _jwtSecret = configuration["Jwt:Admin:Secret"] ??
-                     throw new MisconfigurationException().WithMeta(new
-                     {
-                         configuration,
-                         value = "Jwt:Admin:Secret",
-                         @class = nameof(AdminTokenService),
-                     });
-        _issuer = configuration["Jwt:Issuer"] ??
-                  throw new MisconfigurationException().WithMeta(new
-                  {
-                      configuration,
-                      value = "Jwt:Issuer",
-                      @class = nameof(AdminTokenService),
-                  });
-        _audience = configuration["Jwt:Audience"] ??
-                    throw new MisconfigurationException().WithMeta(new
-                    {
-                        configuration,
-                        value = "Jwt:Audience",
-                        @class = nameof(AdminTokenService),
-                    });
-        _jwtTtl = configuration["Jwt:Admin:Ttl"] ??
-                  throw new MisconfigurationException().WithMeta(new
-                  {
-                      configuration,
-                      value = "Jwt:Admin:Ttl",
-                      @class = nameof(AdminTokenService),
-                  });
+        _parameters = new AdminTokenParameters(configuration);
 
         _tokenValidation = new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret)),
-            ValidAudience = _audience,
-            ValidIssuer = _issuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret)),
+            ValidAudience = _parameters.Audience,
+            ValidIssuer = _parameters.Issuer,
             ValidateLifetime = true,
             ValidateAudience = true,
             ValidateIssuer = true,
@@ -75,14 +43,14 @@ public class AdminTokenService : IAdminTokenService
             new(ClaimTypes.Name, admin.Username),
             new(ClaimTypes.UserData, adminString)
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret));
 
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_jwtTtl)),
-            Audience = _audience,
-            Issuer = _issuer,
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.JwtTtl)),
+            Audience = _parameters.Audience,
+            Issuer = _parameters.Issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
         };
 
@@ -104,7 +72,7 @@ public class AdminTokenService : IAdminTokenService
     {
         try
         {
-            var validatedToken = await _tokenHandler.ValidateTokenAsync(token, _tokenValidation);
+            await _tokenHandler.ValidateTokenAsync(token, _tokenValidation);
         }
         catch (SecurityTokenException)
         {

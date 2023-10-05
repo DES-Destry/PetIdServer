@@ -5,10 +5,10 @@ using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using PetIdServer.Application.Dto;
-using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Services;
 using PetIdServer.Core.Entities;
 using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
@@ -16,65 +16,17 @@ public class OwnerTokenService : IOwnerTokenService
 {
     private readonly TokenValidationParameters _tokenValidation;
     private readonly JwtSecurityTokenHandler _tokenHandler;
-
-    private readonly string _atSecret;
-    private readonly string _rtSecret;
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly string _atTtl;
-    private readonly string _rtTtl;
+    private readonly OwnerTokenParameters _parameters;
 
     public OwnerTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
-
-        _atSecret = configuration["Jwt:Owner:Access:Secret"] ??
-                    throw new MisconfigurationException().WithMeta(new
-                    {
-                        configuration,
-                        value = "Jwt:Owner:Access:Secret",
-                        @class = nameof(OwnerTokenService),
-                    });;
-        _rtSecret = configuration["Jwt:Owner:Refresh:Secret"] ??
-                    throw new MisconfigurationException().WithMeta(new
-                    {
-                        configuration,
-                        value = "Jwt:Owner:Refresh:Secret",
-                        @class = nameof(OwnerTokenService),
-                    });;
-        _issuer = configuration["Jwt:Issuer"] ?? 
-                  throw new MisconfigurationException().WithMeta(new
-                  {
-                      configuration,
-                      value = "Jwt:Issuer",
-                      @class = nameof(OwnerTokenService),
-                  });;
-        _audience = configuration["Jwt:Audience"] ??
-                    throw new MisconfigurationException().WithMeta(new
-                    {
-                        configuration,
-                        value = "Jwt:Audience",
-                        @class = nameof(OwnerTokenService),
-                    });;
-        _atTtl = configuration["Jwt:Owner:Access:Ttl"] ?? 
-                 throw new MisconfigurationException().WithMeta(new
-                 {
-                     configuration,
-                     value = "Jwt:Owner:Access:Ttl",
-                     @class = nameof(OwnerTokenService),
-                 });;
-        _rtTtl = configuration["Jwt:Owner:Refresh:Ttl"] ?? 
-                 throw new MisconfigurationException().WithMeta(new
-                 {
-                     configuration,
-                     value = "Jwt:Owner:Refresh:Ttl",
-                     @class = nameof(OwnerTokenService),
-                 });;
-
+        _parameters = new OwnerTokenParameters(configuration);
+        
         _tokenValidation = new TokenValidationParameters
         {
-            ValidAudience = _audience,
-            ValidIssuer = _issuer,
+            ValidAudience = _parameters.Audience,
+            ValidIssuer = _parameters.Issuer,
             ValidateAudience = true,
             ValidateIssuer = true,
             ValidateIssuerSigningKey = true
@@ -117,14 +69,14 @@ public class OwnerTokenService : IOwnerTokenService
             new(ClaimTypes.Email, owner.Email),
             new(ClaimTypes.UserData, ownerString)
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
 
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_atTtl)),
-            Audience = _audience,
-            Issuer = _issuer,
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.AtTtl)),
+            Audience = _parameters.Audience,
+            Issuer = _parameters.Issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
         };
 
@@ -138,14 +90,14 @@ public class OwnerTokenService : IOwnerTokenService
         {
             new(ClaimTypes.Hash, accessToken),
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_rtSecret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_rtTtl)),
-            Audience = _audience,
-            Issuer = _issuer,
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.RtTtl)),
+            Audience = _parameters.Audience,
+            Issuer = _parameters.Issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
         };
 
@@ -173,7 +125,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(accessToken);
@@ -185,7 +137,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateExpiredAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_atSecret));
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
         _tokenValidation.ValidateLifetime = false;
 
         var validated = await ValidateTokens(accessToken);
@@ -197,7 +149,7 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_rtSecret));
+        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(refreshToken);

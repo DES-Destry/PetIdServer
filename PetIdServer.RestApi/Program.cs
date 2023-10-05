@@ -1,12 +1,19 @@
+using System.Text;
 using Carter;
+using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Extensions;
+using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.Infrastructure.Extensions;
+using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Mapper;
 using PetIdServer.RestApi.Response.Error.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var environment = builder.Environment;
+
+var ownerTokenParameters = new OwnerTokenParameters(configuration);
+var adminTokenParameters = new AdminTokenParameters(configuration);
 
 builder.Services.AddControllers();
 builder.Services
@@ -17,6 +24,33 @@ builder.Services
     .AddServerErrorHandling()
     .AddAutoMapper(typeof(RestApiMappingProfile))
     .AddCarter();
+builder.Services.AddAuthentication()
+    .AddJwtBearer(AuthSchemas.Owner, options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidIssuer = ownerTokenParameters.Issuer,
+            ValidAudience = ownerTokenParameters.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
+        };
+    })
+    .AddJwtBearer(AuthSchemas.Admin, options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidIssuer = adminTokenParameters.Issuer,
+            ValidAudience = adminTokenParameters.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
+        };
+    });
 
 var app = builder.Build();
 
