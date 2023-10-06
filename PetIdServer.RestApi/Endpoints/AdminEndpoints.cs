@@ -2,9 +2,8 @@ using AutoMapper;
 using Carter;
 using MediatR;
 using PetIdServer.Application.Requests.Commands.Admin.Login;
-using PetIdServer.RestApi.Attributes;
 using PetIdServer.RestApi.Auth;
-using PetIdServer.RestApi.Binding.Types;
+using PetIdServer.RestApi.Binding;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
 
 namespace PetIdServer.RestApi.Endpoints;
@@ -33,7 +32,7 @@ public class AdminEndpoints : ICarterModule
         });
     }
     
-    private static async Task<IResult> Authenticate([FromAdmin] RequestAdmin admin, ISender sender, IMapper mapper)
+    private static async Task<IResult> Authenticate(RequestAdmin admin, ISender sender, IMapper mapper)
     {
         return await Task.FromResult(Results.Ok(admin));
     }

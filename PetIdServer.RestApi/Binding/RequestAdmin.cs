@@ -1,12 +1,9 @@
 using System.Security.Claims;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.Services.Dto;
-using PetIdServer.RestApi.Binding.Binders;
 
-namespace PetIdServer.RestApi.Binding.Types;
+namespace PetIdServer.RestApi.Binding;
 
-[ModelBinder(BinderType = typeof(AdminBinder))]
 public class RequestAdmin : AdminDto
 {
     public static ValueTask<RequestAdmin> BindAsync(HttpContext context)

@@ -1,12 +1,9 @@
 using System.Security.Claims;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.Services.Dto;
-using PetIdServer.RestApi.Binding.Binders;
 
-namespace PetIdServer.RestApi.Binding.Types;
+namespace PetIdServer.RestApi.Binding;
 
-[ModelBinder(BinderType = typeof(OwnerBinder))]
 public class RequestOwner : OwnerDto
 {
     public static ValueTask<RequestOwner> BindAsync(HttpContext context)
