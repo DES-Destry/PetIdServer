@@ -1,5 +1,6 @@
 using System.Text;
 using Carter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Extensions;
 using PetIdServer.Infrastructure.Configuration;
@@ -51,6 +52,21 @@ builder.Services.AddAuthentication()
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
         };
     });
+builder.Services.AddAuthorization(options =>
+{
+    var ownerPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddAuthenticationSchemes(AuthSchemas.Owner)
+        .Build();
+
+    var adminPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddAuthenticationSchemes(AuthSchemas.Admin)
+        .Build();
+
+    options.AddPolicy(AuthSchemas.Owner, ownerPolicy);
+    options.AddPolicy(AuthSchemas.Admin, adminPolicy);
+});
 
 var app = builder.Build();
 
