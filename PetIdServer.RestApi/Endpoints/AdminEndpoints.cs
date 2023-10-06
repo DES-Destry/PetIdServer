@@ -8,7 +8,6 @@ using PetIdServer.RestApi.Endpoints.Dto.Admin;
 
 namespace PetIdServer.RestApi.Endpoints;
 
-#pragma warning disable ASP0003
 public class AdminEndpoints : ICarterModule
 {
     private const string EndpointBase = "api/admin";
