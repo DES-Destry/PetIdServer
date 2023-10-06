@@ -5,6 +5,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Services;
+using PetIdServer.Application.Services.Dto;
 using PetIdServer.Core.Entities;
 using PetIdServer.Core.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
@@ -58,14 +59,14 @@ public class AdminTokenService : IAdminTokenService
         return await Task.FromResult(_tokenHandler.WriteToken(token));
     }
 
-    public async Task<Admin> DecryptAdmin(string token)
+    public async Task<AdminDto> DecryptAdmin(string token)
     {
         await ValidateToken(token);
 
         var jwtToken = _tokenHandler.ReadJwtToken(token);
         var adminJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<Admin>(adminJson) ?? throw new ArgumentException(nameof(adminJson));
+        return JsonSerializer.Deserialize<AdminDto>(adminJson) ?? throw new ArgumentException(nameof(adminJson));
     }
 
     private async Task ValidateToken(string token)

@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Entities;
+using PetIdServer.Application.Services.Dto;
 using PetIdServer.Core.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
 
@@ -33,7 +33,7 @@ public class OwnerTokenService : IOwnerTokenService
         };
     }
 
-    public async Task<TokenPairDto> GenerateTokens(Owner owner)
+    public async Task<TokenPairDto> GenerateTokens(OwnerDto owner)
     {
         var accessToken = GenerateAccessToken(owner);
         var refreshToken = GenerateRefreshToken(accessToken);
@@ -50,17 +50,17 @@ public class OwnerTokenService : IOwnerTokenService
         return await GenerateTokens(owner);
     }
 
-    public async Task<Owner> DecryptOwner(string accessToken)
+    public async Task<OwnerDto> DecryptOwner(string accessToken)
     {
         await ValidateAccessToken(accessToken);
 
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<Owner>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
+        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
     }
 
-    private string GenerateAccessToken(Owner owner)
+    private string GenerateAccessToken(OwnerDto owner)
     {
         var ownerString = JsonSerializer.Serialize(owner) ?? throw new ArgumentException(nameof(owner));
 
@@ -105,14 +105,14 @@ public class OwnerTokenService : IOwnerTokenService
         return _tokenHandler.WriteToken(token);
     }
 
-    private async Task<Owner> DecryptExpiredOwner(string accessToken)
+    private async Task<OwnerDto> DecryptExpiredOwner(string accessToken)
     {
         await ValidateExpiredAccessToken(accessToken);
 
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<Owner>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
+        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
     }
 
     private async Task<string> DecryptAccessToken(string refreshToken)

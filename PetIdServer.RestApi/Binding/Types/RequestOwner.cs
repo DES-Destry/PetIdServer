@@ -1,23 +1,14 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Application.Services.Dto;
 using PetIdServer.RestApi.Binding.Binders;
 
 namespace PetIdServer.RestApi.Binding.Types;
 
 [ModelBinder(BinderType = typeof(OwnerBinder))]
-public class RequestOwner : Owner
+public class RequestOwner : OwnerDto
 {
-    public RequestOwner(CreationAttributes creationAttributes) : base(creationAttributes)
-    {
-    }
-
-    public RequestOwner(OwnerId id) : base(id)
-    {
-    }
-    
     public static ValueTask<RequestOwner> BindAsync(HttpContext context)
     {
         if (context == null)

@@ -6,6 +6,7 @@ using PetIdServer.Application.Extensions;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Auth;
+using PetIdServer.RestApi.Extensions;
 using PetIdServer.RestApi.Mapper;
 using PetIdServer.RestApi.Response.Error.Extensions;
 
@@ -19,7 +20,7 @@ var adminTokenParameters = new AdminTokenParameters(configuration);
 builder.Services.AddControllers();
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
+    .AddSwagger()
     .AddApplication()
     .AddInfrastructure(configuration, environment)
     .AddServerErrorHandling()
