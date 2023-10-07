@@ -6,7 +6,7 @@ using PetIdServer.Core.Exceptions.Auth;
 
 namespace PetIdServer.Application.Requests.Commands.Admin.Login;
 
-public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, SingleTokenDto>
+public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, LoginAdminResponseDto>
 {
     private readonly IAdminRepository _adminRepository;
     private readonly IAdminTokenService _adminTokenService;
@@ -19,7 +19,7 @@ public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, Singl
         _passwordService = passwordService;
     }
 
-    public async Task<SingleTokenDto> Handle(LoginAdminCommand request, CancellationToken cancellationToken)
+    public async Task<LoginAdminResponseDto> Handle(LoginAdminCommand request, CancellationToken cancellationToken)
     {
         // try find admin
         var adminCandidate = await _adminRepository.GetAdminByUsername(request.Username);
@@ -35,6 +35,6 @@ public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, Singl
         
         // generate tokens
         var token = await _adminTokenService.GenerateToken(adminCandidate);
-        return new SingleTokenDto {AccessToken = token};
+        return new LoginAdminResponseDto {AccessToken = token, AdminId = adminCandidate.Id.Value};
     }
 }

@@ -6,7 +6,7 @@ using PetIdServer.Core.Exceptions.Auth;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.Login;
 
-public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, TokenPairDto>
+public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, LoginOwnerResponseDto>
 {
     private readonly IOwnerTokenService _ownerTokenService;
     private readonly IPasswordService _passwordService;
@@ -21,7 +21,7 @@ public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, Token
         _ownerRepository = ownerRepository;
     }
 
-    public async Task<TokenPairDto> Handle(LoginOwnerCommand request, CancellationToken cancellationToken)
+    public async Task<LoginOwnerResponseDto> Handle(LoginOwnerCommand request, CancellationToken cancellationToken)
     {
         var ownerCandidate =
             await _ownerRepository.GetOwnerByEmail(request.Email) ??
@@ -32,6 +32,12 @@ public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, Token
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
                 new {request.Email, userType = nameof(Core.Entities.Owner)});
 
-        return await _ownerTokenService.GenerateTokens(ownerCandidate);
+        var tokenPair = await _ownerTokenService.GenerateTokens(ownerCandidate);
+        return new LoginOwnerResponseDto
+        {
+            AccessToken = tokenPair.AccessToken,
+            RefreshToken = tokenPair.RefreshToken,
+            OwnerId = ownerCandidate.Id.Value
+        };
     }
 }
