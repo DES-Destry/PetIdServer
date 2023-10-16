@@ -14,6 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var environment = builder.Environment;
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
 var ownerTokenParameters = new OwnerTokenParameters(configuration);
 var adminTokenParameters = new AdminTokenParameters(configuration);
 
@@ -77,6 +85,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+});
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseExceptionHandler("/error");
