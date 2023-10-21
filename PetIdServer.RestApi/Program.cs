@@ -1,6 +1,5 @@
 using Carter;
 using PetIdServer.Application.Extensions;
-using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Extensions;
 using PetIdServer.RestApi.Mapper;
@@ -13,10 +12,7 @@ var environment = builder.Environment;
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-var ownerTokenParameters = new OwnerTokenParameters(configuration);
-var adminTokenParameters = new AdminTokenParameters(configuration);
-
-builder.Services.AddAuthentication().AddPetIdAuthSchemas(ownerTokenParameters, adminTokenParameters);
+builder.Services.AddAuthentication().AddPetIdAuthSchemas(configuration);
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwagger()

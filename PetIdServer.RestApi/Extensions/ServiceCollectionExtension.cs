@@ -63,9 +63,11 @@ public static class ServiceCollectionExtension
 
     public static AuthenticationBuilder AddPetIdAuthSchemas(
         this AuthenticationBuilder authBuilder,
-        OwnerTokenParameters ownerTokenParameters,
-        AdminTokenParameters adminTokenParameters)
+        IConfiguration configuration)
     {
+        var ownerTokenParameters = new OwnerTokenParameters(configuration);
+        var adminTokenParameters = new AdminTokenParameters(configuration);
+
         return authBuilder.AddJwtBearer(AuthSchemas.Owner, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
