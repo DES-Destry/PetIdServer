@@ -1,4 +1,10 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PetIdServer.Infrastructure.Configuration;
+using PetIdServer.RestApi.Auth;
 
 namespace PetIdServer.RestApi.Extensions;
 
@@ -53,5 +59,57 @@ public static class ServiceCollectionExtension
         });
 
         return services;
+    }
+
+    public static AuthenticationBuilder AddPetIdAuthSchemas(
+        this AuthenticationBuilder authBuilder,
+        OwnerTokenParameters ownerTokenParameters,
+        AdminTokenParameters adminTokenParameters)
+    {
+        return authBuilder.AddJwtBearer(AuthSchemas.Owner, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = ownerTokenParameters.Issuer,
+                    ValidAudience = ownerTokenParameters.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
+                };
+            })
+            .AddJwtBearer(AuthSchemas.Admin, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = adminTokenParameters.Issuer,
+                    ValidAudience = adminTokenParameters.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
+                };
+            });
+    }
+
+    public static IServiceCollection AddPetIdAuthPolicies(this IServiceCollection services)
+    {
+        return services.AddAuthorization(options =>
+        {
+            var ownerPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthSchemas.Owner)
+                .Build();
+
+            var adminPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthSchemas.Admin)
+                .Build();
+
+            options.AddPolicy(AuthSchemas.Owner, ownerPolicy);
+            options.AddPolicy(AuthSchemas.Admin, adminPolicy);
+        });
     }
 }
