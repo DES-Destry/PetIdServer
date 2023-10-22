@@ -1,6 +1,7 @@
 using AutoMapper;
 using Carter;
 using MediatR;
+using PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 using PetIdServer.Application.Requests.Commands.Admin.Login;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
@@ -16,8 +17,9 @@ public class AdminEndpoints : ICarterModule
     {
         var group = app.MapGroup(EndpointBase);
 
-        group.MapGet("auth", Authenticate).WithName(nameof(Authenticate))
+        group.MapGet("auth", Authenticate)
             .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(Authenticate))
             .WithOpenApi(op =>
         {
             op.Summary = "Get information about admin from token.";
@@ -27,6 +29,15 @@ public class AdminEndpoints : ICarterModule
         group.MapPost("login", LoginAdmin).WithName(nameof(LoginAdmin)).WithOpenApi(op =>
         {
             op.Summary = "Login existed administrator in system.";
+            return op;
+        });
+
+        group.MapPut("password", ChangePassword)
+            .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(ChangePassword))
+            .WithOpenApi(op =>
+        {
+            op.Summary = "Change password as authenticated admin.";
             return op;
         });
     }
@@ -39,6 +50,15 @@ public class AdminEndpoints : ICarterModule
     private static async Task<IResult> LoginAdmin(LoginAdminDto dto, ISender sender, IMapper mapper)
     {
         var command = mapper.Map<LoginAdminDto, LoginAdminCommand>(dto);
+        var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> ChangePassword(RequestAdmin admin, ChangePasswordDto dto, ISender sender)
+    {
+        var command = new ChangePasswordCommand
+            {Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword};
         var response = await sender.Send(command);
 
         return Results.Ok(response);

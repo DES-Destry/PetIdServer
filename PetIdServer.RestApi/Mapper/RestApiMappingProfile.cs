@@ -1,4 +1,5 @@
 using AutoMapper;
+using PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 using PetIdServer.Application.Requests.Commands.Admin.Login;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
 

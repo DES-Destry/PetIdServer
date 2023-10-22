@@ -21,15 +21,15 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
 
     public async Task<SingleTokenDto> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        var adminCandidate = await _adminRepository.GetAdminByUsername(request.Username);
+        var adminCandidate = await _adminRepository.GetAdminByUsername(request.Id);
 
         if (adminCandidate is null)
             throw new Exception(); // Admin not found
 
         if (adminCandidate.Password != null &&
             await _passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))
-            throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Username}",
-                new {request.Username, userType = nameof(Core.Entities.Admin)});
+            throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}",
+                new {Username = request.Id, userType = nameof(Core.Entities.Admin)});
 
         var newHashedPassword = await _passwordService.HashPassword(request.NewPassword);
         adminCandidate.Password = newHashedPassword;
