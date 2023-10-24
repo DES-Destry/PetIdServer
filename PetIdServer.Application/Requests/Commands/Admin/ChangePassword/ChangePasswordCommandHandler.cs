@@ -2,6 +2,7 @@ using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
+using PetIdServer.Core.Exceptions.Admin;
 using PetIdServer.Core.Exceptions.Auth;
 
 namespace PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
@@ -24,7 +25,8 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         var adminCandidate = await _adminRepository.GetAdminByUsername(request.Id);
 
         if (adminCandidate is null)
-            throw new Exception(); // TODO: Admin not found
+            throw new AdminNotFoundException($"Admin {request.Id} not found!",
+                new {AdminId = request.Id, UseCase = nameof(ChangePasswordCommandHandler)});
 
         if (adminCandidate.Password != null &&
             await _passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))

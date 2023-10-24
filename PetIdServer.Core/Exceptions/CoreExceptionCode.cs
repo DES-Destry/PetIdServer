@@ -16,4 +16,7 @@ public static class CoreExceptionCode
 
     public const string TagNotFound = DefaultScope + "TAG_NOT_FOUND";
     public const string TagAlreadyInUse = DefaultScope + "TAG_ALREADY_IN_USE";
+
+    public const string AdminNotFound = DefaultScope + "ADMIN_NOT_FOUND";
+    public const string AdminAlreadyCreated = DefaultScope + "ADMIN_ALREADY_CREATED";
 }
