@@ -29,7 +29,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
                 new {AdminId = request.Id, UseCase = nameof(ChangePasswordCommandHandler)});
 
         if (adminCandidate.Password != null &&
-            await _passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))
+            !(await _passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password)))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}",
                 new {Username = request.Id, userType = nameof(Core.Entities.Admin)});
 
