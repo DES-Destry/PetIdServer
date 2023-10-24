@@ -24,7 +24,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         var adminCandidate = await _adminRepository.GetAdminByUsername(request.Id);
 
         if (adminCandidate is null)
-            throw new Exception(); // Admin not found
+            throw new Exception(); // TODO: Admin not found
 
         if (adminCandidate.Password != null &&
             await _passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))

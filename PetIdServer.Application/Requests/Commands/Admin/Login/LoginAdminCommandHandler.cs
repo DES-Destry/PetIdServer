@@ -29,7 +29,7 @@ public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, Login
                 new {request.Username, userType = nameof(Core.Entities.Admin)});
         
         // validate password
-        if (adminCandidate.Password != null && await _passwordService.ValidatePassword(request.Password, adminCandidate.Password))
+        if (adminCandidate.Password != null && !await _passwordService.ValidatePassword(request.Password, adminCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Username}",
                 new {request.Username, userType = nameof(Core.Entities.Admin)});
         
