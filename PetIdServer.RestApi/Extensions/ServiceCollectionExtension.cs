@@ -1,9 +1,5 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 
 namespace PetIdServer.RestApi.Extensions;
@@ -14,7 +10,7 @@ public static class ServiceCollectionExtension
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo()
+            c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "PetID API - V1",
                 Version = "v1",
@@ -30,7 +26,7 @@ public static class ServiceCollectionExtension
                 Scheme = "Bearer"
             });
 
-            c.AddSecurityDefinition("securityKeyAuth", new OpenApiSecurityScheme()
+            c.AddSecurityDefinition("securityKeyAuth", new OpenApiSecurityScheme
             {
                 Name = "Security Key",
                 In = ParameterLocation.Header,
