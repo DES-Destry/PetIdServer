@@ -30,24 +30,24 @@ public static class ServiceCollectionExtension
                 Scheme = "Bearer"
             });
 
-            // c.AddSecurityDefinition("apiKeyAuth", new OpenApiSecurityScheme()
-            // {
-            //     Name = "Api Key",
-            //     In = ParameterLocation.Header,
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Description = "Authorization by ApiKey inside request's header",
-            //     Scheme = "ApiKeyScheme"
-            // });
+            c.AddSecurityDefinition("securityKeyAuth", new OpenApiSecurityScheme()
+            {
+                Name = "Security Key",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Description = "Authorization by SecurityKey inside request's header",
+                Scheme = "SecurityKeyScheme"
+            });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
-                // {
-                //     new OpenApiSecurityScheme
-                //     {
-                //         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "apiKeyAuth" }
-                //     },
-                //     new[] { "SwaggerAuthScheme" }
-                // },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"}
+                    },
+                    new[] {"SwaggerAuthScheme"}
+                },
                 {
                     new OpenApiSecurityScheme
                     {
