@@ -35,6 +35,7 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseExceptionHandler("/error");
+app.UseSecurityKey();
 app.MapCarter();
 
 app.Run();

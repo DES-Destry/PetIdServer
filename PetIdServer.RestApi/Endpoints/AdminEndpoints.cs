@@ -15,7 +15,7 @@ public class AdminEndpoints : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup(EndpointBase);
+        var group = app.MapGroup(EndpointBase).RequireAuthorization();
 
         group.MapGet("auth", Authenticate)
             .RequireAuthorization(AuthSchemas.Admin)

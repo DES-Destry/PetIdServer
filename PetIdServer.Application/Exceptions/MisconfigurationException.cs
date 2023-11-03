@@ -1,3 +1,4 @@
+using PetIdServer.Application.Exceptions.Common;
 using PetIdServer.Core.Exceptions;
 
 namespace PetIdServer.Application.Exceptions;
