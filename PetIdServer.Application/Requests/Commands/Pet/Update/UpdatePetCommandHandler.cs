@@ -7,25 +7,17 @@ using PetIdServer.Core.Exceptions.Pet;
 
 namespace PetIdServer.Application.Requests.Commands.Pet.Update;
 
-public class UpdatePetCommandHandler : IRequestHandler<UpdatePetCommand, VoidResponseDto>
+public class UpdatePetCommandHandler
+    (IMapper mapper, IPetRepository petRepository) : IRequestHandler<UpdatePetCommand, VoidResponseDto>
 {
-    private readonly IMapper _mapper;
-    private readonly IPetRepository _petRepository;
-
-    public UpdatePetCommandHandler(IMapper mapper, IPetRepository petRepository)
-    {
-        _mapper = mapper;
-        _petRepository = petRepository;
-    }
-
     public async Task<VoidResponseDto> Handle(UpdatePetCommand request, CancellationToken cancellationToken)
     {
-        var pet = await _petRepository.GetPetById(new PetId(request.Id)) ??
+        var pet = await petRepository.GetPetById(new PetId(request.Id)) ??
                   throw new PetNotFoundException($"Pet with Id {request.Id} not found", new {Id = request.Id});
-        var updatedPet = _mapper.Map<UpdatePetCommand, Core.Entities.Pet>(request);
+        var updatedPet = mapper.Map<UpdatePetCommand, Core.Entities.Pet>(request);
 
-        await _petRepository.UpdatePet(pet.Id, updatedPet);
-        
+        await petRepository.UpdatePet(pet.Id, updatedPet);
+
         return VoidResponseDto.Executed;
     }
 }

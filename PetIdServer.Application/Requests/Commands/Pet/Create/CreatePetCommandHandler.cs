@@ -5,15 +5,8 @@ using PetIdServer.Core.Entities.Id;
 
 namespace PetIdServer.Application.Requests.Commands.Pet.Create;
 
-public class CreatePetCommandHandler : IRequestHandler<CreatePetCommand, VoidResponseDto>
+public class CreatePetCommandHandler(IPetRepository petRepository) : IRequestHandler<CreatePetCommand, VoidResponseDto>
 {
-    private readonly IPetRepository _petRepository;
-
-    public CreatePetCommandHandler(IPetRepository petRepository)
-    {
-        _petRepository = petRepository;
-    }
-
     public async Task<VoidResponseDto> Handle(CreatePetCommand request, CancellationToken cancellationToken)
     {
         var creationAttributes = new Core.Entities.Pet.CreationAttributes(
@@ -24,7 +17,7 @@ public class CreatePetCommandHandler : IRequestHandler<CreatePetCommand, VoidRes
             request.IsCastrated);
         var pet = new Core.Entities.Pet(creationAttributes);
 
-        await _petRepository.CreatePet(pet);
+        await petRepository.CreatePet(pet);
 
         return VoidResponseDto.Executed;
     }

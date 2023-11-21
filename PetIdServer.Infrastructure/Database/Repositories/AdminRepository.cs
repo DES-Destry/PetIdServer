@@ -7,46 +7,37 @@ using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 
-public class AdminRepository : IAdminRepository
+public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepository
 {
-    private readonly IMapper _mapper;
-    private readonly PetIdContext _database;
-
-    public AdminRepository(IMapper mapper, PetIdContext database)
-    {
-        _mapper = mapper;
-        _database = database;
-    }
-
     public async Task<Admin?> GetAdminById(AdminId id)
     {
-        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Username == id.Value);
-        return model is null ? null : _mapper.Map<AdminModel, Admin>(model);
+        var model = await database.Admins.FirstOrDefaultAsync(admin => admin.Username == id.Value);
+        return model is null ? null : mapper.Map<AdminModel, Admin>(model);
     }
 
     public async Task<Admin?> GetAdminByUsername(string username)
     {
-        var model = await _database.Admins.FirstOrDefaultAsync(admin => admin.Username == username);
-        return model is null ? null : _mapper.Map<AdminModel, Admin>(model);
+        var model = await database.Admins.FirstOrDefaultAsync(admin => admin.Username == username);
+        return model is null ? null : mapper.Map<AdminModel, Admin>(model);
     }
 
     public async Task<Admin?> CreateAdmin(Admin admin)
     {
-        var model = _mapper.Map<Admin, AdminModel>(admin);
-        var saved = await _database.Admins.AddAsync(model);
-        await _database.SaveChangesAsync();
+        var model = mapper.Map<Admin, AdminModel>(admin);
+        var saved = await database.Admins.AddAsync(model);
+        await database.SaveChangesAsync();
 
-        return _mapper.Map<AdminModel, Admin>(saved.Entity);
+        return mapper.Map<AdminModel, Admin>(saved.Entity);
     }
 
     public async Task UpdateAdmin(AdminId id, Admin admin)
     {
-        var incomingData = _mapper.Map<Admin, AdminModel>(admin);
-        var model = await _database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Username == id.Value);
-        
+        var incomingData = mapper.Map<Admin, AdminModel>(admin);
+        var model = await database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Username == id.Value);
+
         if (model is null) return;
 
-        _database.Entry(model).CurrentValues.SetValues(incomingData);
-        await _database.SaveChangesAsync();
+        database.Entry(model).CurrentValues.SetValues(incomingData);
+        await database.SaveChangesAsync();
     }
 }
