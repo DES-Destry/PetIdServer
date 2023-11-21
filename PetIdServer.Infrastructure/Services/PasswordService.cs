@@ -5,20 +5,15 @@ using PetIdServer.Application.Services;
 
 namespace PetIdServer.Infrastructure.Services;
 
-public class PasswordService : IPasswordService
+public class PasswordService(IConfiguration configuration) : IPasswordService
 {
-    private readonly string _salt;
-
-    public PasswordService(IConfiguration configuration)
-    {
-        _salt = configuration["Security:Salt"] ??
-                throw new MisconfigurationException().WithMeta(new
-                {
-                    configuration,
-                    value = "Security:Salt",
-                    @class = nameof(PasswordService),
-                });
-    }
+    private readonly string _salt = configuration["Security:Salt"] ??
+                                    throw new MisconfigurationException().WithMeta(new
+                                    {
+                                        configuration,
+                                        value = "Security:Salt",
+                                        @class = nameof(PasswordService),
+                                    });
 
     // Code from MS Guide: https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/consumer-apis/password-hashing?view=aspnetcore-7.0
     public async Task<string> HashPassword(string password)
