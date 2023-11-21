@@ -7,18 +7,12 @@ using PetIdServer.Core.ValueObjects;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.AddContact;
 
-public class AddContactCommandHandler : IRequestHandler<AddContactCommand, VoidResponseDto>
+public class AddContactCommandHandler
+    (IOwnerRepository ownerRepository) : IRequestHandler<AddContactCommand, VoidResponseDto>
 {
-    private readonly IOwnerRepository _ownerRepository;
-
-    public AddContactCommandHandler(IOwnerRepository ownerRepository)
-    {
-        _ownerRepository = ownerRepository;
-    }
-
     public async Task<VoidResponseDto> Handle(AddContactCommand request, CancellationToken cancellationToken)
     {
-        var owner = await _ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
+        var owner = await ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
                     throw new OwnerNotFoundException($"Owner with id(email) {request.OwnerId} not found",
                         new {Id = request.OwnerId});
 
@@ -30,7 +24,7 @@ public class AddContactCommandHandler : IRequestHandler<AddContactCommand, VoidR
 
         owner.Contacts.Add(contact);
 
-        await _ownerRepository.UpdateOwner(owner.Id, owner);
+        await ownerRepository.UpdateOwner(owner.Id, owner);
 
         return VoidResponseDto.Executed;
     }
