@@ -1,12 +1,12 @@
 using PetIdServer.Core.Exceptions;
 
-namespace PetIdServer.Application.Exceptions;
+namespace PetIdServer.Application.Exceptions.Common;
 
 public abstract class ApplicationException<TConcreteExceptionType> : ScopedException
 {
     private string ApplicationMessage { get; set; }
 
-    protected override string DefaultScope => ApplicationExceptionCode.DefaultScope;
+    protected override string DefaultScope => ApplicationExceptionCode.Scope;
 
     public abstract CoreExceptionKind? Kind { get; }
 

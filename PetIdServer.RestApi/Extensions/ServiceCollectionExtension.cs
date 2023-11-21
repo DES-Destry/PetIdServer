@@ -1,9 +1,5 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 
 namespace PetIdServer.RestApi.Extensions;
@@ -14,7 +10,7 @@ public static class ServiceCollectionExtension
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo()
+            c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "PetID API - V1",
                 Version = "v1",
@@ -30,24 +26,24 @@ public static class ServiceCollectionExtension
                 Scheme = "Bearer"
             });
 
-            // c.AddSecurityDefinition("apiKeyAuth", new OpenApiSecurityScheme()
-            // {
-            //     Name = "Api Key",
-            //     In = ParameterLocation.Header,
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Description = "Authorization by ApiKey inside request's header",
-            //     Scheme = "ApiKeyScheme"
-            // });
+            c.AddSecurityDefinition("securityKeyAuth", new OpenApiSecurityScheme
+            {
+                Name = "Security Key",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Description = "Authorization by SecurityKey inside request's header",
+                Scheme = "SecurityKeyScheme"
+            });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
-                // {
-                //     new OpenApiSecurityScheme
-                //     {
-                //         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "apiKeyAuth" }
-                //     },
-                //     new[] { "SwaggerAuthScheme" }
-                // },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"}
+                    },
+                    new[] {"SwaggerAuthScheme"}
+                },
                 {
                     new OpenApiSecurityScheme
                     {
@@ -59,41 +55,6 @@ public static class ServiceCollectionExtension
         });
 
         return services;
-    }
-
-    public static AuthenticationBuilder AddPetIdAuthSchemas(
-        this AuthenticationBuilder authBuilder,
-        IConfiguration configuration)
-    {
-        var ownerTokenParameters = new OwnerTokenParameters(configuration);
-        var adminTokenParameters = new AdminTokenParameters(configuration);
-
-        return authBuilder.AddJwtBearer(AuthSchemas.Owner, options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = ownerTokenParameters.Issuer,
-                    ValidAudience = ownerTokenParameters.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
-                };
-            })
-            .AddJwtBearer(AuthSchemas.Admin, options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = adminTokenParameters.Issuer,
-                    ValidAudience = adminTokenParameters.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
-                };
-            });
     }
 
     public static IServiceCollection AddPetIdAuthPolicies(this IServiceCollection services)

@@ -15,27 +15,26 @@ namespace PetIdServer.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, 
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
-        // TODO: MisconfigurationException : ArgumentNullException
         var connectionString = configuration.GetConnectionString("Postgres") ??
                                throw new MisconfigurationException().WithMeta(new
                                {
                                    configuration,
                                    value = "ConnectionStrings:Postgres",
                                    @class = "Infrastructure.Extensions",
-                               });;;
+                               });
 
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));
 
         services.AddDbContext<PetIdContext>(options =>
         {
             options.UseNpgsql(connectionString);
-            
+
             if (environment.IsProduction()) return;
-            
+
             // Debug options section
             options.EnableSensitiveDataLogging();
             options.EnableDetailedErrors();
@@ -53,7 +52,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IPetRepository, PetRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
-        
+
         return services;
     }
 
@@ -62,7 +61,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
         services.AddScoped<IAdminTokenService, AdminTokenService>();
-        
+
         return services;
     }
 }
