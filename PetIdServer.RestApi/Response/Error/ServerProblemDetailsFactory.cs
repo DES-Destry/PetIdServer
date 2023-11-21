@@ -8,15 +8,10 @@ using PetIdServer.Core.Exceptions;
 
 namespace PetIdServer.RestApi.Response.Error;
 
-public class ServerProblemDetailsFactory : ProblemDetailsFactory
+public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
 {
-    private readonly ApiBehaviorOptions _options;
+    private readonly ApiBehaviorOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
     private Exception? _exception;
-
-    public ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
-    {
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-    }
 
     public override ServerProblemDetails CreateProblemDetails(
         HttpContext httpContext,
