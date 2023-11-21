@@ -6,6 +6,7 @@ using PetIdServer.Application.Requests.Commands.Admin.Login;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
+using PetIdServer.RestApi.Endpoints.EndpointConventions;
 
 namespace PetIdServer.RestApi.Endpoints;
 
@@ -15,7 +16,7 @@ public class AdminEndpoints : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup(EndpointBase).RequireAuthorization();
+        var group = app.MapGroup(EndpointBase).RequireAuthorization().RequireSecurityKey();
 
         group.MapGet("auth", Authenticate)
             .RequireAuthorization(AuthSchemas.Admin)
