@@ -5,5 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea
 
+**/private_key.pem
+
 PetIdServer.RestApi/appsettings.json
 PetIdServer.RestApi/appsettings.Development.json
