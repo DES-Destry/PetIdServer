@@ -4,6 +4,8 @@ public static class CoreExceptionCode
 {
     public const string DefaultScope = "CORE.";
 
+    public const string ValidationException = DefaultScope + "VALIDATION_EXCEPTION";
+
     public const string IncorrectCredentials = DefaultScope + "INCORRECT_CREDENTIALS";
 
     public const string AccessTokenMalformed = DefaultScope + "ACCESS_TOKEN_MALFORMED";

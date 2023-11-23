@@ -2,20 +2,29 @@ using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Exceptions.Common;
 using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
 
-public class CreateTagsBatchCommandHandler(ITagRepository tagRepository) : IRequestHandler<CreateTagsBatchCommand, VoidResponseDto>
+public class CreateTagsBatchCommandHandler
+    (ITagRepository tagRepository) : IRequestHandler<CreateTagsBatchCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(CreateTagsBatchCommand request, CancellationToken cancellationToken)
     {
         await CheckDuplicates(request);
-        
+
         var ids = Enumerable.Range(request.IdFrom, request.IdTo).ToList();
-        
+
         if (ids.Count != request.Codes.Count())
-            throw new Exception();
+            throw new ValidationException("Id range must be same with codes count", new
+            {
+                command = nameof(CreateTagsBatchCommand),
+                idFrom = request.IdFrom,
+                idTo = request.IdTo,
+                idsCount = ids.Count,
+                codesCount = request.Codes.Count()
+            });
 
         using var codeEnumerator = request.Codes.GetEnumerator();
         var tags = ids.Select(id =>
@@ -30,7 +39,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository) : IRequ
         });
 
         await tagRepository.CreateTagsBatch(tags);
-        
+
         return VoidResponseDto.Executed;
     }
 
