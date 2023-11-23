@@ -61,7 +61,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
         services.AddScoped<IAdminTokenService, AdminTokenService>();
-        services.AddScoped<ISecurityCodeDecoder, SecurityCodeDecoder>();
+        services.AddScoped<ICodeDecoder, CodeDecoder>();
 
         return services;
     }

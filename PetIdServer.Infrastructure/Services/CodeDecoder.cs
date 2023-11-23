@@ -6,14 +6,14 @@ using Org.BouncyCastle.OpenSsl;
 
 namespace PetIdServer.Infrastructure.Services;
 
-public class SecurityCodeDecoder : ISecurityCodeDecoder
+public class CodeDecoder : ICodeDecoder
 {
     private enum Action { Decrypt, Encrypt }
     
     private readonly AsymmetricKeyParameter _publicCrt;
     private readonly AsymmetricKeyParameter _privateCrt;
 
-    public SecurityCodeDecoder()
+    public CodeDecoder()
     {
         var privateKey = File.ReadAllText("../Keys/private_key.pem");
         
@@ -26,10 +26,10 @@ public class SecurityCodeDecoder : ISecurityCodeDecoder
                       throw new ArgumentException("Cannot create private key crt parameters", nameof(privateKey));
     }
 
-    public async Task<string> EncodeSecurityCode(string securityCode) => await Execute(Action.Encrypt, securityCode);
-    public async Task<string> GetSecurityCodeOriginal(string encoded) => await Execute(Action.Decrypt, encoded);
+    public async Task<string> EncodePublicCode(string publicCode) => await Execute(Action.Encrypt, publicCode);
+    public async Task<string> GetPublicCodeOriginal(string privateCode) => await Execute(Action.Decrypt, privateCode);
 
-    private async Task<string> Execute(Action action, string data)
+    private async Task<string> Execute(Action action, string code)
     {
         var forEncryption = action == Action.Encrypt;
         var crt = forEncryption ? _publicCrt : _privateCrt;
@@ -37,10 +37,10 @@ public class SecurityCodeDecoder : ISecurityCodeDecoder
         var rsaEngine = new RsaEngine();
         rsaEngine.Init(forEncryption, crt);
 
-        var encodedBytes = Encoding.UTF8.GetBytes(data);
+        var encodedBytes = Encoding.UTF8.GetBytes(code);
         var decryptedBytes = rsaEngine.ProcessBlock(encodedBytes, 0, encodedBytes.Length) ??
                              throw new ArgumentException("Cannot encode security code with current private key",
-                                 nameof(data));
+                                 nameof(code));
 
         var decrypted = Encoding.UTF8.GetString(decryptedBytes);
 
