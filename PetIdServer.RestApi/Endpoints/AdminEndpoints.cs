@@ -3,6 +3,7 @@ using Carter;
 using MediatR;
 using PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 using PetIdServer.Application.Requests.Commands.Admin.Login;
+using PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
 using PetIdServer.Application.Requests.Queries.Tag.GetDecoded;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
@@ -50,7 +51,16 @@ public class AdminEndpoints : ICarterModule
             {
                 op.Summary = "Get tag with his public code with admin credentials.";
                 return op;
-            });;
+            });
+        
+        group.MapPost("tags", CreateTags)
+            .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(CreateTags))
+            .WithOpenApi(op =>
+            {
+                op.Summary = "Create tags range.";
+                return op;
+            });
     }
     
     private static async Task<IResult> Authenticate(RequestAdmin admin, ISender sender, IMapper mapper)
@@ -79,6 +89,14 @@ public class AdminEndpoints : ICarterModule
     {
         var query = new GetDecodedTagQuery {Id = id};
         var response = await sender.Send(query);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> CreateTags(CreateTagsDto dto, ISender sender, IMapper mapper)
+    {
+        var command = mapper.Map<CreateTagsDto, CreateTagsBatchCommand>(dto);
+        var response = await sender.Send(command);
 
         return Results.Ok(response);
     }
