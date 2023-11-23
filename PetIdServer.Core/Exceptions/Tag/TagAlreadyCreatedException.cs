@@ -2,7 +2,7 @@ namespace PetIdServer.Core.Exceptions.Tag;
 
 public class TagAlreadyCreatedException : CoreException
 {
-    public override string Code { get; protected set; } = CoreExceptionCode.TagAlreadyInUse;
+    public override string Code { get; protected set; } = CoreExceptionCode.TagAlreadyExists;
     public override CoreExceptionKind? Kind => CoreExceptionKind.EntitiesConflicting;
     
     public TagAlreadyCreatedException(string message = "Tag already exists") : base(message) { }
