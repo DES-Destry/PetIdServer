@@ -9,8 +9,11 @@ public class TagModel
     [Column("id"), Required, Key]
     public int Id { get; set; }
 
-    [Column("security_code"), Required]
-    public string SecurityCode { get; set; }
+    [Column("code"), Required]
+    public string Code { get; set; }
+    
+    [Column("control_code"), Required]
+    public long ControlCode { get; set; }
 
     [Column("pet_id")]
     public Guid? PetId { get; set; }
