@@ -1,28 +1,17 @@
+using System.Security.Cryptography;
 using System.Text;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.OpenSsl;
 using PetIdServer.Application.Services;
 
 namespace PetIdServer.Infrastructure.Services;
 
 public class CodeDecoder : ICodeDecoder
 {
-    private readonly AsymmetricKeyParameter _privateCrt;
-
-    private readonly AsymmetricKeyParameter _publicCrt;
+    private readonly RSAParameters _rsaParameters;
 
     public CodeDecoder()
     {
-        var privateKey = File.ReadAllText("./Keys/private_key.pem");
-
-        var pemReader = new PemReader(new StringReader(privateKey));
-        var keyPair = pemReader.ReadObject() as AsymmetricCipherKeyPair;
-
-        _publicCrt = keyPair?.Public ??
-                     throw new ArgumentException("Cannot create public key crt parameters", nameof(privateKey));
-        _privateCrt = keyPair?.Private ??
-                      throw new ArgumentException("Cannot create private key crt parameters", nameof(privateKey));
+        var privateKey = File.ReadAllText("./Keys/private.pem");
+        _rsaParameters = ExtractRsaParameters(privateKey);
     }
 
     public async Task<string> EncodePublicCode(string publicCode)
@@ -37,20 +26,37 @@ public class CodeDecoder : ICodeDecoder
 
     private async Task<string> Execute(Action action, string code)
     {
-        var forEncryption = action == Action.Encrypt;
-        var crt = forEncryption ? _publicCrt : _privateCrt;
+        using var rsaProvider = RSA.Create();
+        rsaProvider.ImportParameters(_rsaParameters);
 
-        var rsaEngine = new RsaEngine();
-        rsaEngine.Init(forEncryption, crt);
+        var inputCodeBytes = Convert.FromBase64String(code);
 
-        var encodedBytes = Encoding.UTF8.GetBytes(code);
-        var decryptedBytes = rsaEngine.ProcessBlock(encodedBytes, 0, encodedBytes.Length) ??
-                             throw new ArgumentException("Cannot encode security code with current private key",
-                                 nameof(code));
+        var resultCodeBytes = action switch
+        {
+            Action.Decrypt => rsaProvider.Decrypt(inputCodeBytes, RSAEncryptionPadding.Pkcs1),
+            Action.Encrypt => rsaProvider.Encrypt(inputCodeBytes, RSAEncryptionPadding.Pkcs1),
+            _ => Array.Empty<byte>()
+        };
 
-        var decrypted = Encoding.UTF8.GetString(decryptedBytes);
+        var resultCode = Encoding.UTF8.GetString(resultCodeBytes);
+        return await Task.FromResult(resultCode);
+    }
 
-        return await Task.FromResult(decrypted);
+    private static RSAParameters ExtractRsaParameters(string privateKey)
+    {
+        var base64PrivateKey = ExtractBase64Key(privateKey);
+        var privateKeyBits = Convert.FromBase64String(base64PrivateKey);
+        var rsa = new RSACryptoServiceProvider();
+        rsa.ImportPkcs8PrivateKey(privateKeyBits, out _);
+        return rsa.ExportParameters(true);
+    }
+
+    private static string ExtractBase64Key(string keyWithHeaders)
+    {
+        const string header = "-----BEGIN PRIVATE KEY-----";
+        const string footer = "-----END PRIVATE KEY-----";
+
+        return keyWithHeaders.Replace(header, "").Replace(footer, "");
     }
 
     private enum Action

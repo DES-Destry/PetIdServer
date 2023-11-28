@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
@@ -26,14 +27,13 @@ public class CreateTagsBatchCommandHandler
                 codesCount = request.Codes.Count()
             });
 
-        using var codeEnumerator = request.Codes.GetEnumerator();
-        var tags = ids.Select(id =>
+        var codes = request.Codes.ToImmutableArray();
+
+        var tags = ids.Select((id, index) =>
         {
             var controlCode = Random.Shared.NextInt64();
             var creationAttributes =
-                new Core.Entities.Tag.CreationAttributes(new TagId(id), codeEnumerator.Current, controlCode);
-
-            codeEnumerator.MoveNext();
+                new Core.Entities.Tag.CreationAttributes(new TagId(id), codes[index], controlCode);
 
             return new Core.Entities.Tag(creationAttributes);
         });
