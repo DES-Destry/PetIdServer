@@ -18,7 +18,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("pet")
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -50,7 +50,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         new
                         {
                             Username = "Andrey.Kirik",
-                            CreatedAt = new DateTime(2023, 10, 3, 13, 8, 12, 716, DateTimeKind.Utc).AddTicks(3360)
+                            CreatedAt = new DateTime(2023, 11, 23, 14, 28, 41, 752, DateTimeKind.Utc).AddTicks(5770)
                         });
                 });
 
@@ -162,14 +162,18 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.Property<long>("ControlCode")
+                        .HasColumnType("bigint")
+                        .HasColumnName("control_code");
+
                     b.Property<Guid?>("PetId")
                         .HasColumnType("uuid")
                         .HasColumnName("pet_id");
-
-                    b.Property<string>("SecurityCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("security_code");
 
                     b.HasKey("Id");
 

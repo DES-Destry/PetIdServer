@@ -14,7 +14,7 @@ public static class ServiceCollectionExtension
             {
                 Title = "PetID API - V1",
                 Version = "v1",
-                Description = "PetID Server.",
+                Description = "PetID Server."
             });
 
             c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
@@ -28,7 +28,7 @@ public static class ServiceCollectionExtension
 
             c.AddSecurityDefinition("securityKeyAuth", new OpenApiSecurityScheme
             {
-                Name = "Security Key",
+                Name = "X-Security-Key",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
                 Description = "Authorization by SecurityKey inside request's header",
@@ -50,7 +50,7 @@ public static class ServiceCollectionExtension
                         Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
                     },
                     new[] {"SwaggerAuthScheme"}
-                },
+                }
             });
         });
 
