@@ -10,6 +10,7 @@ public class Tag : Entity<TagId>
     {
         Code = creationAttributes.Code;
         ControlCode = creationAttributes.ControlCode;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public Tag(TagId id) : base(id)
