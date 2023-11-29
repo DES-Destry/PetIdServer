@@ -14,11 +14,11 @@ public class TagModel
 
     [Column("pet_id")] public Guid? PetId { get; set; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; set; }
+    [Column("created_at")] [Required] public DateTime CreatedAt { get; set; }
 
-    [Column("pet_added_at")] public DateTime PetAddedAt { get; set; }
+    [Column("pet_added_at")] public DateTime? PetAddedAt { get; set; }
 
-    [Column("last_scanned_at")] public DateTime LastScannedAt { get; set; }
+    [Column("last_scanned_at")] public DateTime? LastScannedAt { get; set; }
 
 
     [ForeignKey("PetId")] public virtual PetModel? Pet { get; set; }
