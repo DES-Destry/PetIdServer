@@ -8,14 +8,15 @@ using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
 
-public class CreateTagsBatchCommandHandler
-    (ITagRepository tagRepository) : IRequestHandler<CreateTagsBatchCommand, VoidResponseDto>
+public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
+    : IRequestHandler<CreateTagsBatchCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(CreateTagsBatchCommand request, CancellationToken cancellationToken)
     {
         await CheckDuplicates(request);
 
-        var ids = Enumerable.Range(request.IdFrom, request.IdTo).ToList();
+        var tagsCount = request.IdTo - request.IdFrom + 1;
+        var ids = Enumerable.Range(request.IdFrom, tagsCount).ToList();
 
         if (ids.Count != request.Codes.Count())
             throw new ValidationException("Id range must be same with codes count", new
