@@ -44,19 +44,9 @@ public class CodeDecoder : ICodeDecoder
 
     private static RSAParameters ExtractRsaParameters(string privateKey)
     {
-        var base64PrivateKey = ExtractBase64Key(privateKey);
-        var privateKeyBits = Convert.FromBase64String(base64PrivateKey);
         var rsa = new RSACryptoServiceProvider();
-        rsa.ImportPkcs8PrivateKey(privateKeyBits, out _);
+        rsa.ImportFromPem(privateKey);
         return rsa.ExportParameters(true);
-    }
-
-    private static string ExtractBase64Key(string keyWithHeaders)
-    {
-        const string header = "-----BEGIN PRIVATE KEY-----";
-        const string footer = "-----END PRIVATE KEY-----";
-
-        return keyWithHeaders.Replace(header, "").Replace(footer, "");
     }
 
     private enum Action
