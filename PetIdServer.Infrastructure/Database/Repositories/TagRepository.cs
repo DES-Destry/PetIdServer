@@ -24,10 +24,10 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
 
         return await Task.FromResult(result);
     }
-    
+
     public async Task<IEnumerable<Tag>> GetAllTags()
     {
-        var models = await database.Tags.AsNoTracking().ToListAsync();
+        var models = await database.Tags.OrderBy(tag => tag.Id).AsNoTracking().ToListAsync();
         return models.Select(mapper.Map<TagModel, Tag>);
     }
 
@@ -42,7 +42,7 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         var model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.Code == code);
         return model is null ? null : mapper.Map<TagModel, Tag>(model);
     }
-    
+
     public async Task<Tag?> GetByControlCode(long controlCode)
     {
         var model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
@@ -73,7 +73,7 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         if (petModel is null) return;
 
         model.Pet = petModel;
-        
+
         await database.SaveChangesAsync();
     }
 }
