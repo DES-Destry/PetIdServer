@@ -12,7 +12,7 @@ using PetIdServer.Infrastructure.Database;
 namespace PetIdServer.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PetIdContext))]
-    [Migration("20231123142841_Initial")]
+    [Migration("20231129123045_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -53,7 +53,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         new
                         {
                             Username = "Andrey.Kirik",
-                            CreatedAt = new DateTime(2023, 11, 23, 14, 28, 41, 752, DateTimeKind.Utc).AddTicks(5770)
+                            CreatedAt = new DateTime(2023, 11, 29, 12, 30, 45, 372, DateTimeKind.Utc).AddTicks(950)
                         });
                 });
 
@@ -173,6 +173,18 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                     b.Property<long>("ControlCode")
                         .HasColumnType("bigint")
                         .HasColumnName("control_code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("LastScannedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_scanned_at");
+
+                    b.Property<DateTime?>("PetAddedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("pet_added_at");
 
                     b.Property<Guid?>("PetId")
                         .HasColumnType("uuid")

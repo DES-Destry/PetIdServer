@@ -16,7 +16,7 @@ public class GetDecodedTagQueryHandler
             $"Tag with Id {request.Id} not found", new
             {
                 query = nameof(GetDecodedTagQuery),
-                tagId = request.Id,
+                tagId = request.Id
             });
 
         var publicCode = await codeDecoder.GetPublicCodeOriginal(tag.Code);
@@ -27,6 +27,9 @@ public class GetDecodedTagQueryHandler
             PublicCode = publicCode,
             ControlCode = tag.ControlCode,
             IsAlreadyInUse = tag.IsAlreadyInUse,
+            CreatedAt = tag.CreatedAt,
+            PetAddedAt = tag.PetAddedAt,
+            LastScannedAt = tag.LastScannedAt
         };
     }
 }

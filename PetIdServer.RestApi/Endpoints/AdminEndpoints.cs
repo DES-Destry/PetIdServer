@@ -4,6 +4,7 @@ using MediatR;
 using PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 using PetIdServer.Application.Requests.Commands.Admin.Login;
 using PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
+using PetIdServer.Application.Requests.Queries.Tag.GetAll;
 using PetIdServer.Application.Requests.Queries.Tag.GetDecoded;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
@@ -44,6 +45,15 @@ public class AdminEndpoints : ICarterModule
                 return op;
             });
 
+        group.MapGet("tag/all", GetAllTags)
+            .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(GetAllTags))
+            .WithOpenApi(op =>
+            {
+                op.Summary = "Get all tags with shorted amount of fields.";
+                return op;
+            });
+
         group.MapGet("tag/{id:int}", GetDecodedTag)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithName(nameof(GetDecodedTag))
@@ -81,6 +91,14 @@ public class AdminEndpoints : ICarterModule
         var command = new ChangePasswordCommand
             {Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword};
         var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> GetAllTags(ISender sender)
+    {
+        var query = new GetAllTagsQuery();
+        var response = await sender.Send(query);
 
         return Results.Ok(response);
     }

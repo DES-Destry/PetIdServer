@@ -102,7 +102,10 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     code = table.Column<string>(type: "text", nullable: false),
                     control_code = table.Column<long>(type: "bigint", nullable: false),
-                    pet_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    pet_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    pet_added_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_scanned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,7 +122,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                 schema: "pet",
                 table: "admins",
                 columns: new[] { "username", "created_at", "password", "password_last_changed_at" },
-                values: new object[] { "Andrey.Kirik", new DateTime(2023, 11, 23, 14, 28, 41, 752, DateTimeKind.Utc).AddTicks(5770), null, null });
+                values: new object[] { "Andrey.Kirik", new DateTime(2023, 11, 29, 12, 30, 45, 372, DateTimeKind.Utc).AddTicks(950), null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_pets_owner_id",
