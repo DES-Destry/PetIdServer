@@ -33,8 +33,8 @@ public class CodeDecoder : ICodeDecoder
 
         var resultCodeBytes = action switch
         {
-            Action.Decrypt => rsaProvider.Decrypt(inputCodeBytes, RSAEncryptionPadding.Pkcs1),
-            Action.Encrypt => rsaProvider.Encrypt(inputCodeBytes, RSAEncryptionPadding.Pkcs1),
+            Action.Decrypt => rsaProvider.Decrypt(inputCodeBytes, RSAEncryptionPadding.OaepSHA256),
+            Action.Encrypt => rsaProvider.Encrypt(inputCodeBytes, RSAEncryptionPadding.OaepSHA256),
             _ => Array.Empty<byte>()
         };
 
