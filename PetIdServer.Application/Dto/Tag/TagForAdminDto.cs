@@ -4,7 +4,7 @@ public class TagForAdminDto
 {
     public int Id { get; set; }
     public string PublicCode { get; set; }
-    public long ControlCode { get; set; }
+    public string ControlCode { get; set; }
     public bool IsAlreadyInUse { get; set; }
 
     public DateTime CreatedAt { get; set; }

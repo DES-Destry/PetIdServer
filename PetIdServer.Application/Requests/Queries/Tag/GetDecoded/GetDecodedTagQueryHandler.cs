@@ -7,8 +7,8 @@ using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Application.Requests.Queries.Tag.GetDecoded;
 
-public class GetDecodedTagQueryHandler
-    (ITagRepository tagRepository, ICodeDecoder codeDecoder) : IRequestHandler<GetDecodedTagQuery, TagForAdminDto>
+public class GetDecodedTagQueryHandler(ITagRepository tagRepository, ICodeDecoder codeDecoder)
+    : IRequestHandler<GetDecodedTagQuery, TagForAdminDto>
 {
     public async Task<TagForAdminDto> Handle(GetDecodedTagQuery request, CancellationToken cancellationToken)
     {
@@ -25,7 +25,7 @@ public class GetDecodedTagQueryHandler
         {
             Id = tag.Id.Value,
             PublicCode = publicCode,
-            ControlCode = tag.ControlCode,
+            ControlCode = tag.ControlCode.ToString(),
             IsAlreadyInUse = tag.IsAlreadyInUse,
             CreatedAt = tag.CreatedAt,
             PetAddedAt = tag.PetAddedAt,
