@@ -6,7 +6,8 @@ using PetIdServer.Core.Exceptions.Tag;
 
 namespace PetIdServer.Application.Requests.Queries.Tag.ControlCheck;
 
-public class TagControlCheckQueryHandler(ITagRepository tagRepository) : IRequestHandler<TagControlCheckQuery, CheckTagDto>
+public class TagControlCheckQueryHandler(ITagRepository tagRepository)
+    : IRequestHandler<TagControlCheckQuery, CheckTagDto>
 {
     public async Task<CheckTagDto> Handle(TagControlCheckQuery request, CancellationToken cancellationToken)
     {
@@ -22,6 +23,6 @@ public class TagControlCheckQueryHandler(ITagRepository tagRepository) : IReques
         var isVirgin = !tag.IsAlreadyInUse;
         var pet = tag.IsAlreadyInUse ? new CheckPetDto(tag.Pet!.Owner.Email, tag.Pet.Name) : null;
 
-        return new CheckTagDto(pet, isVirgin);
+        return new CheckTagDto(tag.Id.Value, pet, isVirgin);
     }
 }
