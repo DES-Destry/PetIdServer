@@ -20,9 +20,9 @@ public class TagControlCheckQueryHandler(ITagRepository tagRepository)
                 controlCode = request.ControlCode
             });
 
-        var isVirgin = !tag.IsAlreadyInUse;
+        var isFree = !tag.IsAlreadyInUse;
         var pet = tag.IsAlreadyInUse ? new CheckPetDto(tag.Pet!.Owner.Email, tag.Pet.Name) : null;
 
-        return new CheckTagDto(tag.Id.Value, pet, isVirgin);
+        return new CheckTagDto(tag.Id.Value, pet, isFree);
     }
 }
