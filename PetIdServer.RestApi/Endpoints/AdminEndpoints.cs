@@ -1,11 +1,11 @@
 using AutoMapper;
 using Carter;
 using MediatR;
-using PetIdServer.Application.Domain.Admin.Commands.ChangePassword;
-using PetIdServer.Application.Domain.Admin.Commands.Login;
-using PetIdServer.Application.Domain.Tag.Commands.CreateBatch;
-using PetIdServer.Application.Domain.Tag.Queries.GetAll;
-using PetIdServer.Application.Domain.Tag.Queries.GetDecoded;
+using PetIdServer.Application.AppDomain.AdminDomain.Commands.ChangePassword;
+using PetIdServer.Application.AppDomain.AdminDomain.Commands.Login;
+using PetIdServer.Application.AppDomain.TagDomain.Commands.CreateBatch;
+using PetIdServer.Application.AppDomain.TagDomain.Queries.GetAll;
+using PetIdServer.Application.AppDomain.TagDomain.Queries.GetDecoded;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;

@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Domain\Admin\Commands\"/>
-        <Folder Include="Domain\Owner\Commands\ChangePassword\"/>
-        <Folder Include="Domain\Owner\Commands\ForgotPassword\"/>
-        <Folder Include="Domain\Owner\Commands\RestorePassword\"/>
-        <Folder Include="Domain\Report\Commands\MarkAsResolved\"/>
-        <Folder Include="Domain\Tag\Commands\"/>
-        <Folder Include="Domain\Tag\Queries\"/>
+        <Folder Include="AppDomain\AdminDomain\Commands\"/>
+        <Folder Include="AppDomain\OwnerDomain\Commands\ChangePassword\"/>
+        <Folder Include="AppDomain\OwnerDomain\Commands\ForgotPassword\"/>
+        <Folder Include="AppDomain\OwnerDomain\Commands\RestorePassword\"/>
+        <Folder Include="AppDomain\ReportDomain\Commands\MarkAsResolved\"/>
+        <Folder Include="AppDomain\TagDomain\Commands\"/>
+        <Folder Include="AppDomain\TagDomain\Queries\"/>
     </ItemGroup>
 
     <ItemGroup>

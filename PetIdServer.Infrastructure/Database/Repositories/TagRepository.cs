@@ -1,6 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Application.Domain.Tag;
+using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Infrastructure.Database.Models;

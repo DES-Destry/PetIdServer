@@ -1,7 +1,7 @@
 using Carter;
 using MediatR;
-using PetIdServer.Application.Domain.Tag.Dto;
-using PetIdServer.Application.Domain.Tag.Queries.ControlCheck;
+using PetIdServer.Application.AppDomain.TagDomain.Dto;
+using PetIdServer.Application.AppDomain.TagDomain.Queries.ControlCheck;
 
 namespace PetIdServer.RestApi.Endpoints;
 
