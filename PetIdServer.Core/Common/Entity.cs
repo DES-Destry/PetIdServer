@@ -12,7 +12,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         Id = id;
     }
 
-    public TId Id { get; }
+    public TId Id { get; protected init; }
 
     public bool Equals(Entity<TId>? other)
     {
@@ -25,8 +25,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
     public override bool Equals(object? obj)
     {
         if (obj is Entity<TId> entity) return Equals(entity);
-
-        return base.Equals(obj);
+        return false;
     }
 
     public override int GetHashCode() => Id?.GetHashCode() ?? 0;
