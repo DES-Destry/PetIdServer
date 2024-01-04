@@ -2,9 +2,10 @@ using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Domains.Admin.Exceptions;
+using PetIdServer.Core.Domains.Report;
 using PetIdServer.Core.Domains.Tag.Exceptions;
 
-namespace PetIdServer.Application.Requests.Commands.Report.Create;
+namespace PetIdServer.Application.Requests.Commands.ReportCommands.Create;
 
 public class CreateReportCommandHandler(
     IAdminRepository adminRepository,
@@ -33,9 +34,7 @@ public class CreateReportCommandHandler(
                 tagId = request.TagId.Value
             });
 
-        var report =
-            new Core.Domains.Report.Report(
-                new Core.Domains.Report.Report.CreationAttributes(reportedTag, admin));
+        var report = new Report(new Report.CreationAttributes(reportedTag, admin));
 
         await reportRepository.CreateReport(report);
 

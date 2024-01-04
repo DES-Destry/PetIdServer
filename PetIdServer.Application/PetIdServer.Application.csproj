@@ -11,7 +11,7 @@
         <Folder Include="Requests\Commands\Owner\ChangePassword\"/>
         <Folder Include="Requests\Commands\Owner\ForgotPassword\"/>
         <Folder Include="Requests\Commands\Owner\RestorePassword\"/>
-        <Folder Include="Requests\Commands\Report\MarkAsResolved\"/>
+        <Folder Include="Requests\Commands\ReportCommands\MarkAsResolved\"/>
     </ItemGroup>
 
     <ItemGroup>

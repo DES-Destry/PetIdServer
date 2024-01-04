@@ -3,7 +3,7 @@ using PetIdServer.Application.Dto;
 using PetIdServer.Core.Domains.Admin;
 using PetIdServer.Core.Domains.Tag;
 
-namespace PetIdServer.Application.Requests.Commands.Report.Create;
+namespace PetIdServer.Application.Requests.Commands.ReportCommands.Create;
 
 public class CreateReportCommand : IRequest<VoidResponseDto>
 {
