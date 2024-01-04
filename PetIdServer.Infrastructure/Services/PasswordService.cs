@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
-using PetIdServer.Application.Exceptions;
-using PetIdServer.Application.Services;
+using PetIdServer.Application.Common.Exceptions;
+using PetIdServer.Application.Common.Services;
 
 namespace PetIdServer.Infrastructure.Services;
 

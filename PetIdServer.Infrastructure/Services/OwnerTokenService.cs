@@ -4,9 +4,9 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using PetIdServer.Application.Dto;
-using PetIdServer.Application.Services;
-using PetIdServer.Application.Services.Dto;
+using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services;
+using PetIdServer.Application.Common.Services.Dto;
 using PetIdServer.Core.Common.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
 

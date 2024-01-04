@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using PetIdServer.Application.Exceptions;
+using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.RestApi.Attributes;
 
 namespace PetIdServer.RestApi.Middlewares;

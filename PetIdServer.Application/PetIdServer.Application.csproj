@@ -8,10 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Requests\Commands\Owner\ChangePassword\"/>
-        <Folder Include="Requests\Commands\Owner\ForgotPassword\"/>
-        <Folder Include="Requests\Commands\Owner\RestorePassword\"/>
-        <Folder Include="Requests\Commands\ReportCommands\MarkAsResolved\"/>
+        <Folder Include="Domain\Admin\Commands\"/>
+        <Folder Include="Domain\Owner\Commands\ChangePassword\"/>
+        <Folder Include="Domain\Owner\Commands\ForgotPassword\"/>
+        <Folder Include="Domain\Owner\Commands\RestorePassword\"/>
+        <Folder Include="Domain\Report\Commands\MarkAsResolved\"/>
+        <Folder Include="Domain\Tag\Commands\"/>
+        <Folder Include="Domain\Tag\Queries\"/>
     </ItemGroup>
 
     <ItemGroup>

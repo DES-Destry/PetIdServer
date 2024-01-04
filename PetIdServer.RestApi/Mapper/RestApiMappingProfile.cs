@@ -1,6 +1,6 @@
 using AutoMapper;
-using PetIdServer.Application.Requests.Commands.Admin.Login;
-using PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
+using PetIdServer.Application.Domain.Admin.Commands.Login;
+using PetIdServer.Application.Domain.Tag.Commands.CreateBatch;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
 
 namespace PetIdServer.RestApi.Mapper;
