@@ -1,10 +1,10 @@
 using PetIdServer.Core.Common;
 
-namespace PetIdServer.Core.Domain.Report;
+namespace PetIdServer.Core.Domain.TagReport;
 
-public class Report : Entity<Guid>
+public class TagReport : Entity<TagReportId>
 {
-    public Report(CreationAttributes creationAttributes) : base(Guid.NewGuid())
+    public TagReport(CreationAttributes creationAttributes) : base(new TagReportId(Guid.NewGuid()))
     {
         CorruptedTag = creationAttributes.CorruptedTag;
         Reporter = creationAttributes.Reporter;
@@ -12,8 +12,8 @@ public class Report : Entity<Guid>
         IsResolved = false;
         CreatedAt = DateTime.UtcNow;
     }
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public Report(Guid id) : base(id) { }
+
+    public TagReport(TagReportId id) : base(id) { }
 
     public Tag.Tag CorruptedTag { get; set; }
 
