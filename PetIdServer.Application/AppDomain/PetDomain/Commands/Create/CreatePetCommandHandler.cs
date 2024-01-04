@@ -12,7 +12,6 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
         CancellationToken cancellationToken)
     {
         var creationAttributes = new PetEntity.CreationAttributes(
-            (PetId) Guid.NewGuid(),
             request.Type,
             request.Name,
             request.Sex,

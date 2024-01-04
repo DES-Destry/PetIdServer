@@ -33,9 +33,8 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
 
         var tags = ids.Select((id, index) =>
         {
-            var controlCode = Random.Shared.NextInt64();
             var creationAttributes =
-                new TagEntity.CreationAttributes((TagId) id, codes[index], controlCode);
+                new TagEntity.CreationAttributes((TagId) id, codes[index]);
             return new TagEntity(creationAttributes);
         });
 

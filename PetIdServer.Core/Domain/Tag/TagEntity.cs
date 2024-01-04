@@ -9,7 +9,8 @@ public class TagEntity : Entity<TagId>
     public TagEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
     {
         Code = creationAttributes.Code;
-        ControlCode = creationAttributes.ControlCode;
+
+        ControlCode = Random.Shared.NextInt64();
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -39,5 +40,5 @@ public class TagEntity : Entity<TagId>
         Pet = pet;
     }
 
-    public record CreationAttributes(TagId Id, string Code, long ControlCode);
+    public record CreationAttributes(TagId Id, string Code);
 }

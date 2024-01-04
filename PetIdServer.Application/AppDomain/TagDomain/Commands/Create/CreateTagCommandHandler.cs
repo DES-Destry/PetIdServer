@@ -14,10 +14,8 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
     {
         await CheckDuplicates(request);
 
-        var controlCode = Random.Shared.NextInt64();
-
         var creationAttributes =
-            new TagEntity.CreationAttributes((TagId) request.Id, request.Code, controlCode);
+            new TagEntity.CreationAttributes((TagId) request.Id, request.Code);
         var tag = new TagEntity(creationAttributes);
 
         await tagRepository.CreateTag(tag);

@@ -5,7 +5,7 @@ namespace PetIdServer.Core.Domain.Pet;
 
 public class PetEntity : Entity<PetId>
 {
-    public PetEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
+    public PetEntity(CreationAttributes creationAttributes) : base((PetId) Guid.NewGuid())
     {
         Type = creationAttributes.Type;
         Name = creationAttributes.Name;
@@ -25,7 +25,6 @@ public class PetEntity : Entity<PetId>
     public string? Description { get; set; }
 
     public record CreationAttributes(
-        PetId Id,
         string Type,
         string Name,
         bool Sex,
