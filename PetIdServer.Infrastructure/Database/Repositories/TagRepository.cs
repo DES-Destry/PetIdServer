@@ -34,7 +34,7 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
     public async Task<TagEntity?> GetTagById(TagId id)
     {
         var model = await database.Tags.AsNoTracking()
-            .FirstOrDefaultAsync(tag => tag.Id == id.Value);
+            .FirstOrDefaultAsync(tag => tag.Id == id);
         return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
     }
 
@@ -71,11 +71,11 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
 
     public async Task AttachPet(TagId id, PetEntity pet)
     {
-        var model = await database.Tags.FirstOrDefaultAsync(tag => tag.Id == id.Value);
+        var model = await database.Tags.FirstOrDefaultAsync(tag => tag.Id == id);
         if (model is null) return;
 
         var petModel =
-            await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id.Value);
+            await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id);
         if (petModel is null) return;
 
         model.Pet = petModel;

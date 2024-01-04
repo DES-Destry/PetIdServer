@@ -10,7 +10,7 @@ public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepo
 {
     public async Task<AdminEntity?> GetAdminById(AdminId id)
     {
-        var model = await database.Admins.FirstOrDefaultAsync(admin => admin.Username == id.Value);
+        var model = await database.Admins.FirstOrDefaultAsync(admin => admin.Username == id);
         return model is null ? null : mapper.Map<AdminModel, AdminEntity>(model);
     }
 
@@ -34,7 +34,7 @@ public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepo
         var incomingData = mapper.Map<AdminEntity, AdminModel>(admin);
         var model =
             await database.Admins.FirstOrDefaultAsync(adminModel =>
-                adminModel.Username == id.Value);
+                adminModel.Username == id);
 
         if (model is null) return;
 

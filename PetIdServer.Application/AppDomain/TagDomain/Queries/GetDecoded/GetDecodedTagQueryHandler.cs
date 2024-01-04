@@ -13,7 +13,7 @@ public class GetDecodedTagQueryHandler(ITagRepository tagRepository, ICodeDecode
         GetDecodedTagQuery request,
         CancellationToken cancellationToken)
     {
-        var tag = await tagRepository.GetTagById(new TagId(request.Id)) ??
+        var tag = await tagRepository.GetTagById((TagId) request.Id) ??
                   throw new TagNotFoundException(
                       $"Tag with Id {request.Id} not found", new
                       {

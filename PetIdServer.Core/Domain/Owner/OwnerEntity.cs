@@ -6,7 +6,7 @@ namespace PetIdServer.Core.Domain.Owner;
 public class OwnerEntity : Entity<OwnerId>
 {
     public OwnerEntity(CreationAttributes creationAttributes) : base(
-        new OwnerId(creationAttributes.Email))
+        (OwnerId) creationAttributes.Email)
     {
         Password = creationAttributes.Password;
         Name = creationAttributes.Name;
@@ -14,7 +14,7 @@ public class OwnerEntity : Entity<OwnerId>
 
     public OwnerEntity(OwnerId id) : base(id) { }
 
-    public string Email => Id.Value;
+    public string Email => Id;
 
     /// <summary>
     ///     Storing only as a hash

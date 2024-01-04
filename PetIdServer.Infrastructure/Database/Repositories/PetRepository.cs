@@ -11,7 +11,7 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
     public async Task<PetEntity?> GetPetById(PetId id)
     {
         var model = await database.Pets.AsNoTracking()
-            .FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
+            .FirstOrDefaultAsync(petModel => petModel.Id == id);
         return model is null ? null : mapper.Map<PetModel, PetEntity>(model);
     }
 
@@ -26,7 +26,7 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
     public async Task UpdatePet(PetId id, PetEntity pet)
     {
         var incomingData = mapper.Map<PetEntity, PetModel>(pet);
-        var model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
+        var model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id);
 
         if (model is null) return;
 

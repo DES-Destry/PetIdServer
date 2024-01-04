@@ -5,7 +5,7 @@ namespace PetIdServer.Core.Domain.Admin;
 public class AdminEntity : Entity<AdminId>
 {
     public AdminEntity(CreationAttributes creationAttributes) : base(
-        new AdminId(creationAttributes.Username))
+        (AdminId) creationAttributes.Username)
     {
         Password = creationAttributes.Password;
 
@@ -15,7 +15,7 @@ public class AdminEntity : Entity<AdminId>
 
     public AdminEntity(AdminId id) : base(id) { }
 
-    public string Username => Id.Value;
+    public string Username => Id;
 
     /// <summary>
     ///     Storing only as a hash or empty value
