@@ -3,14 +3,14 @@ using PetIdServer.Application.Dto;
 using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Exceptions.Owner;
+using PetIdServer.Core.Domains.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.Registration;
 
 public class RegistrationOwnerCommandHandler(
-        IOwnerTokenService ownerTokenService, 
-        IPasswordService passwordService,
-        IOwnerRepository ownerRepository)
+    IOwnerTokenService ownerTokenService,
+    IPasswordService passwordService,
+    IOwnerRepository ownerRepository)
     : IRequestHandler<RegistrationOwnerCommand, TokenPairDto>
 {
     public async Task<TokenPairDto> Handle(RegistrationOwnerCommand request, CancellationToken cancellationToken)
@@ -24,8 +24,8 @@ public class RegistrationOwnerCommandHandler(
         var passwordHash = await passwordService.HashPassword(request.Password);
 
         var creationAttributes =
-            new Core.Entities.Owner.CreationAttributes(request.Email, passwordHash, request.Name);
-        var owner = new Core.Entities.Owner(creationAttributes);
+            new Core.Domains.Owner.Owner.CreationAttributes(request.Email, passwordHash, request.Name);
+        var owner = new Core.Domains.Owner.Owner(creationAttributes);
 
         var createdOwner = await ownerRepository.CreateOwner(owner) ?? throw new SomethingWentWrongException(new
             {Reason = "Owner created successfully in core, but not saved in infrastructure", Email = owner.Id});

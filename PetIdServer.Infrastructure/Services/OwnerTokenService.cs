@@ -2,27 +2,27 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Services;
 using PetIdServer.Application.Services.Dto;
-using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Core.Common.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
 public class OwnerTokenService : IOwnerTokenService
 {
-    private readonly TokenValidationParameters _tokenValidation;
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly OwnerTokenParameters _parameters;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly TokenValidationParameters _tokenValidation;
 
     public OwnerTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
         _parameters = new OwnerTokenParameters(configuration);
-        
+
         _tokenValidation = new TokenValidationParameters
         {
             ValidAudience = _parameters.Audience,
@@ -71,13 +71,13 @@ public class OwnerTokenService : IOwnerTokenService
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.AtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -88,7 +88,7 @@ public class OwnerTokenService : IOwnerTokenService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Hash, accessToken),
+            new(ClaimTypes.Hash, accessToken)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
 
@@ -98,7 +98,7 @@ public class OwnerTokenService : IOwnerTokenService
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.RtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);

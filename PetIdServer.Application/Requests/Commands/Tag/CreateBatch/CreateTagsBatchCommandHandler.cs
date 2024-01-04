@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Entities.Id;
-using PetIdServer.Core.Exceptions.Common;
-using PetIdServer.Core.Exceptions.Tag;
+using PetIdServer.Core.Common.Exceptions.Common;
+using PetIdServer.Core.Domains.Tag;
+using PetIdServer.Core.Domains.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
 
@@ -34,9 +34,9 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
         {
             var controlCode = Random.Shared.NextInt64();
             var creationAttributes =
-                new Core.Entities.Tag.CreationAttributes(new TagId(id), codes[index], controlCode);
+                new Core.Domains.Tag.Tag.CreationAttributes(new TagId(id), codes[index], controlCode);
 
-            return new Core.Entities.Tag(creationAttributes);
+            return new Core.Domains.Tag.Tag(creationAttributes);
         });
 
         await tagRepository.CreateTagsBatch(tags);

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
-using PetIdServer.Core.Exceptions;
+using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.RestApi.Response.Error;
 
@@ -35,7 +35,7 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
         const string stackTrace = "Hidden";
 #endif
 
-        var problemDetails = new ServerProblemDetails()
+        var problemDetails = new ServerProblemDetails
         {
             Status = statusCode,
             Title = title,
@@ -44,7 +44,7 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
             Instance = instance,
             Code = code,
             StackTrace = stackTrace,
-            Metadata = (_exception as CoreException)?.Metadata,
+            Metadata = (_exception as CoreException)?.Metadata
         };
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
@@ -61,10 +61,7 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
         string? detail = null,
         string? instance = null)
     {
-        if (modelStateDictionary == null)
-        {
-            throw new ArgumentNullException(nameof(modelStateDictionary));
-        }
+        if (modelStateDictionary == null) throw new ArgumentNullException(nameof(modelStateDictionary));
 
         statusCode ??= ServerProblemDetailsDefaults.DefaultValidationErrorStatusCode;
 
@@ -73,14 +70,12 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
             Status = statusCode,
             Type = type,
             Detail = detail,
-            Instance = instance,
+            Instance = instance
         };
 
         if (title != null)
-        {
             // For validation problem details, don't overwrite the default title with null.
             problemDetails.Title = title;
-        }
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
 
@@ -98,10 +93,7 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
         }
 
         var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
-        if (traceId != null)
-        {
-            problemDetails.Extensions["traceId"] = traceId;
-        }
+        if (traceId != null) problemDetails.Extensions["traceId"] = traceId;
     }
 
     private string GetCodeFromException()

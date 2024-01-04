@@ -1,7 +1,8 @@
 using AutoMapper;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
-using PetIdServer.Core.ValueObjects;
+using PetIdServer.Core.Domains.Admin;
+using PetIdServer.Core.Domains.Owner;
+using PetIdServer.Core.Domains.Pet;
+using PetIdServer.Core.Domains.Tag;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Mapper;

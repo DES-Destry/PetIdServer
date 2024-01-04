@@ -1,12 +1,12 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Exceptions.Owner;
+using PetIdServer.Core.Domains.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.RemoveContact;
 
-public class RemoveContactCommandHandler
-    (IOwnerRepository ownerRepository) : IRequestHandler<RemoveContactCommand, VoidResponseDto>
+public class RemoveContactCommandHandler(IOwnerRepository ownerRepository)
+    : IRequestHandler<RemoveContactCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(RemoveContactCommand request, CancellationToken cancellationToken)
     {

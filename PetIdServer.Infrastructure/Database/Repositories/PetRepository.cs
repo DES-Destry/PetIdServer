@@ -1,8 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Domains.Pet;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -27,9 +26,9 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
     {
         var incomingData = mapper.Map<Pet, PetModel>(pet);
         var model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
-        
+
         if (model is null) return;
-        
+
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();
     }

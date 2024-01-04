@@ -1,15 +1,14 @@
 using MediatR;
-using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Core.Common.Exceptions.Auth;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.Login;
 
 public class LoginOwnerCommandHandler(
-        IOwnerTokenService ownerTokenService,
-        IPasswordService passwordService,
-        IOwnerRepository ownerRepository)
+    IOwnerTokenService ownerTokenService,
+    IPasswordService passwordService,
+    IOwnerRepository ownerRepository)
     : IRequestHandler<LoginOwnerCommand, LoginOwnerResponseDto>
 {
     public async Task<LoginOwnerResponseDto> Handle(LoginOwnerCommand request, CancellationToken cancellationToken)
@@ -17,11 +16,11 @@ public class LoginOwnerCommandHandler(
         var ownerCandidate =
             await ownerRepository.GetOwnerByEmail(request.Email) ??
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new {request.Email, userType = nameof(Core.Entities.Owner)});
+                new {request.Email, userType = nameof(Core.Domains.Owner.Owner)});
 
         if (!await passwordService.ValidatePassword(request.Password, ownerCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new {request.Email, userType = nameof(Core.Entities.Owner)});
+                new {request.Email, userType = nameof(Core.Domains.Owner.Owner)});
 
         var tokenPair = await ownerTokenService.GenerateTokens(ownerCandidate);
         return new LoginOwnerResponseDto

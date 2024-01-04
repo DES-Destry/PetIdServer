@@ -1,8 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Domains.Owner;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -26,7 +25,7 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
         var model = mapper.Map<Owner, OwnerModel>(owner);
         var saved = await database.Owners.AddAsync(model);
         await database.SaveChangesAsync();
-        
+
         return mapper.Map<OwnerModel, Owner>(saved.Entity);
     }
 
@@ -34,7 +33,7 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
     {
         var incomingData = mapper.Map<Owner, OwnerModel>(owner);
         var model = await database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Email == id.Value);
-        
+
         if (model is null) return;
 
         database.Entry(model).CurrentValues.SetValues(incomingData);

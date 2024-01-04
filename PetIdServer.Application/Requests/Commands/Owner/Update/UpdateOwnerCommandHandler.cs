@@ -2,12 +2,12 @@ using AutoMapper;
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Exceptions.Owner;
+using PetIdServer.Core.Domains.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.Update;
 
-public class UpdateOwnerCommandHandler
-    (IMapper mapper, IOwnerRepository ownerRepository) : IRequestHandler<UpdateOwnerCommand, VoidResponseDto>
+public class UpdateOwnerCommandHandler(IMapper mapper, IOwnerRepository ownerRepository)
+    : IRequestHandler<UpdateOwnerCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
@@ -15,7 +15,7 @@ public class UpdateOwnerCommandHandler
         var owner = await ownerRepository.GetOwnerByEmail(request.Id) ??
                     throw new OwnerNotFoundException($"Owner with email {request.Id} not found",
                         new {Email = request.Id});
-        var updatedOwner = mapper.Map<UpdateOwnerCommand, Core.Entities.Owner>(request);
+        var updatedOwner = mapper.Map<UpdateOwnerCommand, Core.Domains.Owner.Owner>(request);
 
         await ownerRepository.UpdateOwner(owner.Id, updatedOwner);
 

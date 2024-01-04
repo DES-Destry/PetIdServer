@@ -2,15 +2,15 @@ using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Exceptions.Admin;
-using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Core.Common.Exceptions.Auth;
+using PetIdServer.Core.Domains.Admin.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 
 public class ChangePasswordCommandHandler(
-        IAdminRepository adminRepository,
-        IAdminTokenService adminTokenService,
-        IPasswordService passwordService)
+    IAdminRepository adminRepository,
+    IAdminTokenService adminTokenService,
+    IPasswordService passwordService)
     : IRequestHandler<ChangePasswordCommand, SingleTokenDto>
 {
     public async Task<SingleTokenDto> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
@@ -22,9 +22,9 @@ public class ChangePasswordCommandHandler(
                 new {AdminId = request.Id, UseCase = nameof(ChangePasswordCommandHandler)});
 
         if (adminCandidate.Password != null &&
-            !(await passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password)))
+            !await passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}",
-                new {Username = request.Id, userType = nameof(Core.Entities.Admin)});
+                new {Username = request.Id, userType = nameof(Core.Domains.Admin.Admin)});
 
         var newHashedPassword = await passwordService.HashPassword(request.NewPassword);
         adminCandidate.Password = newHashedPassword;

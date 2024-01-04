@@ -2,7 +2,7 @@ using MediatR;
 using PetIdServer.Application.Dto.Pet;
 using PetIdServer.Application.Dto.Tag;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Exceptions.Tag;
+using PetIdServer.Core.Domains.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Queries.Tag.ControlCheck;
 

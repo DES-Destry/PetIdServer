@@ -1,18 +1,9 @@
-using PetIdServer.Core.Exceptions;
+using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.Application.Exceptions.Common;
 
 public abstract class ApplicationException<TConcreteExceptionType> : ScopedException
 {
-    private string ApplicationMessage { get; set; }
-
-    protected override string DefaultScope => ApplicationExceptionCode.Scope;
-
-    public abstract CoreExceptionKind? Kind { get; }
-
-    public override string Message => ApplicationMessage;
-    public object Metadata { get; set; }
-
     protected ApplicationException()
     {
     }
@@ -30,6 +21,15 @@ public abstract class ApplicationException<TConcreteExceptionType> : ScopedExcep
     {
         Metadata = metadata;
     }
+
+    private string ApplicationMessage { get; set; }
+
+    protected override string DefaultScope => ApplicationExceptionCode.Scope;
+
+    public abstract CoreExceptionKind? Kind { get; }
+
+    public override string Message => ApplicationMessage;
+    public object Metadata { get; set; }
 
     protected ApplicationException<TConcreteExceptionType> WithMessageBase(string message)
     {

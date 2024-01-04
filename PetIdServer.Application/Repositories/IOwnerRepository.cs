@@ -1,5 +1,4 @@
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Domains.Owner;
 
 namespace PetIdServer.Application.Repositories;
 

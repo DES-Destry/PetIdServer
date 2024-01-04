@@ -1,8 +1,8 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Domains.Pet;
+using PetIdServer.Core.Domains.Tag;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -45,7 +45,11 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
 
     public async Task<Tag?> GetByControlCode(long controlCode)
     {
-        var model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
+        var model = await database.Tags
+            .Include(tag => tag.Pet)
+            .ThenInclude(pet => pet!.Owner)
+            .FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
+
         return model is null ? null : mapper.Map<TagModel, Tag>(model);
     }
 

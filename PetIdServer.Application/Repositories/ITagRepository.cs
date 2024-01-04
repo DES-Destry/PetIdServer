@@ -1,5 +1,5 @@
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Entities.Id;
+using PetIdServer.Core.Domains.Pet;
+using PetIdServer.Core.Domains.Tag;
 
 namespace PetIdServer.Application.Repositories;
 
@@ -11,7 +11,7 @@ public interface ITagRepository
     Task<Tag?> GetTagById(TagId id);
     Task<Tag?> GetByCode(string code);
     Task<Tag?> GetByControlCode(long controlCode);
-        
+
     Task<Tag?> CreateTag(Tag tag);
     Task CreateTagsBatch(IEnumerable<Tag> tags);
     Task AttachPet(TagId id, Pet pet);

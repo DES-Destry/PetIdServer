@@ -1,14 +1,13 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Entities.Id;
-using PetIdServer.Core.Exceptions.Owner;
-using PetIdServer.Core.ValueObjects;
+using PetIdServer.Core.Domains.Owner;
+using PetIdServer.Core.Domains.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.AddContact;
 
-public class AddContactCommandHandler
-    (IOwnerRepository ownerRepository) : IRequestHandler<AddContactCommand, VoidResponseDto>
+public class AddContactCommandHandler(IOwnerRepository ownerRepository)
+    : IRequestHandler<AddContactCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(AddContactCommand request, CancellationToken cancellationToken)
     {
@@ -19,7 +18,7 @@ public class AddContactCommandHandler
         var contact = new OwnerContact
         {
             Contact = request.Contact,
-            ContactType = request.ContactType,
+            ContactType = request.ContactType
         };
 
         owner.Contacts.Add(contact);

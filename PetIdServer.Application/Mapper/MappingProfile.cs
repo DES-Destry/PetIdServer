@@ -2,7 +2,9 @@ using AutoMapper;
 using PetIdServer.Application.Dto.Tag;
 using PetIdServer.Application.Requests.Commands.Owner.Update;
 using PetIdServer.Application.Requests.Commands.Pet.Update;
-using PetIdServer.Core.Entities;
+using PetIdServer.Core.Domains.Owner;
+using PetIdServer.Core.Domains.Pet;
+using PetIdServer.Core.Domains.Tag;
 
 namespace PetIdServer.Application.Mapper;
 

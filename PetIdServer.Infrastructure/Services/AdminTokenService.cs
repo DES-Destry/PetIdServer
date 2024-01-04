@@ -6,17 +6,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Services;
 using PetIdServer.Application.Services.Dto;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Core.Common.Exceptions.Auth;
+using PetIdServer.Core.Domains.Admin;
 using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
 public class AdminTokenService : IAdminTokenService
 {
-    private readonly TokenValidationParameters _tokenValidation;
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly AdminTokenParameters _parameters;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly TokenValidationParameters _tokenValidation;
 
     public AdminTokenService(IConfiguration configuration)
     {
@@ -46,13 +46,13 @@ public class AdminTokenService : IAdminTokenService
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret));
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.JwtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);

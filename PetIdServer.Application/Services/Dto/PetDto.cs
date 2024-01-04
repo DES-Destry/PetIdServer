@@ -1,4 +1,4 @@
-using PetIdServer.Core.Entities;
+using PetIdServer.Core.Domains.Pet;
 
 namespace PetIdServer.Application.Services.Dto;
 
