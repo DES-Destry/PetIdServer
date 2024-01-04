@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common.Exceptions;
 
-namespace PetIdServer.Core.Domains.Admin.Exceptions;
+namespace PetIdServer.Core.Domain.Admin.Exceptions;
 
 public class AdminNotFoundException : CoreException
 {

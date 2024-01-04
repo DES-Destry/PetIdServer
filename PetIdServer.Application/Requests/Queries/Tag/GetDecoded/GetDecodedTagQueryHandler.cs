@@ -2,8 +2,8 @@ using MediatR;
 using PetIdServer.Application.Dto.Tag;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Domains.Tag;
-using PetIdServer.Core.Domains.Tag.Exceptions;
+using PetIdServer.Core.Domain.Tag;
+using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Queries.Tag.GetDecoded;
 

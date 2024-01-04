@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common;
 
-namespace PetIdServer.Core.Domains.Admin;
+namespace PetIdServer.Core.Domain.Admin;
 
 public class Admin : Entity<AdminId>
 {

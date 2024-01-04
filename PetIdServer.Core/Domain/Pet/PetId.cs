@@ -1,4 +1,4 @@
-namespace PetIdServer.Core.Domains.Pet;
+namespace PetIdServer.Core.Domain.Pet;
 
 public record PetId(Guid Value)
 {

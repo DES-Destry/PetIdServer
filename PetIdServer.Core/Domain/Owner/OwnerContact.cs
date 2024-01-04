@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common;
 
-namespace PetIdServer.Core.Domains.Owner;
+namespace PetIdServer.Core.Domain.Owner;
 
 public class OwnerContact : ValueObject
 {

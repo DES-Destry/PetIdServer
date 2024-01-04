@@ -1,7 +1,7 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Domains.Owner.Exceptions;
+using PetIdServer.Core.Domain.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.RemoveContact;
 

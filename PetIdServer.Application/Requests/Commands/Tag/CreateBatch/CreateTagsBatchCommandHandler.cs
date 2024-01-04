@@ -3,8 +3,8 @@ using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Core.Common.Exceptions.Common;
-using PetIdServer.Core.Domains.Tag;
-using PetIdServer.Core.Domains.Tag.Exceptions;
+using PetIdServer.Core.Domain.Tag;
+using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Tag.CreateBatch;
 
@@ -36,10 +36,10 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
         {
             var controlCode = Random.Shared.NextInt64();
             var creationAttributes =
-                new Core.Domains.Tag.Tag.CreationAttributes(new TagId(id), codes[index],
+                new Core.Domain.Tag.Tag.CreationAttributes(new TagId(id), codes[index],
                     controlCode);
 
-            return new Core.Domains.Tag.Tag(creationAttributes);
+            return new Core.Domain.Tag.Tag(creationAttributes);
         });
 
         await tagRepository.CreateTagsBatch(tags);

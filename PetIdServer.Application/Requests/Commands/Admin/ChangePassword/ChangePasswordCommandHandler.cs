@@ -3,7 +3,7 @@ using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
 using PetIdServer.Core.Common.Exceptions.Auth;
-using PetIdServer.Core.Domains.Admin.Exceptions;
+using PetIdServer.Core.Domain.Admin.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Admin.ChangePassword;
 
@@ -26,7 +26,7 @@ public class ChangePasswordCommandHandler(
         if (adminCandidate.Password != null &&
             !await passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}",
-                new {Username = request.Id, userType = nameof(Core.Domains.Admin.Admin)});
+                new {Username = request.Id, userType = nameof(Core.Domain.Admin.Admin)});
 
         var newHashedPassword = await passwordService.HashPassword(request.NewPassword);
         adminCandidate.Password = newHashedPassword;

@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common.Exceptions;
 
-namespace PetIdServer.Core.Domains.Owner.Exceptions;
+namespace PetIdServer.Core.Domain.Owner.Exceptions;
 
 public class OwnerNotFoundException : CoreException
 {

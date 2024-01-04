@@ -3,7 +3,7 @@ using PetIdServer.Application.Dto;
 using PetIdServer.Application.Exceptions;
 using PetIdServer.Application.Repositories;
 using PetIdServer.Application.Services;
-using PetIdServer.Core.Domains.Owner.Exceptions;
+using PetIdServer.Core.Domain.Owner.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Owner.Registration;
 
@@ -27,9 +27,9 @@ public class RegistrationOwnerCommandHandler(
         var passwordHash = await passwordService.HashPassword(request.Password);
 
         var creationAttributes =
-            new Core.Domains.Owner.Owner.CreationAttributes(request.Email, passwordHash,
+            new Core.Domain.Owner.Owner.CreationAttributes(request.Email, passwordHash,
                 request.Name);
-        var owner = new Core.Domains.Owner.Owner(creationAttributes);
+        var owner = new Core.Domain.Owner.Owner(creationAttributes);
 
         var createdOwner = await ownerRepository.CreateOwner(owner) ??
                            throw new SomethingWentWrongException(new

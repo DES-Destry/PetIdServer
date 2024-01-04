@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common;
 
-namespace PetIdServer.Core.Domains.Report;
+namespace PetIdServer.Core.Domain.Report;
 
 public class Report : Entity<Guid>
 {

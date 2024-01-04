@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common;
 
-namespace PetIdServer.Core.Domains.Pet;
+namespace PetIdServer.Core.Domain.Pet;
 
 public class Pet : Entity<PetId>
 {

@@ -1,4 +1,4 @@
-namespace PetIdServer.Core.Domains.Owner;
+namespace PetIdServer.Core.Domain.Owner;
 
 /// <summary>
 ///     Owner Id

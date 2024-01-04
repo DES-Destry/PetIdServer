@@ -1,4 +1,4 @@
-using PetIdServer.Core.Domains.Admin;
+using PetIdServer.Core.Domain.Admin;
 
 namespace PetIdServer.Application.Repositories;
 

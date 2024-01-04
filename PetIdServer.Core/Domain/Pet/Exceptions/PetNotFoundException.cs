@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common.Exceptions;
 
-namespace PetIdServer.Core.Domains.Pet.Exceptions;
+namespace PetIdServer.Core.Domain.Pet.Exceptions;
 
 public class PetNotFoundException : CoreException
 {

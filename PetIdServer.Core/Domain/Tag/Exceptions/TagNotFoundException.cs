@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common.Exceptions;
 
-namespace PetIdServer.Core.Domains.Tag.Exceptions;
+namespace PetIdServer.Core.Domain.Tag.Exceptions;
 
 public class TagNotFoundException : CoreException
 {

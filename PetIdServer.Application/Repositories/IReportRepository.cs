@@ -1,5 +1,5 @@
-using PetIdServer.Core.Domains.Report;
-using PetIdServer.Core.Domains.Tag;
+using PetIdServer.Core.Domain.Report;
+using PetIdServer.Core.Domain.Tag;
 
 namespace PetIdServer.Application.Repositories;
 

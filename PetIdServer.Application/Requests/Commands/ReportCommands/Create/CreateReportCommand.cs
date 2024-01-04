@@ -1,7 +1,7 @@
 using MediatR;
 using PetIdServer.Application.Dto;
-using PetIdServer.Core.Domains.Admin;
-using PetIdServer.Core.Domains.Tag;
+using PetIdServer.Core.Domain.Admin;
+using PetIdServer.Core.Domain.Tag;
 
 namespace PetIdServer.Application.Requests.Commands.ReportCommands.Create;
 

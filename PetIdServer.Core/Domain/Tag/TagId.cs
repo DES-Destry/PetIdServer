@@ -1,4 +1,4 @@
-namespace PetIdServer.Core.Domains.Tag;
+namespace PetIdServer.Core.Domain.Tag;
 
 public record TagId(int Value)
 {

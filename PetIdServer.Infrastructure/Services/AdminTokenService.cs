@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Services;
 using PetIdServer.Application.Services.Dto;
 using PetIdServer.Core.Common.Exceptions.Auth;
-using PetIdServer.Core.Domains.Admin;
+using PetIdServer.Core.Domain.Admin;
 using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;

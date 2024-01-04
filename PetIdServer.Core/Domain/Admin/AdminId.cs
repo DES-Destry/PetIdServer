@@ -1,4 +1,4 @@
-namespace PetIdServer.Core.Domains.Admin;
+namespace PetIdServer.Core.Domain.Admin;
 
 /// <summary>
 ///     Admin Id

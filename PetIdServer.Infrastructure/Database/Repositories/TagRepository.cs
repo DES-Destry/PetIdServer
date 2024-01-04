@@ -1,8 +1,8 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Domains.Pet;
-using PetIdServer.Core.Domains.Tag;
+using PetIdServer.Core.Domain.Pet;
+using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;

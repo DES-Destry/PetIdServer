@@ -1,5 +1,5 @@
 using PetIdServer.Application.Services.Dto;
-using PetIdServer.Core.Domains.Admin;
+using PetIdServer.Core.Domain.Admin;
 
 namespace PetIdServer.Application.Services;
 

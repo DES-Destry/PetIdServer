@@ -1,8 +1,8 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Domains.Tag;
-using PetIdServer.Core.Domains.Tag.Exceptions;
+using PetIdServer.Core.Domain.Tag;
+using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.Tag.Create;
 
@@ -18,9 +18,9 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
         var controlCode = Random.Shared.NextInt64();
 
         var creationAttributes =
-            new Core.Domains.Tag.Tag.CreationAttributes(new TagId(request.Id), request.Code,
+            new Core.Domain.Tag.Tag.CreationAttributes(new TagId(request.Id), request.Code,
                 controlCode);
-        var tag = new Core.Domains.Tag.Tag(creationAttributes);
+        var tag = new Core.Domain.Tag.Tag(creationAttributes);
 
         await tagRepository.CreateTag(tag);
 

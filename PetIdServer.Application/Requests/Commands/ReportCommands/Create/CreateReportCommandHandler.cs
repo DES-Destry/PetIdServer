@@ -1,9 +1,9 @@
 using MediatR;
 using PetIdServer.Application.Dto;
 using PetIdServer.Application.Repositories;
-using PetIdServer.Core.Domains.Admin.Exceptions;
-using PetIdServer.Core.Domains.Report;
-using PetIdServer.Core.Domains.Tag.Exceptions;
+using PetIdServer.Core.Domain.Admin.Exceptions;
+using PetIdServer.Core.Domain.Report;
+using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.Requests.Commands.ReportCommands.Create;
 

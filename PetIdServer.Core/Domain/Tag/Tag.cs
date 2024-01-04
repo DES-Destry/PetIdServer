@@ -1,7 +1,7 @@
 using PetIdServer.Core.Common;
-using PetIdServer.Core.Domains.Tag.Exceptions;
+using PetIdServer.Core.Domain.Tag.Exceptions;
 
-namespace PetIdServer.Core.Domains.Tag;
+namespace PetIdServer.Core.Domain.Tag;
 
 public class Tag : Entity<TagId>
 {
