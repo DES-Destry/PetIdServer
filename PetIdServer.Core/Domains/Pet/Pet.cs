@@ -13,9 +13,7 @@ public class Pet : Entity<PetId>
     }
 
     // Mapper require this constructor
-    public Pet(PetId id) : base(id)
-    {
-    }
+    public Pet(PetId id) : base(id) { }
 
     public Owner.Owner Owner { get; set; }
     public string Type { get; set; }

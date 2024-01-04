@@ -33,7 +33,8 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
 
     public async Task<Tag?> GetTagById(TagId id)
     {
-        var model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.Id == id.Value);
+        var model = await database.Tags.AsNoTracking()
+            .FirstOrDefaultAsync(tag => tag.Id == id.Value);
         return model is null ? null : mapper.Map<TagModel, Tag>(model);
     }
 
@@ -73,7 +74,8 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         var model = await database.Tags.FirstOrDefaultAsync(tag => tag.Id == id.Value);
         if (model is null) return;
 
-        var petModel = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id.Value);
+        var petModel =
+            await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id.Value);
         if (petModel is null) return;
 
         model.Pet = petModel;

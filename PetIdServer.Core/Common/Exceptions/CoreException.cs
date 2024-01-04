@@ -2,18 +2,11 @@ namespace PetIdServer.Core.Common.Exceptions;
 
 public abstract class CoreException : ScopedException
 {
-    protected CoreException()
-    {
-    }
+    protected CoreException() { }
 
-    protected CoreException(string message) : base(message)
-    {
-    }
+    protected CoreException(string message) : base(message) { }
 
-    protected CoreException(object metadata)
-    {
-        Metadata = metadata;
-    }
+    protected CoreException(object metadata) { Metadata = metadata; }
 
     protected CoreException(string message, object metadata) : base(message)
     {

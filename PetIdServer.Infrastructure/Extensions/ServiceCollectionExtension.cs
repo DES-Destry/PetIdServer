@@ -15,7 +15,8 @@ namespace PetIdServer.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
@@ -24,7 +25,7 @@ public static class ServiceCollectionExtension
                                {
                                    configuration,
                                    value = "ConnectionStrings:Postgres",
-                                   @class = "Infrastructure.Extensions",
+                                   @class = "Infrastructure.Extensions"
                                });
 
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));

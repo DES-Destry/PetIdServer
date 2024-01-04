@@ -8,9 +8,12 @@ using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.RestApi.Response.Error;
 
-public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) : ProblemDetailsFactory
+public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
+    : ProblemDetailsFactory
 {
-    private readonly ApiBehaviorOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly ApiBehaviorOptions _options =
+        options?.Value ?? throw new ArgumentNullException(nameof(options));
+
     private Exception? _exception;
 
     public override ServerProblemDetails CreateProblemDetails(
@@ -61,7 +64,8 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
         string? detail = null,
         string? instance = null)
     {
-        if (modelStateDictionary == null) throw new ArgumentNullException(nameof(modelStateDictionary));
+        if (modelStateDictionary == null)
+            throw new ArgumentNullException(nameof(modelStateDictionary));
 
         statusCode ??= ServerProblemDetailsDefaults.DefaultValidationErrorStatusCode;
 
@@ -82,7 +86,10 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options) :
         return problemDetails;
     }
 
-    private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode)
+    private void ApplyProblemDetailsDefaults(
+        HttpContext httpContext,
+        ProblemDetails problemDetails,
+        int statusCode)
     {
         problemDetails.Status ??= statusCode;
 

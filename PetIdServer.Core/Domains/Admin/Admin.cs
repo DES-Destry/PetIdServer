@@ -4,7 +4,8 @@ namespace PetIdServer.Core.Domains.Admin;
 
 public class Admin : Entity<AdminId>
 {
-    public Admin(CreationAttributes creationAttributes) : base(new AdminId(creationAttributes.Username))
+    public Admin(CreationAttributes creationAttributes) : base(
+        new AdminId(creationAttributes.Username))
     {
         Password = creationAttributes.Password;
 
@@ -12,9 +13,7 @@ public class Admin : Entity<AdminId>
         PasswordLastChangedAt = DateTime.UtcNow;
     }
 
-    public Admin(AdminId id) : base(id)
-    {
-    }
+    public Admin(AdminId id) : base(id) { }
 
     public string Username => Id.Value;
 

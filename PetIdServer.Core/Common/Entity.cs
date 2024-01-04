@@ -2,8 +2,6 @@ namespace PetIdServer.Core.Common;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
 {
-    private readonly TId _id;
-
     protected Entity(TId id)
     {
         ArgumentNullException.ThrowIfNull(id);
@@ -11,10 +9,10 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         if (Equals(id, default(TId)))
             throw new ArgumentException("The ID cannot be the default value.", nameof(id));
 
-        _id = id;
+        Id = id;
     }
 
-    public TId Id => _id;
+    public TId Id { get; }
 
     public bool Equals(Entity<TId>? other)
     {
@@ -26,10 +24,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override bool Equals(object? obj)
     {
-        if (obj is Entity<TId> entity)
-        {
-            return Equals(entity);
-        }
+        if (obj is Entity<TId> entity) return Equals(entity);
 
         return base.Equals(obj);
     }

@@ -9,11 +9,14 @@ namespace PetIdServer.Application.Requests.Commands.Owner.AddContact;
 public class AddContactCommandHandler(IOwnerRepository ownerRepository)
     : IRequestHandler<AddContactCommand, VoidResponseDto>
 {
-    public async Task<VoidResponseDto> Handle(AddContactCommand request, CancellationToken cancellationToken)
+    public async Task<VoidResponseDto> Handle(
+        AddContactCommand request,
+        CancellationToken cancellationToken)
     {
         var owner = await ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
-                    throw new OwnerNotFoundException($"Owner with id(email) {request.OwnerId} not found",
-                        new { Id = request.OwnerId });
+                    throw new OwnerNotFoundException(
+                        $"Owner with id(email) {request.OwnerId} not found",
+                        new {Id = request.OwnerId});
 
         var contact = new OwnerContact
         {

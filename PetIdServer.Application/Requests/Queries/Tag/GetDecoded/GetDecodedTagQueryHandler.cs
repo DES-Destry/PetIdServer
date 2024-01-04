@@ -10,14 +10,17 @@ namespace PetIdServer.Application.Requests.Queries.Tag.GetDecoded;
 public class GetDecodedTagQueryHandler(ITagRepository tagRepository, ICodeDecoder codeDecoder)
     : IRequestHandler<GetDecodedTagQuery, TagForAdminDto>
 {
-    public async Task<TagForAdminDto> Handle(GetDecodedTagQuery request, CancellationToken cancellationToken)
+    public async Task<TagForAdminDto> Handle(
+        GetDecodedTagQuery request,
+        CancellationToken cancellationToken)
     {
-        var tag = await tagRepository.GetTagById(new TagId(request.Id)) ?? throw new TagNotFoundException(
-            $"Tag with Id {request.Id} not found", new
-            {
-                query = nameof(GetDecodedTagQuery),
-                tagId = request.Id
-            });
+        var tag = await tagRepository.GetTagById(new TagId(request.Id)) ??
+                  throw new TagNotFoundException(
+                      $"Tag with Id {request.Id} not found", new
+                      {
+                          query = nameof(GetDecodedTagQuery),
+                          tagId = request.Id
+                      });
 
         var publicCode = await codeDecoder.GetPublicCodeOriginal(tag.Code);
 

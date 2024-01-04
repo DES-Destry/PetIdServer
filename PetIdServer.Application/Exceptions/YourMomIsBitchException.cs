@@ -11,17 +11,11 @@ public class YourMomIsBitchException : ApplicationException<YourMomIsBitchExcept
 {
     public const string DefaultMessage = "Mom?";
 
-    public YourMomIsBitchException(string message = DefaultMessage) : base(message)
-    {
-    }
+    public YourMomIsBitchException(string message = DefaultMessage) : base(message) { }
 
-    public YourMomIsBitchException(object metadata) : base(metadata)
-    {
-    }
+    public YourMomIsBitchException(object metadata) : base(metadata) { }
 
-    public YourMomIsBitchException(string message, object metadata) : base(message, metadata)
-    {
-    }
+    public YourMomIsBitchException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = ApplicationExceptionCode.MomIsBitch;
     public override CoreExceptionKind? Kind => CoreExceptionKind.UserAuthorizationRequired;

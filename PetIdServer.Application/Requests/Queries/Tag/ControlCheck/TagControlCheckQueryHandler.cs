@@ -9,7 +9,9 @@ namespace PetIdServer.Application.Requests.Queries.Tag.ControlCheck;
 public class TagControlCheckQueryHandler(ITagRepository tagRepository)
     : IRequestHandler<TagControlCheckQuery, CheckTagDto>
 {
-    public async Task<CheckTagDto> Handle(TagControlCheckQuery request, CancellationToken cancellationToken)
+    public async Task<CheckTagDto> Handle(
+        TagControlCheckQuery request,
+        CancellationToken cancellationToken)
     {
         var tag = await tagRepository.GetByControlCode(request.ControlCode);
 

@@ -8,7 +8,7 @@ public class CreateTagCommand : IRequest<VoidResponseDto>
     public int Id { get; set; }
 
     /// <summary>
-    /// A private code
+    ///     A private code
     /// </summary>
     public string Code { get; set; }
 }

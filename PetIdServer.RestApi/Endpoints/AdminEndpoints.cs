@@ -73,7 +73,10 @@ public class AdminEndpoints : ICarterModule
             });
     }
 
-    private static async Task<IResult> Authenticate(RequestAdmin admin, ISender sender, IMapper mapper)
+    private static async Task<IResult> Authenticate(
+        RequestAdmin admin,
+        ISender sender,
+        IMapper mapper)
     {
         return await Task.FromResult(Results.Ok(admin));
     }
@@ -86,10 +89,13 @@ public class AdminEndpoints : ICarterModule
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> ChangePassword(RequestAdmin admin, ChangePasswordDto dto, ISender sender)
+    private static async Task<IResult> ChangePassword(
+        RequestAdmin admin,
+        ChangePasswordDto dto,
+        ISender sender)
     {
         var command = new ChangePasswordCommand
-        { Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword };
+            {Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword};
         var response = await sender.Send(command);
 
         return Results.Ok(response);
@@ -105,7 +111,7 @@ public class AdminEndpoints : ICarterModule
 
     private static async Task<IResult> GetDecodedTag(int id, ISender sender)
     {
-        var query = new GetDecodedTagQuery { Id = id };
+        var query = new GetDecodedTagQuery {Id = id};
         var response = await sender.Send(query);
 
         return Results.Ok(response);

@@ -5,19 +5,14 @@ namespace PetIdServer.Application.Exceptions;
 
 public class MisconfigurationException : ApplicationException<MisconfigurationException>
 {
-    public const string DefaultMessage = "Misconfiguration occured. appsettings.json file doesn't filled completely!";
+    public const string DefaultMessage =
+        "Misconfiguration occured. appsettings.json file doesn't filled completely!";
 
-    public MisconfigurationException(string message = DefaultMessage) : base(message)
-    {
-    }
+    public MisconfigurationException(string message = DefaultMessage) : base(message) { }
 
-    public MisconfigurationException(object metadata) : base(metadata)
-    {
-    }
+    public MisconfigurationException(object metadata) : base(metadata) { }
 
-    public MisconfigurationException(string message, object metadata) : base(message, metadata)
-    {
-    }
+    public MisconfigurationException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = ApplicationExceptionCode.Misconfiguration;
     public override CoreExceptionKind? Kind => CoreExceptionKind.Default;

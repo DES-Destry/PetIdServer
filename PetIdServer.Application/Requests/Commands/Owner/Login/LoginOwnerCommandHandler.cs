@@ -11,16 +11,18 @@ public class LoginOwnerCommandHandler(
     IOwnerRepository ownerRepository)
     : IRequestHandler<LoginOwnerCommand, LoginOwnerResponseDto>
 {
-    public async Task<LoginOwnerResponseDto> Handle(LoginOwnerCommand request, CancellationToken cancellationToken)
+    public async Task<LoginOwnerResponseDto> Handle(
+        LoginOwnerCommand request,
+        CancellationToken cancellationToken)
     {
         var ownerCandidate =
             await ownerRepository.GetOwnerByEmail(request.Email) ??
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new { request.Email, userType = nameof(Core.Domains.Owner.Owner) });
+                new {request.Email, userType = nameof(Core.Domains.Owner.Owner)});
 
         if (!await passwordService.ValidatePassword(request.Password, ownerCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new { request.Email, userType = nameof(Core.Domains.Owner.Owner) });
+                new {request.Email, userType = nameof(Core.Domains.Owner.Owner)});
 
         var tokenPair = await ownerTokenService.GenerateTokens(ownerCandidate);
         return new LoginOwnerResponseDto

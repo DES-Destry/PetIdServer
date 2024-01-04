@@ -25,7 +25,8 @@ public class AdminTokenService : IAdminTokenService
 
         _tokenValidation = new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret)),
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret)),
             ValidAudience = _parameters.Audience,
             ValidIssuer = _parameters.Issuer,
             ValidateLifetime = true,
@@ -37,7 +38,8 @@ public class AdminTokenService : IAdminTokenService
 
     public async Task<string> GenerateToken(Admin admin)
     {
-        var adminString = JsonSerializer.Serialize(admin) ?? throw new ArgumentException(nameof(admin));
+        var adminString = JsonSerializer.Serialize(admin) ??
+                          throw new ArgumentException(nameof(admin));
 
         var claims = new List<Claim>
         {
@@ -66,7 +68,8 @@ public class AdminTokenService : IAdminTokenService
         var jwtToken = _tokenHandler.ReadJwtToken(token);
         var adminJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<AdminDto>(adminJson) ?? throw new ArgumentException(nameof(adminJson));
+        return JsonSerializer.Deserialize<AdminDto>(adminJson) ??
+               throw new ArgumentException(nameof(adminJson));
     }
 
     private async Task ValidateToken(string token)
@@ -78,7 +81,7 @@ public class AdminTokenService : IAdminTokenService
         catch (SecurityTokenException)
         {
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new { Class = nameof(AdminTokenService) });
+                new {Class = nameof(AdminTokenService)});
         }
     }
 }

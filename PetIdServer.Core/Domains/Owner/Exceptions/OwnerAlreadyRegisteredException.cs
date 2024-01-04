@@ -4,15 +4,15 @@ namespace PetIdServer.Core.Domains.Owner.Exceptions;
 
 public class OwnerAlreadyRegisteredException : CoreException
 {
-    public OwnerAlreadyRegisteredException(string message = "Owner already registered") : base(message)
+    public OwnerAlreadyRegisteredException(string message = "Owner already registered") :
+        base(message)
     {
     }
 
-    public OwnerAlreadyRegisteredException(object metadata) : base(metadata)
-    {
-    }
+    public OwnerAlreadyRegisteredException(object metadata) : base(metadata) { }
 
-    public OwnerAlreadyRegisteredException(string message, object metadata) : base(message, metadata)
+    public OwnerAlreadyRegisteredException(string message, object metadata) : base(message,
+        metadata)
     {
     }
 

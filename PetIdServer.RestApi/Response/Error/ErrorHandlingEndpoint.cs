@@ -19,7 +19,6 @@ public class ErrorHandlingEndpoint : ICarterModule
         {
             ProblemDetails problemDetails;
             if (factory == null)
-            {
                 // ProblemDetailsFactory may be null in unit testing scenarios. Improvise to make this more testable.
                 problemDetails = new ProblemDetails
                 {
@@ -27,19 +26,16 @@ public class ErrorHandlingEndpoint : ICarterModule
                     Instance = instance,
                     Status = statusCode ?? 500,
                     Title = title,
-                    Type = type,
+                    Type = type
                 };
-            }
             else
-            {
                 problemDetails = factory.CreateProblemDetails(
                     ctx,
-                    statusCode: statusCode ?? 500,
-                    title: title,
-                    type: type,
-                    detail: detail,
-                    instance: instance);
-            }
+                    statusCode ?? 500,
+                    title,
+                    type,
+                    detail,
+                    instance);
 
             return TypedResults.Problem(problemDetails);
         });

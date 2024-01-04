@@ -40,14 +40,16 @@ public static class ServiceCollectionExtension
                 {
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"}
+                        Reference = new OpenApiReference
+                            {Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"}
                     },
                     new[] {"SwaggerAuthScheme"}
                 },
                 {
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
+                        Reference = new OpenApiReference
+                            {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
                     },
                     new[] {"SwaggerAuthScheme"}
                 }

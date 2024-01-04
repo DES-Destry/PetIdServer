@@ -10,7 +10,8 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
 {
     public async Task<Pet?> GetPetById(PetId id)
     {
-        var model = await database.Pets.AsNoTracking().FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
+        var model = await database.Pets.AsNoTracking()
+            .FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
         return model is null ? null : mapper.Map<PetModel, Pet>(model);
     }
 

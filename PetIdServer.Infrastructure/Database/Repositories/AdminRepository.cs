@@ -32,7 +32,9 @@ public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepo
     public async Task UpdateAdmin(AdminId id, Admin admin)
     {
         var incomingData = mapper.Map<Admin, AdminModel>(admin);
-        var model = await database.Admins.FirstOrDefaultAsync(adminModel => adminModel.Username == id.Value);
+        var model =
+            await database.Admins.FirstOrDefaultAsync(adminModel =>
+                adminModel.Username == id.Value);
 
         if (model is null) return;
 

@@ -8,9 +8,7 @@ public class AdminAlreadyCreatedException : CoreException
     {
     }
 
-    public AdminAlreadyCreatedException(object metadata) : base(metadata)
-    {
-    }
+    public AdminAlreadyCreatedException(object metadata) : base(metadata) { }
 
     public AdminAlreadyCreatedException(string message, object metadata) : base(message, metadata)
     {

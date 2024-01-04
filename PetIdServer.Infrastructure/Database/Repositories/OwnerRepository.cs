@@ -10,13 +10,15 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
 {
     public async Task<Owner?> GetOwnerById(OwnerId id)
     {
-        var model = await database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Email == id.Value);
+        var model = await database.Owners.AsNoTracking()
+            .FirstOrDefaultAsync(owner => owner.Email == id.Value);
         return model is null ? null : mapper.Map<OwnerModel, Owner>(model);
     }
 
     public async Task<Owner?> GetOwnerByEmail(string email)
     {
-        var model = await database.Owners.AsNoTracking().FirstOrDefaultAsync(owner => owner.Email == email);
+        var model = await database.Owners.AsNoTracking()
+            .FirstOrDefaultAsync(owner => owner.Email == email);
         return model is null ? null : mapper.Map<OwnerModel, Owner>(model);
     }
 
@@ -32,7 +34,8 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
     public async Task UpdateOwner(OwnerId id, Owner owner)
     {
         var incomingData = mapper.Map<Owner, OwnerModel>(owner);
-        var model = await database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Email == id.Value);
+        var model =
+            await database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Email == id.Value);
 
         if (model is null) return;
 

@@ -4,18 +4,11 @@ namespace PetIdServer.Application.Exceptions.Common;
 
 public abstract class ApplicationException<TConcreteExceptionType> : ScopedException
 {
-    protected ApplicationException()
-    {
-    }
+    protected ApplicationException() { }
 
-    protected ApplicationException(string message) : base(message)
-    {
-    }
+    protected ApplicationException(string message) : base(message) { }
 
-    protected ApplicationException(object metadata)
-    {
-        Metadata = metadata;
-    }
+    protected ApplicationException(object metadata) { Metadata = metadata; }
 
     protected ApplicationException(string message, object metadata) : base(message)
     {

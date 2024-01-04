@@ -1,5 +1,4 @@
 using MediatR;
-using PetIdServer.Application.Dto;
 
 namespace PetIdServer.Application.Requests.Commands.Admin.Login;
 

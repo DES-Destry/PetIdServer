@@ -21,11 +21,11 @@ public class RequestOwner : OwnerDto
     {
         RequestOwner? result = default;
         foreach (var claim in claimsPrincipal.Claims)
-        {
             if (claim.Type == ClaimTypes.UserData)
-                result = JsonSerializer.Deserialize<RequestOwner>(claim.Value) ?? throw new ArgumentException(nameof(claim));
-        }
+                result = JsonSerializer.Deserialize<RequestOwner>(claim.Value) ??
+                         throw new ArgumentException(nameof(claim));
 
-        return result ?? throw new ArgumentException(nameof(result)); ;
+        return result ?? throw new ArgumentException(nameof(result));
+        ;
     }
 }

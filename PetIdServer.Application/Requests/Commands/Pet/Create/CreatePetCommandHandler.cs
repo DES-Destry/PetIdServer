@@ -5,9 +5,12 @@ using PetIdServer.Core.Domains.Pet;
 
 namespace PetIdServer.Application.Requests.Commands.Pet.Create;
 
-public class CreatePetCommandHandler(IPetRepository petRepository) : IRequestHandler<CreatePetCommand, VoidResponseDto>
+public class CreatePetCommandHandler(IPetRepository petRepository)
+    : IRequestHandler<CreatePetCommand, VoidResponseDto>
 {
-    public async Task<VoidResponseDto> Handle(CreatePetCommand request, CancellationToken cancellationToken)
+    public async Task<VoidResponseDto> Handle(
+        CreatePetCommand request,
+        CancellationToken cancellationToken)
     {
         var creationAttributes = new Core.Domains.Pet.Pet.CreationAttributes(
             new PetId(Guid.NewGuid()),

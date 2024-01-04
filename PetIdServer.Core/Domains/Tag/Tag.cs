@@ -12,9 +12,7 @@ public class Tag : Entity<TagId>
         CreatedAt = DateTime.UtcNow;
     }
 
-    public Tag(TagId id) : base(id)
-    {
-    }
+    public Tag(TagId id) : base(id) { }
 
     /// <summary>
     ///     A private code
@@ -34,7 +32,8 @@ public class Tag : Entity<TagId>
 
     public void SetupPet(Pet.Pet pet)
     {
-        if (IsAlreadyInUse) throw new TagAlreadyInUseException($"Tag {Id} is already in use", new { Id, Pet });
+        if (IsAlreadyInUse)
+            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new {Id, Pet});
 
         Pet = pet;
     }

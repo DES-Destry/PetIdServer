@@ -12,7 +12,7 @@ public class PasswordService(IConfiguration configuration) : IPasswordService
                                     {
                                         configuration,
                                         value = "Security:Salt",
-                                        @class = nameof(PasswordService),
+                                        @class = nameof(PasswordService)
                                     });
 
     // Code from MS Guide: https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/consumer-apis/password-hashing?view=aspnetcore-7.0
@@ -21,11 +21,11 @@ public class PasswordService(IConfiguration configuration) : IPasswordService
         var saltBase64 = Convert.FromBase64String(_salt);
 
         var hashBytes = KeyDerivation.Pbkdf2(
-            password: password,
-            salt: saltBase64,
-            prf: KeyDerivationPrf.HMACSHA512,
-            iterationCount: 100_000,
-            numBytesRequested: 256 / 8);
+            password,
+            saltBase64,
+            KeyDerivationPrf.HMACSHA512,
+            100_000,
+            256 / 8);
         var hash = Convert.ToBase64String(hashBytes);
 
         return await Task.FromResult(hash);

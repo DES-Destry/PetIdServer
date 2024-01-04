@@ -4,15 +4,14 @@ namespace PetIdServer.Core.Domains.Owner;
 
 public class Owner : Entity<OwnerId>
 {
-    public Owner(CreationAttributes creationAttributes) : base(new OwnerId(creationAttributes.Email))
+    public Owner(CreationAttributes creationAttributes) : base(
+        new OwnerId(creationAttributes.Email))
     {
         Password = creationAttributes.Password;
         Name = creationAttributes.Name;
     }
 
-    public Owner(OwnerId id) : base(id)
-    {
-    }
+    public Owner(OwnerId id) : base(id) { }
 
     public string Email => Id.Value;
 

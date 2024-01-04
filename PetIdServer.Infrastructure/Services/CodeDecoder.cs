@@ -14,15 +14,11 @@ public class CodeDecoder : ICodeDecoder
         _rsaParameters = ExtractRsaParameters(privateKey);
     }
 
-    public async Task<string> EncodePublicCode(string publicCode)
-    {
-        return await Execute(Action.Encrypt, publicCode);
-    }
+    public async Task<string> EncodePublicCode(string publicCode) =>
+        await Execute(Action.Encrypt, publicCode);
 
-    public async Task<string> GetPublicCodeOriginal(string privateCode)
-    {
-        return await Execute(Action.Decrypt, privateCode);
-    }
+    public async Task<string> GetPublicCodeOriginal(string privateCode) =>
+        await Execute(Action.Decrypt, privateCode);
 
     private async Task<string> Execute(Action action, string code)
     {
@@ -49,9 +45,5 @@ public class CodeDecoder : ICodeDecoder
         return rsa.ExportParameters(true);
     }
 
-    private enum Action
-    {
-        Decrypt,
-        Encrypt
-    }
+    private enum Action { Decrypt, Encrypt }
 }
