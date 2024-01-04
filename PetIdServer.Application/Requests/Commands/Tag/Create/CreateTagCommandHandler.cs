@@ -28,11 +28,11 @@ public class CreateTagCommandHandler(ITagRepository tagRepository) : IRequestHan
         var tagIdCandidate = await tagRepository.GetTagById(new TagId(request.Id));
 
         if (tagIdCandidate is not null)
-            throw new TagAlreadyInUseException(new {command = nameof(CreateTagCommand), tagId = request.Id});
+            throw new TagAlreadyInUseException(new { command = nameof(CreateTagCommand), tagId = request.Id });
 
         var tagCodeCandidate = await tagRepository.GetByCode(request.Code);
 
         if (tagCodeCandidate is not null)
-            throw new TagAlreadyInUseException(new {command = nameof(CreateTagCommand), code = request.Code});
+            throw new TagAlreadyInUseException(new { command = nameof(CreateTagCommand), code = request.Code });
     }
 }

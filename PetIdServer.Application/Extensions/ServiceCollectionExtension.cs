@@ -14,7 +14,7 @@ public static class ServiceCollectionExtension
             cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
         });
         services.AddAutoMapper(typeof(MappingProfile));
-        
+
         return services;
     }
 }

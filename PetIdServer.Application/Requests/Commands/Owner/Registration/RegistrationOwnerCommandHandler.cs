@@ -19,7 +19,7 @@ public class RegistrationOwnerCommandHandler(
 
         if (ownerCandidate is not null)
             throw new OwnerAlreadyRegisteredException($"Owner with email {request.Email} already registered",
-                new {request.Email});
+                new { request.Email });
 
         var passwordHash = await passwordService.HashPassword(request.Password);
 
@@ -28,7 +28,7 @@ public class RegistrationOwnerCommandHandler(
         var owner = new Core.Domains.Owner.Owner(creationAttributes);
 
         var createdOwner = await ownerRepository.CreateOwner(owner) ?? throw new SomethingWentWrongException(new
-            {Reason = "Owner created successfully in core, but not saved in infrastructure", Email = owner.Id});
+        { Reason = "Owner created successfully in core, but not saved in infrastructure", Email = owner.Id });
         return await ownerTokenService.GenerateTokens(createdOwner);
     }
 }

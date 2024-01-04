@@ -14,7 +14,7 @@ public class UpdateOwnerCommandHandler(IMapper mapper, IOwnerRepository ownerRep
         // Owner Id is a email
         var owner = await ownerRepository.GetOwnerByEmail(request.Id) ??
                     throw new OwnerNotFoundException($"Owner with email {request.Id} not found",
-                        new {Email = request.Id});
+                        new { Email = request.Id });
         var updatedOwner = mapper.Map<UpdateOwnerCommand, Core.Domains.Owner.Owner>(request);
 
         await ownerRepository.UpdateOwner(owner.Id, updatedOwner);

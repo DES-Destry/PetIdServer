@@ -50,11 +50,11 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
         var idsAvailable = await tagRepository.IsIdsAvailable(ids);
 
         if (!idsAvailable)
-            throw new TagAlreadyCreatedException(new {command = nameof(CreateTagsBatchCommand)});
+            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
 
         var codesAvailable = await tagRepository.IsCodesAvailable(request.Codes);
 
         if (!codesAvailable)
-            throw new TagAlreadyCreatedException(new {command = nameof(CreateTagsBatchCommand)});
+            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
     }
 }

@@ -25,7 +25,7 @@ public class PetModel
     [Column("description"), MaxLength(4096)]
     public string? Description { get; set; }
 
-    
+
     [ForeignKey("OwnerId")] public virtual OwnerModel Owner { get; set; }
     public virtual ICollection<TagModel> Tags { get; set; }
 }

@@ -12,7 +12,7 @@ public class RemoveContactCommandHandler(IOwnerRepository ownerRepository)
     {
         var owner = await ownerRepository.GetOwnerByEmail(request.OwnerEmail) ??
                     throw new OwnerNotFoundException($"Owner with email {request.OwnerEmail} not found",
-                        new {Email = request.OwnerEmail});
+                        new { Email = request.OwnerEmail });
         owner.Contacts = owner.Contacts.Where(contact => contact.ContactType != request.ContactType).ToList();
 
         return VoidResponseDto.Executed;

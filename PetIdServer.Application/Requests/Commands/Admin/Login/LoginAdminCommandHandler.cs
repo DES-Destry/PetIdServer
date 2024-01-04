@@ -18,16 +18,16 @@ public class LoginAdminCommandHandler(
 
         if (adminCandidate is null)
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Username}",
-                new {request.Username, userType = nameof(Core.Domains.Admin.Admin)});
+                new { request.Username, userType = nameof(Core.Domains.Admin.Admin) });
 
         // validate password
         if (adminCandidate.Password != null &&
             !await passwordService.ValidatePassword(request.Password, adminCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Username}",
-                new {request.Username, userType = nameof(Core.Domains.Admin.Admin)});
+                new { request.Username, userType = nameof(Core.Domains.Admin.Admin) });
 
         // generate tokens
         var token = await adminTokenService.GenerateToken(adminCandidate);
-        return new LoginAdminResponseDto {AccessToken = token, AdminId = adminCandidate.Id.Value};
+        return new LoginAdminResponseDto { AccessToken = token, AdminId = adminCandidate.Id.Value };
     }
 }

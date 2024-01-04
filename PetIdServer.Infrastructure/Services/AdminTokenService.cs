@@ -78,7 +78,7 @@ public class AdminTokenService : IAdminTokenService
         catch (SecurityTokenException)
         {
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new {Class = nameof(AdminTokenService)});
+                new { Class = nameof(AdminTokenService) });
         }
     }
 }

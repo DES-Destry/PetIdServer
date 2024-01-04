@@ -11,7 +11,7 @@ public class PetIdContext : DbContext
     public DbSet<TagModel> Tags { get; set; }
 
     public DbSet<AdminModel> Admins { get; set; }
-    
+
     public PetIdContext(DbContextOptions<PetIdContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ public class PetIdContext : DbContext
 
         modelBuilder.Entity<OwnerModel>().Navigation(owner => owner.Pets).AutoInclude();
         modelBuilder.Entity<OwnerModel>().Navigation(owner => owner.Contacts).AutoInclude();
-        
+
         modelBuilder.Entity<TagModel>().Navigation(owner => owner.Pet).AutoInclude();
 
         modelBuilder.Entity<AdminModel>().HasData(new AdminModel
@@ -30,7 +30,7 @@ public class PetIdContext : DbContext
             CreatedAt = DateTime.UtcNow,
             PasswordLastChangedAt = null,
         });
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }

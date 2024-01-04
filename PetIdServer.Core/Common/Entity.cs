@@ -7,7 +7,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
     protected Entity(TId id)
     {
         ArgumentNullException.ThrowIfNull(id);
-        
+
         if (Equals(id, default(TId)))
             throw new ArgumentException("The ID cannot be the default value.", nameof(id));
 
@@ -30,7 +30,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         {
             return Equals(entity);
         }
-        
+
         return base.Equals(obj);
     }
 

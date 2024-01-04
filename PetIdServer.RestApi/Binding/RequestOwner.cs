@@ -10,13 +10,13 @@ public class RequestOwner : OwnerDto
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
-        
+
         var claimsPrincipal = context.User;
         var owner = ExtractOwner(claimsPrincipal);
-        
+
         return ValueTask.FromResult(owner);
     }
-    
+
     public static RequestOwner ExtractOwner(ClaimsPrincipal claimsPrincipal)
     {
         RequestOwner? result = default;
@@ -26,6 +26,6 @@ public class RequestOwner : OwnerDto
                 result = JsonSerializer.Deserialize<RequestOwner>(claim.Value) ?? throw new ArgumentException(nameof(claim));
         }
 
-        return result ?? throw new ArgumentException(nameof(result));;
+        return result ?? throw new ArgumentException(nameof(result)); ;
     }
 }

@@ -13,7 +13,7 @@ public class AddContactCommandHandler(IOwnerRepository ownerRepository)
     {
         var owner = await ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
                     throw new OwnerNotFoundException($"Owner with id(email) {request.OwnerId} not found",
-                        new {Id = request.OwnerId});
+                        new { Id = request.OwnerId });
 
         var contact = new OwnerContact
         {

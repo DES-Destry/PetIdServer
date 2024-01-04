@@ -21,10 +21,10 @@ public class PasswordService(IConfiguration configuration) : IPasswordService
         var saltBase64 = Convert.FromBase64String(_salt);
 
         var hashBytes = KeyDerivation.Pbkdf2(
-            password: password, 
-            salt: saltBase64, 
+            password: password,
+            salt: saltBase64,
             prf: KeyDerivationPrf.HMACSHA512,
-            iterationCount: 100_000, 
+            iterationCount: 100_000,
             numBytesRequested: 256 / 8);
         var hash = Convert.ToBase64String(hashBytes);
 

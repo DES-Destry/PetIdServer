@@ -20,7 +20,7 @@ public class OwnerDto
             Address = owner.Address,
             Description = owner.Description,
             Contacts = owner.Contacts,
-            Pets = owner.Pets.Select(pet => (PetDto) pet).ToList()
+            Pets = owner.Pets.Select(pet => (PetDto)pet).ToList()
         };
     }
 }

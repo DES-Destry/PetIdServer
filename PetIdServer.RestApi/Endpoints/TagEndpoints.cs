@@ -23,7 +23,7 @@ public class TagEndpoints : ICarterModule
 
     private static async Task<IResult> TagControlCheck(long controlCode, ISender sender)
     {
-        var query = new TagControlCheckQuery {ControlCode = controlCode};
+        var query = new TagControlCheckQuery { ControlCode = controlCode };
         var response = await sender.Send(query);
 
         return Results.Ok(response);
