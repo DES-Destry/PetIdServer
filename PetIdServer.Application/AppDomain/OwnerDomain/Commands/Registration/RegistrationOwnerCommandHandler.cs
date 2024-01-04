@@ -27,8 +27,8 @@ public class RegistrationOwnerCommandHandler(
         var passwordHash = await passwordService.HashPassword(request.Password);
 
         var creationAttributes =
-            new Owner.CreationAttributes(request.Email, passwordHash, request.Name);
-        var owner = new Owner(creationAttributes);
+            new OwnerEntity.CreationAttributes(request.Email, passwordHash, request.Name);
+        var owner = new OwnerEntity(creationAttributes);
 
         var createdOwner = await ownerRepository.CreateOwner(owner) ??
                            throw new SomethingWentWrongException(new

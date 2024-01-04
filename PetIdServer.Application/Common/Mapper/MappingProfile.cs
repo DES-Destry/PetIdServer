@@ -12,10 +12,10 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Tag, TagReviewForAdminDto>()
+        CreateMap<TagEntity, TagReviewForAdminDto>()
             .ForMember(dto => dto.Id, expression => expression.MapFrom(tag => tag.Id));
 
-        CreateMap<UpdateOwnerCommand, Owner>();
-        CreateMap<UpdatePetCommand, Pet>();
+        CreateMap<UpdateOwnerCommand, OwnerEntity>();
+        CreateMap<UpdatePetCommand, PetEntity>();
     }
 }

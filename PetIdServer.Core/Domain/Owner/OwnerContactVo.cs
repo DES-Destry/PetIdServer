@@ -2,7 +2,7 @@ using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Domain.Owner;
 
-public class OwnerContact : ValueObject
+public class OwnerContactVo : ValueObject
 {
     public string ContactType { get; set; } = "_default";
     public string Contact { get; set; } = "_default";

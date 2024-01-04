@@ -18,7 +18,7 @@ public class UpdatePetCommandHandler(IMapper mapper, IPetRepository petRepositor
                       $"Pet with Id {request.Id} not found",
                       new {request.Id});
 
-        var updatedPet = mapper.Map<UpdatePetCommand, Pet>(request);
+        var updatedPet = mapper.Map<UpdatePetCommand, PetEntity>(request);
         await petRepository.UpdatePet(pet.Id, updatedPet);
 
         return VoidResponseDto.Executed;

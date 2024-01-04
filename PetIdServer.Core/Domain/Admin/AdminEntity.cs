@@ -2,9 +2,9 @@ using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Domain.Admin;
 
-public class Admin : Entity<AdminId>
+public class AdminEntity : Entity<AdminId>
 {
-    public Admin(CreationAttributes creationAttributes) : base(
+    public AdminEntity(CreationAttributes creationAttributes) : base(
         new AdminId(creationAttributes.Username))
     {
         Password = creationAttributes.Password;
@@ -13,7 +13,7 @@ public class Admin : Entity<AdminId>
         PasswordLastChangedAt = DateTime.UtcNow;
     }
 
-    public Admin(AdminId id) : base(id) { }
+    public AdminEntity(AdminId id) : base(id) { }
 
     public string Username => Id.Value;
 

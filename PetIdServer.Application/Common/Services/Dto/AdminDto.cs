@@ -12,7 +12,7 @@ public class AdminDto
 
     public bool IsNotCapable { get; set; }
 
-    public static implicit operator AdminDto(Admin admin)
+    public static implicit operator AdminDto(AdminEntity admin)
     {
         return new AdminDto
         {

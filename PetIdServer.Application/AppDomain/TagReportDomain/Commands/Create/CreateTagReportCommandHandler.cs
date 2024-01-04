@@ -34,8 +34,8 @@ public class CreateTagReportCommandHandler(
                               tagId = request.TagId
                           });
 
-        var creationAttributes = new TagReport.CreationAttributes(reportedTag, admin);
-        var report = new TagReport(creationAttributes);
+        var creationAttributes = new TagReportEntity.CreationAttributes(reportedTag, admin);
+        var report = new TagReportEntity(creationAttributes);
 
         await reportRepository.CreateReport(report);
 

@@ -1,10 +1,11 @@
 using PetIdServer.Core.Common;
+using PetIdServer.Core.Domain.Owner;
 
 namespace PetIdServer.Core.Domain.Pet;
 
-public class Pet : Entity<PetId>
+public class PetEntity : Entity<PetId>
 {
-    public Pet(CreationAttributes creationAttributes) : base(creationAttributes.Id)
+    public PetEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
     {
         Type = creationAttributes.Type;
         Name = creationAttributes.Name;
@@ -13,9 +14,9 @@ public class Pet : Entity<PetId>
     }
 
     // Mapper require this constructor
-    public Pet(PetId id) : base(id) { }
+    public PetEntity(PetId id) : base(id) { }
 
-    public Owner.Owner Owner { get; set; }
+    public OwnerEntity Owner { get; set; }
     public string Type { get; set; }
     public string Name { get; set; }
     public bool Sex { get; set; }

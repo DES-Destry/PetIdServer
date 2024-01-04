@@ -17,8 +17,8 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
         var controlCode = Random.Shared.NextInt64();
 
         var creationAttributes =
-            new Tag.CreationAttributes((TagId) request.Id, request.Code, controlCode);
-        var tag = new Tag(creationAttributes);
+            new TagEntity.CreationAttributes((TagId) request.Id, request.Code, controlCode);
+        var tag = new TagEntity(creationAttributes);
 
         await tagRepository.CreateTag(tag);
 
@@ -27,7 +27,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
 
     private async Task CheckDuplicates(CreateTagCommand request)
     {
-        var tagIdCandidate = await tagRepository.GetTagById(new TagId(request.Id));
+        var tagIdCandidate = await tagRepository.GetTagById((TagId) request.Id);
 
         if (tagIdCandidate is not null)
             throw new TagAlreadyInUseException(new

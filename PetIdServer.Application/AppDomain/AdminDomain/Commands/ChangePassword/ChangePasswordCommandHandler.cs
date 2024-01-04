@@ -26,7 +26,7 @@ public class ChangePasswordCommandHandler(
         if (adminCandidate.Password != null &&
             !await passwordService.ValidatePassword(request.OldPassword, adminCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}",
-                new {Username = request.Id, userType = nameof(Admin)});
+                new {Username = request.Id, userType = nameof(AdminEntity)});
 
         var newHashedPassword = await passwordService.HashPassword(request.NewPassword);
         adminCandidate.Password = newHashedPassword;

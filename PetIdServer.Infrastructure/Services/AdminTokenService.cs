@@ -36,10 +36,11 @@ public class AdminTokenService : IAdminTokenService
         };
     }
 
-    public async Task<string> GenerateToken(Admin admin)
+    public async Task<string> GenerateToken(AdminEntity admin)
     {
         var adminString = JsonSerializer.Serialize(admin) ??
-                          throw new ArgumentException(nameof(admin));
+                          throw new ArgumentException("Cannot parse null to valid JSON",
+                              nameof(admin));
 
         var claims = new List<Claim>
         {

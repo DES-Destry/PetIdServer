@@ -12,12 +12,12 @@ public class AddContactCommandHandler(IOwnerRepository ownerRepository)
         AddContactCommand request,
         CancellationToken cancellationToken)
     {
-        var owner = await ownerRepository.GetOwnerById(new OwnerId(request.OwnerId)) ??
+        var owner = await ownerRepository.GetOwnerById((OwnerId) request.OwnerId) ??
                     throw new OwnerNotFoundException(
                         $"Owner with id(email) {request.OwnerId} not found",
                         new {Id = request.OwnerId});
 
-        var contact = new OwnerContact
+        var contact = new OwnerContactVo
         {
             Contact = request.Contact,
             ContactType = request.ContactType

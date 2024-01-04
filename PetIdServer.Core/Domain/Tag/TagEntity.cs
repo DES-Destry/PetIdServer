@@ -1,18 +1,19 @@
 using PetIdServer.Core.Common;
+using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Core.Domain.Tag;
 
-public class Tag : Entity<TagId>
+public class TagEntity : Entity<TagId>
 {
-    public Tag(CreationAttributes creationAttributes) : base(creationAttributes.Id)
+    public TagEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
     {
         Code = creationAttributes.Code;
         ControlCode = creationAttributes.ControlCode;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public Tag(TagId id) : base(id) { }
+    public TagEntity(TagId id) : base(id) { }
 
     /// <summary>
     ///     A private code
@@ -20,7 +21,7 @@ public class Tag : Entity<TagId>
     public string Code { get; set; } = string.Empty;
 
     public long ControlCode { get; set; }
-    public Pet.Pet? Pet { get; private set; }
+    public PetEntity? Pet { get; private set; }
 
     public bool IsAlreadyInUse => Pet is not null;
 
@@ -30,7 +31,7 @@ public class Tag : Entity<TagId>
 
     public DateTime? LastScannedAt { get; set; }
 
-    public void SetupPet(Pet.Pet pet)
+    public void SetupPet(PetEntity pet)
     {
         if (IsAlreadyInUse)
             throw new TagAlreadyInUseException($"Tag {Id} is already in use", new {Id, Pet});

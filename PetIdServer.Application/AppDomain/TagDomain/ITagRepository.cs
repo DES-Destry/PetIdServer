@@ -7,12 +7,12 @@ public interface ITagRepository
 {
     Task<bool> IsIdsAvailable(IEnumerable<int> ids);
     Task<bool> IsCodesAvailable(IEnumerable<string> codes);
-    Task<IEnumerable<Tag>> GetAllTags();
-    Task<Tag?> GetTagById(TagId id);
-    Task<Tag?> GetByCode(string code);
-    Task<Tag?> GetByControlCode(long controlCode);
+    Task<IEnumerable<TagEntity>> GetAllTags();
+    Task<TagEntity?> GetTagById(TagId id);
+    Task<TagEntity?> GetByCode(string code);
+    Task<TagEntity?> GetByControlCode(long controlCode);
 
-    Task<Tag?> CreateTag(Tag tag);
-    Task CreateTagsBatch(IEnumerable<Tag> tags);
-    Task AttachPet(TagId id, Pet pet);
+    Task<TagEntity?> CreateTag(TagEntity tag);
+    Task CreateTagsBatch(IEnumerable<TagEntity> tags);
+    Task AttachPet(TagId id, PetEntity pet);
 }

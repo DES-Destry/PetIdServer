@@ -11,13 +11,13 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
         CreatePetCommand request,
         CancellationToken cancellationToken)
     {
-        var creationAttributes = new Pet.CreationAttributes(
+        var creationAttributes = new PetEntity.CreationAttributes(
             new PetId(Guid.NewGuid()),
             request.Type,
             request.Name,
             request.Sex,
             request.IsCastrated);
-        var pet = new Pet(creationAttributes);
+        var pet = new PetEntity(creationAttributes);
 
         await petRepository.CreatePet(pet);
 

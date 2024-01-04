@@ -8,24 +8,24 @@ namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class PetRepository(IMapper mapper, PetIdContext database) : IPetRepository
 {
-    public async Task<Pet?> GetPetById(PetId id)
+    public async Task<PetEntity?> GetPetById(PetId id)
     {
         var model = await database.Pets.AsNoTracking()
             .FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
-        return model is null ? null : mapper.Map<PetModel, Pet>(model);
+        return model is null ? null : mapper.Map<PetModel, PetEntity>(model);
     }
 
-    public async Task<Pet?> CreatePet(Pet pet)
+    public async Task<PetEntity?> CreatePet(PetEntity pet)
     {
-        var model = mapper.Map<Pet, PetModel>(pet);
+        var model = mapper.Map<PetEntity, PetModel>(pet);
         var saved = await database.Pets.AddAsync(model);
 
-        return mapper.Map<PetModel, Pet>(saved.Entity);
+        return mapper.Map<PetModel, PetEntity>(saved.Entity);
     }
 
-    public async Task UpdatePet(PetId id, Pet pet)
+    public async Task UpdatePet(PetId id, PetEntity pet)
     {
-        var incomingData = mapper.Map<Pet, PetModel>(pet);
+        var incomingData = mapper.Map<PetEntity, PetModel>(pet);
         var model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id.Value);
 
         if (model is null) return;

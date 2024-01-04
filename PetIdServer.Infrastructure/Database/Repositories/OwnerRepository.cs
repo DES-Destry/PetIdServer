@@ -8,32 +8,32 @@ namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepository
 {
-    public async Task<Owner?> GetOwnerById(OwnerId id)
+    public async Task<OwnerEntity?> GetOwnerById(OwnerId id)
     {
         var model = await database.Owners.AsNoTracking()
             .FirstOrDefaultAsync(owner => owner.Email == id.Value);
-        return model is null ? null : mapper.Map<OwnerModel, Owner>(model);
+        return model is null ? null : mapper.Map<OwnerModel, OwnerEntity>(model);
     }
 
-    public async Task<Owner?> GetOwnerByEmail(string email)
+    public async Task<OwnerEntity?> GetOwnerByEmail(string email)
     {
         var model = await database.Owners.AsNoTracking()
             .FirstOrDefaultAsync(owner => owner.Email == email);
-        return model is null ? null : mapper.Map<OwnerModel, Owner>(model);
+        return model is null ? null : mapper.Map<OwnerModel, OwnerEntity>(model);
     }
 
-    public async Task<Owner?> CreateOwner(Owner owner)
+    public async Task<OwnerEntity?> CreateOwner(OwnerEntity owner)
     {
-        var model = mapper.Map<Owner, OwnerModel>(owner);
+        var model = mapper.Map<OwnerEntity, OwnerModel>(owner);
         var saved = await database.Owners.AddAsync(model);
         await database.SaveChangesAsync();
 
-        return mapper.Map<OwnerModel, Owner>(saved.Entity);
+        return mapper.Map<OwnerModel, OwnerEntity>(saved.Entity);
     }
 
-    public async Task UpdateOwner(OwnerId id, Owner owner)
+    public async Task UpdateOwner(OwnerId id, OwnerEntity owner)
     {
-        var incomingData = mapper.Map<Owner, OwnerModel>(owner);
+        var incomingData = mapper.Map<OwnerEntity, OwnerModel>(owner);
         var model =
             await database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Email == id.Value);
 

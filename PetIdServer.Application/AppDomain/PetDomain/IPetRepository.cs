@@ -4,8 +4,8 @@ namespace PetIdServer.Application.AppDomain.PetDomain;
 
 public interface IPetRepository
 {
-    Task<Pet?> GetPetById(PetId id);
-    Task<Pet?> CreatePet(Pet pet);
+    Task<PetEntity?> GetPetById(PetId id);
+    Task<PetEntity?> CreatePet(PetEntity pet);
 
-    Task UpdatePet(PetId petId, Pet pet);
+    Task UpdatePet(PetId petId, PetEntity pet);
 }

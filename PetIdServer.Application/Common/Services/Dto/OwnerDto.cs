@@ -8,10 +8,10 @@ public class OwnerDto
     public string Name { get; set; }
     public string? Address { get; set; }
     public string? Description { get; set; }
-    public IList<OwnerContact> Contacts { get; set; }
+    public IList<OwnerContactVo> Contacts { get; set; }
     public IList<PetDto> Pets { get; set; }
 
-    public static implicit operator OwnerDto(Owner owner)
+    public static implicit operator OwnerDto(OwnerEntity owner)
     {
         return new OwnerDto
         {

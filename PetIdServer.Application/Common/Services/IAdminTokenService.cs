@@ -5,6 +5,6 @@ namespace PetIdServer.Application.Common.Services;
 
 public interface IAdminTokenService
 {
-    Task<string> GenerateToken(Admin admin);
+    Task<string> GenerateToken(AdminEntity admin);
     Task<AdminDto> DecryptAdmin(string token);
 }

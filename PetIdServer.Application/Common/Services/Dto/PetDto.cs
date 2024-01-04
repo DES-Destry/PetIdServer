@@ -11,7 +11,7 @@ public class PetDto
     public string? Photo { get; set; }
     public string? Description { get; set; }
 
-    public static implicit operator PetDto(Pet pet)
+    public static implicit operator PetDto(PetEntity pet)
     {
         return new PetDto
         {

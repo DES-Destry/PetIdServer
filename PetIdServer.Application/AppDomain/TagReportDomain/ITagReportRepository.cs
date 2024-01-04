@@ -5,10 +5,10 @@ namespace PetIdServer.Application.AppDomain.TagReportDomain;
 
 public interface ITagReportRepository
 {
-    Task<IEnumerable<TagReport>> GetAllReports();
-    Task<IEnumerable<TagReport>> GetNotResolvedReports();
-    Task<IEnumerable<TagReport>> GetReportsByTagId(TagId tagId);
+    Task<IEnumerable<TagReportEntity>> GetAllReports();
+    Task<IEnumerable<TagReportEntity>> GetNotResolvedReports();
+    Task<IEnumerable<TagReportEntity>> GetReportsByTagId(TagId tagId);
 
-    Task CreateReport(TagReport report);
-    Task UpdateReport(TagReportId id, TagReport updated);
+    Task CreateReport(TagReportEntity report);
+    Task UpdateReport(TagReportId id, TagReportEntity updated);
 }

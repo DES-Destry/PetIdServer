@@ -18,11 +18,11 @@ public class LoginOwnerCommandHandler(
         var ownerCandidate =
             await ownerRepository.GetOwnerByEmail(request.Email) ??
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new {request.Email, userType = nameof(Owner)});
+                new {request.Email, userType = nameof(OwnerEntity)});
 
         if (!await passwordService.ValidatePassword(request.Password, ownerCandidate.Password))
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new {request.Email, userType = nameof(Owner)});
+                new {request.Email, userType = nameof(OwnerEntity)});
 
         var tokenPair = await ownerTokenService.GenerateTokens(ownerCandidate);
         return new LoginOwnerResponseDto

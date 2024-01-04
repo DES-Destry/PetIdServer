@@ -4,8 +4,8 @@ namespace PetIdServer.Application.AppDomain.AdminDomain;
 
 public interface IAdminRepository
 {
-    Task<Admin?> GetAdminById(AdminId id);
-    Task<Admin?> GetAdminByUsername(string username);
-    Task<Admin?> CreateAdmin(Admin admin);
-    Task UpdateAdmin(AdminId adminId, Admin admin);
+    Task<AdminEntity?> GetAdminById(AdminId id);
+    Task<AdminEntity?> GetAdminByUsername(string username);
+    Task<AdminEntity?> CreateAdmin(AdminEntity admin);
+    Task UpdateAdmin(AdminId adminId, AdminEntity admin);
 }

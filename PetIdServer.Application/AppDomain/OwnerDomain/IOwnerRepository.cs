@@ -4,9 +4,9 @@ namespace PetIdServer.Application.AppDomain.OwnerDomain;
 
 public interface IOwnerRepository
 {
-    Task<Owner?> GetOwnerById(OwnerId id);
-    Task<Owner?> GetOwnerByEmail(string email);
-    Task<Owner?> CreateOwner(Owner owner);
+    Task<OwnerEntity?> GetOwnerById(OwnerId id);
+    Task<OwnerEntity?> GetOwnerByEmail(string email);
+    Task<OwnerEntity?> CreateOwner(OwnerEntity owner);
 
-    Task UpdateOwner(OwnerId id, Owner owner);
+    Task UpdateOwner(OwnerId id, OwnerEntity owner);
 }

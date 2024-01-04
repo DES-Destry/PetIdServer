@@ -13,7 +13,7 @@ public class GetAllTagsQueryHandler(IMapper mapper, ITagRepository tagRepository
         CancellationToken cancellationToken)
     {
         var tagsFromDb = await tagRepository.GetAllTags();
-        var tags = tagsFromDb.Select(mapper.Map<Tag, TagReviewForAdminDto>);
+        var tags = tagsFromDb.Select(mapper.Map<TagEntity, TagReviewForAdminDto>);
 
         return new TagReviewList(tags);
     }
