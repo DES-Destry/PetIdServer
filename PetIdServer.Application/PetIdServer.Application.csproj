@@ -12,7 +12,6 @@
         <Folder Include="AppDomain\OwnerDomain\Commands\ChangePassword\"/>
         <Folder Include="AppDomain\OwnerDomain\Commands\ForgotPassword\"/>
         <Folder Include="AppDomain\OwnerDomain\Commands\RestorePassword\"/>
-        <Folder Include="AppDomain\TagDomain\Commands\"/>
         <Folder Include="AppDomain\TagDomain\Queries\"/>
     </ItemGroup>
 

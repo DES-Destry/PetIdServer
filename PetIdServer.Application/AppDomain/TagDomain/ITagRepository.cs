@@ -15,4 +15,6 @@ public interface ITagRepository
     Task<TagEntity?> CreateTag(TagEntity tag);
     Task CreateTagsBatch(IEnumerable<TagEntity> tags);
     Task AttachPet(TagId id, PetEntity pet);
+
+    Task UpdateTag(TagId id, TagEntity tag);
 }

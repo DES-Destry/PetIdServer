@@ -82,4 +82,15 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
 
         await database.SaveChangesAsync();
     }
+
+    public async Task UpdateTag(TagId id, TagEntity pet)
+    {
+        var incomingData = mapper.Map<TagEntity, TagModel>(pet);
+        var model = await database.Tags.FirstOrDefaultAsync(tagModel => tagModel.Id == id);
+
+        if (model is null) return;
+
+        database.Entry(model).CurrentValues.SetValues(incomingData);
+        await database.SaveChangesAsync();
+    }
 }

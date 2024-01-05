@@ -19,6 +19,7 @@ public static class CoreExceptionCode
     public const string TagNotFound = DefaultScope + "TAG_NOT_FOUND";
     public const string TagAlreadyInUse = DefaultScope + "TAG_ALREADY_IN_USE";
     public const string TagAlreadyExists = DefaultScope + "TAG_ALREADY_EXISTS";
+    public const string TagCannotBeCleared = DefaultScope + "TAG_CANNOT_BE_CLEARED";
 
     public const string TagReportNotFound = DefaultScope + "TAG_REPORT_NOT_FOUND";
 

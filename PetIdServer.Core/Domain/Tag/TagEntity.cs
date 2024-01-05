@@ -40,5 +40,11 @@ public class TagEntity : Entity<TagId>
         Pet = pet;
     }
 
+    public void RemovePet()
+    {
+        Pet = null;
+        PetAddedAt = null;
+    }
+
     public record CreationAttributes(TagId Id, string Code);
 }
