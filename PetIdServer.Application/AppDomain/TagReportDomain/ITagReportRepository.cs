@@ -8,7 +8,6 @@ public interface ITagReportRepository
 {
     Task<TagReportEntity?> GetTagReportById(TagReportId id);
     Task<IEnumerable<TagReportEntity>> GetAllReports(GetReportsFilters filters);
-    Task<IEnumerable<TagReportEntity>> GetNotResolvedReports();
     Task<IEnumerable<TagReportEntity>> GetReportsByTagId(TagId tagId);
 
     Task CreateReport(TagReportEntity report);
