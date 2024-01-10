@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetIdServer.Infrastructure.Database;
@@ -11,9 +12,11 @@ using PetIdServer.Infrastructure.Database;
 namespace PetIdServer.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PetIdContext))]
-    partial class PetIdContextModelSnapshot : ModelSnapshot
+    [Migration("20240110120115_AddReports")]
+    partial class AddReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
