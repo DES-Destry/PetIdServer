@@ -12,12 +12,8 @@ public class TagEndpoints : ICarterModule
         var group = app.MapGroup("tag");
 
         group.MapGet("pre-sell/{controlCode:long}", TagControlCheck)
-            .WithName(nameof(TagControlCheck))
-            .WithOpenApi(op =>
-            {
-                op.Summary = "Get pre-sell info by control code.";
-                return op;
-            })
+            .WithOpenApi()
+            .WithSummary("Get pre-sell info by control code.")
             .Produces<CheckTagDto>();
     }
 
