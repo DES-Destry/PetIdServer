@@ -7,6 +7,7 @@ using PetIdServer.Application.AppDomain.AdminDomain;
 using PetIdServer.Application.AppDomain.OwnerDomain;
 using PetIdServer.Application.AppDomain.PetDomain;
 using PetIdServer.Application.AppDomain.TagDomain;
+using PetIdServer.Application.AppDomain.TagReportDomain;
 using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Infrastructure.Database;
@@ -55,6 +56,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddScoped<IPetRepository, PetRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<ITagReportRepository, TagReportRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
 
         return services;
