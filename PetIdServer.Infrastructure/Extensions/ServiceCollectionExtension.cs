@@ -24,26 +24,8 @@ public static class ServiceCollectionExtension
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
-        var connectionString = configuration.GetConnectionString("Postgres") ??
-                               throw new MisconfigurationException().WithMeta(new
-                               {
-                                   configuration,
-                                   value = "ConnectionStrings:Postgres",
-                                   @class = "Infrastructure.Extensions"
-                               });
-
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));
-
-        services.AddDbContext<PetIdContext>(options =>
-        {
-            options.UseNpgsql(connectionString);
-
-            if (environment.IsProduction()) return;
-
-            // Debug options section
-            options.EnableSensitiveDataLogging();
-            options.EnableDetailedErrors();
-        });
+        services.AddDbConnection(configuration, environment);
 
         services.AddRepositories();
         services.AddServices();
@@ -68,6 +50,33 @@ public static class ServiceCollectionExtension
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
         services.AddScoped<IAdminTokenService, AdminTokenService>();
         services.AddScoped<ICodeDecoder, CodeDecoder>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDbConnection(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment environment)
+    {
+        var connectionString = configuration.GetConnectionString("Postgres") ??
+                               throw new MisconfigurationException().WithMeta(new
+                               {
+                                   configuration,
+                                   value = "ConnectionStrings:Postgres",
+                                   @class = "Infrastructure.Extensions"
+                               });
+
+        services.AddDbContext<PetIdContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+
+            if (environment.IsProduction()) return;
+
+            // Debug options section
+            options.EnableSensitiveDataLogging();
+            options.EnableDetailedErrors();
+        });
 
         return services;
     }
