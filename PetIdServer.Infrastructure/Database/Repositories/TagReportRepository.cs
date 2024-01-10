@@ -41,7 +41,7 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
     public async Task CreateReport(TagReportEntity report)
     {
         var model = mapper.Map<TagReportEntity, TagReportModel>(report);
-        await database.TagReports.AddAsync(model);
+        database.Entry(model).State = EntityState.Added;
 
         await database.SaveChangesAsync();
     }
