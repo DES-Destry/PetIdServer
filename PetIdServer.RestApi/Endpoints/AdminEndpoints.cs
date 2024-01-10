@@ -1,11 +1,18 @@
 using AutoMapper;
 using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.AppDomain.AdminDomain.Commands.ChangePassword;
 using PetIdServer.Application.AppDomain.AdminDomain.Commands.Login;
+using PetIdServer.Application.AppDomain.TagDomain.Commands.Clear;
 using PetIdServer.Application.AppDomain.TagDomain.Commands.CreateBatch;
 using PetIdServer.Application.AppDomain.TagDomain.Queries.GetAll;
 using PetIdServer.Application.AppDomain.TagDomain.Queries.GetDecoded;
+using PetIdServer.Application.AppDomain.TagReportDomain.Commands.Create;
+using PetIdServer.Application.AppDomain.TagReportDomain.Commands.Resolve;
+using PetIdServer.Application.AppDomain.TagReportDomain.Dto;
+using PetIdServer.Application.AppDomain.TagReportDomain.Queries.GetAll;
+using PetIdServer.Application.Common.Dto;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
@@ -71,15 +78,41 @@ public class AdminEndpoints : ICarterModule
                 op.Summary = "Create tags range.";
                 return op;
             });
+
+        group.MapPost("tag/{id:int}/clear", ClearTag)
+            .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(ClearTag))
+            .WithOpenApi(op =>
+            {
+                op.Summary = "Remove the pet from tag force with admin permissions";
+                return op;
+            })
+            .Produces<VoidResponseDto>();
+
+        group.MapGet("report/tag/all", GetAllTagReports)
+            .RequireAuthorization(AuthSchemas.Admin)
+            .WithName(nameof(GetAllTagReports))
+            .WithSummary("Get all retorts with abused tags with filters(isResolved, tagId)")
+            .Produces<TagReportsDto>();
+
+        group.MapPost("report/tag/{id:int}", CreateTagReport)
+            .WithName(nameof(CreateTagReport))
+            .WithSummary("Create report that by opinion of admin was abused.")
+            .RequireAuthorization(AuthSchemas.Admin)
+            .Produces<VoidResponseDto>();
+
+        group.MapPost("report/{id:guid}/resolve", ResolveTagReport)
+            .WithName(nameof(ResolveTagReport))
+            .WithSummary(
+                "To not pay attention for already resolved reports it must be marked as resolved")
+            .RequireAuthorization(AuthSchemas.Admin)
+            .Produces<VoidResponseDto>();
     }
 
     private static async Task<IResult> Authenticate(
         RequestAdmin admin,
         ISender sender,
-        IMapper mapper)
-    {
-        return await Task.FromResult(Results.Ok(admin));
-    }
+        IMapper mapper) => await Task.FromResult(Results.Ok(admin));
 
     private static async Task<IResult> LoginAdmin(LoginAdminDto dto, ISender sender, IMapper mapper)
     {
@@ -120,6 +153,53 @@ public class AdminEndpoints : ICarterModule
     private static async Task<IResult> CreateTags(CreateTagsDto dto, ISender sender, IMapper mapper)
     {
         var command = mapper.Map<CreateTagsDto, CreateTagsBatchCommand>(dto);
+        var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> ClearTag(int id, RequestAdmin admin, ISender sender)
+    {
+        var command = new ClearTagCommand {AdminId = admin.Username, TagId = id};
+        var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> GetAllTagReports(
+        [FromQuery] int? tagId,
+        [FromQuery] bool? isResolved,
+        ISender sender)
+    {
+        var query = new GetAllTagReportsQuery
+        {
+            TagId = tagId,
+            IsResolved = isResolved
+        };
+        var response = await sender.Send(query);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> CreateTagReport(int id, RequestAdmin admin, ISender sender)
+    {
+        var command = new CreateTagReportCommand
+        {
+            AdminId = admin.Username,
+            TagId = id
+        };
+        var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> ResolveTagReport(Guid id, RequestAdmin admin, ISender sender)
+    {
+        var command = new ResolveTagReportCommand
+        {
+            AdminId = admin.Username,
+            ReportId = id
+        };
         var response = await sender.Send(command);
 
         return Results.Ok(response);
