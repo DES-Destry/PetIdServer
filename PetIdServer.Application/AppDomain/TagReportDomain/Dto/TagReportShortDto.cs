@@ -5,7 +5,7 @@ namespace PetIdServer.Application.AppDomain.TagReportDomain.Dto;
 
 public record TagReportShortDto(
     Guid Id,
-    TagReviewForAdminDto Tag,
+    TagReviewForAdminDto CorruptedTag,
     AdminDto Reporter,
     bool IsResolved,
     DateTime CreatedAt);
