@@ -18,7 +18,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("pet")
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -50,7 +50,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         new
                         {
                             Username = "Andrey.Kirik",
-                            CreatedAt = new DateTime(2023, 11, 29, 12, 30, 45, 372, DateTimeKind.Utc).AddTicks(950)
+                            CreatedAt = new DateTime(2024, 1, 10, 12, 1, 14, 983, DateTimeKind.Utc).AddTicks(750)
                         });
                 });
 
@@ -194,6 +194,45 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                     b.ToTable("tags", "pet");
                 });
 
+            modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.TagReportModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("CorruptedTagId")
+                        .HasColumnType("integer")
+                        .HasColumnName("corrupted_tag_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("ReporterId")
+                        .IsRequired()
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("reporter_id");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("resolved_at");
+
+                    b.Property<string>("ResolverId")
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("resolver_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorruptedTagId");
+
+                    b.HasIndex("ReporterId");
+
+                    b.HasIndex("ResolverId");
+
+                    b.ToTable("tag_reports", "pet");
+                });
+
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerContactModel", b =>
                 {
                     b.HasOne("PetIdServer.Infrastructure.Database.Models.OwnerModel", "Owner")
@@ -223,6 +262,31 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasForeignKey("PetId");
 
                     b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.TagReportModel", b =>
+                {
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.TagModel", "CorruptedTag")
+                        .WithMany()
+                        .HasForeignKey("CorruptedTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.AdminModel", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.AdminModel", "Resolver")
+                        .WithMany()
+                        .HasForeignKey("ResolverId");
+
+                    b.Navigation("CorruptedTag");
+
+                    b.Navigation("Reporter");
+
+                    b.Navigation("Resolver");
                 });
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerModel", b =>

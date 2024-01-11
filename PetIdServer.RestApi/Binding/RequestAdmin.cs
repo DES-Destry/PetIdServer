@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json;
-using PetIdServer.Application.Services.Dto;
+using PetIdServer.Application.Common.Services.Dto;
 
 namespace PetIdServer.RestApi.Binding;
 
@@ -21,11 +21,9 @@ public class RequestAdmin : AdminDto
     {
         RequestAdmin? result = default;
         foreach (var claim in claimsPrincipal.Claims)
-        {
             if (claim.Type == ClaimTypes.UserData)
                 result = JsonSerializer.Deserialize<RequestAdmin>(claim.Value) ??
                          throw new ArgumentException(nameof(claim));
-        }
 
         return result ?? throw new ArgumentException(nameof(result));
     }

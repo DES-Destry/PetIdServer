@@ -25,7 +25,9 @@ public static class AuthExtensions
                     ValidateLifetime = true,
                     ValidIssuer = ownerTokenParameters.Issuer,
                     ValidAudience = ownerTokenParameters.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
                 };
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
@@ -38,7 +40,9 @@ public static class AuthExtensions
                     ValidateLifetime = true,
                     ValidIssuer = adminTokenParameters.Issuer,
                     ValidAudience = adminTokenParameters.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
                 };
             });
     }

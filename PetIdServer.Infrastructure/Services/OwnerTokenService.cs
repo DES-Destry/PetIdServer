@@ -2,27 +2,27 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
-using PetIdServer.Application.Dto;
-using PetIdServer.Application.Services;
-using PetIdServer.Application.Services.Dto;
-using PetIdServer.Core.Exceptions.Auth;
+using Microsoft.IdentityModel.Tokens;
+using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services;
+using PetIdServer.Application.Common.Services.Dto;
+using PetIdServer.Core.Common.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
 public class OwnerTokenService : IOwnerTokenService
 {
-    private readonly TokenValidationParameters _tokenValidation;
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly OwnerTokenParameters _parameters;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly TokenValidationParameters _tokenValidation;
 
     public OwnerTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
         _parameters = new OwnerTokenParameters(configuration);
-        
+
         _tokenValidation = new TokenValidationParameters
         {
             ValidAudience = _parameters.Audience,
@@ -57,12 +57,14 @@ public class OwnerTokenService : IOwnerTokenService
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
+        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ??
+               throw new ArgumentException(nameof(ownerJson));
     }
 
     private string GenerateAccessToken(OwnerDto owner)
     {
-        var ownerString = JsonSerializer.Serialize(owner) ?? throw new ArgumentException(nameof(owner));
+        var ownerString = JsonSerializer.Serialize(owner) ??
+                          throw new ArgumentException(nameof(owner));
 
         var claims = new List<Claim>
         {
@@ -71,13 +73,13 @@ public class OwnerTokenService : IOwnerTokenService
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.AtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -88,7 +90,7 @@ public class OwnerTokenService : IOwnerTokenService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Hash, accessToken),
+            new(ClaimTypes.Hash, accessToken)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
 
@@ -98,7 +100,7 @@ public class OwnerTokenService : IOwnerTokenService
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.RtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -112,7 +114,8 @@ public class OwnerTokenService : IOwnerTokenService
         var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
         var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ?? throw new ArgumentException(nameof(ownerJson));
+        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ??
+               throw new ArgumentException(nameof(ownerJson));
     }
 
     private async Task<string> DecryptAccessToken(string refreshToken)
@@ -125,7 +128,8 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
+        _tokenValidation.IssuerSigningKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(accessToken);
@@ -137,7 +141,8 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateExpiredAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
+        _tokenValidation.IssuerSigningKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
         _tokenValidation.ValidateLifetime = false;
 
         var validated = await ValidateTokens(accessToken);
@@ -149,7 +154,8 @@ public class OwnerTokenService : IOwnerTokenService
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
-        _tokenValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
+        _tokenValidation.IssuerSigningKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
         _tokenValidation.ValidateLifetime = true;
 
         var validated = await ValidateTokens(refreshToken);

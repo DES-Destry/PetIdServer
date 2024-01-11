@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using PetIdServer.Application.Exceptions;
+using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.RestApi.Attributes;
 
 namespace PetIdServer.RestApi.Middlewares;
@@ -45,7 +45,7 @@ public class SecurityKeyMiddleware(
                           throw new MisconfigurationException().WithMeta(new
                           {
                               _configuration = configuration,
-                              value = "Security:SecurityKeySecret",
+                              value = "Security:SecurityKeySecret"
                           });
         var dateSecret = string.Concat(privatePart, "_", date);
         var srcBytes = Encoding.UTF8.GetBytes(dateSecret);

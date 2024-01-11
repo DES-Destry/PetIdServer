@@ -1,5 +1,5 @@
 using Carter;
-using PetIdServer.Application.Extensions;
+using PetIdServer.Application.Common.Extensions;
 using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Extensions;
 using PetIdServer.RestApi.Mapper;

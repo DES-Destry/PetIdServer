@@ -4,19 +4,19 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using PetIdServer.Application.Services;
-using PetIdServer.Application.Services.Dto;
-using PetIdServer.Core.Entities;
-using PetIdServer.Core.Exceptions.Auth;
+using PetIdServer.Application.Common.Services;
+using PetIdServer.Application.Common.Services.Dto;
+using PetIdServer.Core.Common.Exceptions.Auth;
+using PetIdServer.Core.Domain.Admin;
 using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
 public class AdminTokenService : IAdminTokenService
 {
-    private readonly TokenValidationParameters _tokenValidation;
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly AdminTokenParameters _parameters;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly TokenValidationParameters _tokenValidation;
 
     public AdminTokenService(IConfiguration configuration)
     {
@@ -25,7 +25,8 @@ public class AdminTokenService : IAdminTokenService
 
         _tokenValidation = new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret)),
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret)),
             ValidAudience = _parameters.Audience,
             ValidIssuer = _parameters.Issuer,
             ValidateLifetime = true,
@@ -35,9 +36,11 @@ public class AdminTokenService : IAdminTokenService
         };
     }
 
-    public async Task<string> GenerateToken(Admin admin)
+    public async Task<string> GenerateToken(AdminEntity admin)
     {
-        var adminString = JsonSerializer.Serialize(admin) ?? throw new ArgumentException(nameof(admin));
+        var adminString = JsonSerializer.Serialize(admin) ??
+                          throw new ArgumentException("Cannot parse null to valid JSON",
+                              nameof(admin));
 
         var claims = new List<Claim>
         {
@@ -46,13 +49,13 @@ public class AdminTokenService : IAdminTokenService
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.JwtSecret));
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.JwtTtl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512),
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -66,7 +69,8 @@ public class AdminTokenService : IAdminTokenService
         var jwtToken = _tokenHandler.ReadJwtToken(token);
         var adminJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
 
-        return JsonSerializer.Deserialize<AdminDto>(adminJson) ?? throw new ArgumentException(nameof(adminJson));
+        return JsonSerializer.Deserialize<AdminDto>(adminJson) ??
+               throw new ArgumentException(nameof(adminJson));
     }
 
     private async Task ValidateToken(string token)

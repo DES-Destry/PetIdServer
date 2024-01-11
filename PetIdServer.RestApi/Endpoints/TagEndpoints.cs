@@ -1,7 +1,7 @@
 using Carter;
 using MediatR;
-using PetIdServer.Application.Dto.Tag;
-using PetIdServer.Application.Requests.Queries.Tag.ControlCheck;
+using PetIdServer.Application.AppDomain.TagDomain.Dto;
+using PetIdServer.Application.AppDomain.TagDomain.Queries.ControlCheck;
 
 namespace PetIdServer.RestApi.Endpoints;
 
@@ -12,12 +12,8 @@ public class TagEndpoints : ICarterModule
         var group = app.MapGroup("tag");
 
         group.MapGet("pre-sell/{controlCode:long}", TagControlCheck)
-            .WithName(nameof(TagControlCheck))
-            .WithOpenApi(op =>
-            {
-                op.Summary = "Get pre-sell info by control code.";
-                return op;
-            })
+            .WithOpenApi()
+            .WithSummary("Get pre-sell info by control code.")
             .Produces<CheckTagDto>();
     }
 
