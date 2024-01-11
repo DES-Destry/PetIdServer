@@ -7,5 +7,6 @@ public record TagReportShortDto(
     Guid Id,
     TagReviewForAdminDto CorruptedTag,
     AdminDto Reporter,
+    AdminDto? Resolver,
     bool IsResolved,
     DateTime CreatedAt);
