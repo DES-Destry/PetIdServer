@@ -20,6 +20,4 @@ public class TagReportModel
     [ForeignKey(nameof(CorruptedTagId))] public virtual TagModel CorruptedTag { get; set; }
     [ForeignKey(nameof(ReporterId))] public virtual AdminModel Reporter { get; set; }
     [ForeignKey(nameof(ResolverId))] public virtual AdminModel? Resolver { get; set; }
-
-    public bool IsResolved => Resolver is not null;
 }

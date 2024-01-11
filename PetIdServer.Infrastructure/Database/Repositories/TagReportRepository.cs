@@ -23,7 +23,7 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
         var reportModels = await database.TagReports
             .Where(report => (filters.TagId == null || report.CorruptedTagId == filters.TagId) &&
                              (filters.IsResolved == null ||
-                              report.IsResolved == filters.IsResolved))
+                              report.ResolverId != null || !filters.IsResolved.Value))
             .ToListAsync();
 
         return reportModels.Select(mapper.Map<TagReportModel, TagReportEntity>);
