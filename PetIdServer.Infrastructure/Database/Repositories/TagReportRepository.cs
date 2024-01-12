@@ -25,6 +25,7 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
                              (filters.IsResolved == null ||
                               ((report.ResolverId != null || !filters.IsResolved.Value) &&
                                (report.ResolverId == null || filters.IsResolved.Value))))
+            .OrderBy(report => report.ResolverId != null)
             .ToListAsync();
 
         return reportModels.Select(mapper.Map<TagReportModel, TagReportEntity>);
