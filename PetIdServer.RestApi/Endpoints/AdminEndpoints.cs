@@ -47,14 +47,14 @@ public class AdminEndpoints : ICarterModule
             .WithSummary("Change password as authenticated admin.")
             .Produces<SingleTokenDto>();
 
-        group.MapGet("tag/all", GetAllTags)
+        group.MapGet("tags", GetAllTags)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Get all tags (admin).")
             .WithDescription("Get all tags with shorted amount of fields.")
             .Produces<TagReviewList>();
 
-        group.MapGet("tag/{id:int}", GetDecodedTag)
+        group.MapGet("tags/{id:int}", GetDecodedTag)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Get decoded tag (admin).")
@@ -69,28 +69,28 @@ public class AdminEndpoints : ICarterModule
                 "Describe range and it will create all tags from x to y. Be careful with conflicts!")
             .Produces<VoidResponseDto>();
 
-        group.MapPost("tag/{id:int}/clear", ClearTag)
+        group.MapPost("tags/{id:int}/clear", ClearTag)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Remove the pet from tag (admin).")
             .WithDescription("Remove the pet from tag force with admin permissions.")
             .Produces<VoidResponseDto>();
 
-        group.MapGet("report/tag/all", GetAllTagReports)
+        group.MapGet("tags/reports", GetAllTagReports)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Get all reports (admin).")
             .WithDescription("Get all reports with abused tags with filters(isResolved, tagId).")
             .Produces<TagReportsDto>();
 
-        group.MapPost("report/tag/{id:int}", CreateTagReport)
+        group.MapPost("tags/{id:int}/reports", CreateTagReport)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Create report for tag (admin).")
             .WithDescription("Create report that by opinion of admin was abused.")
             .Produces<VoidResponseDto>();
 
-        group.MapPost("report/{id:guid}/resolve", ResolveTagReport)
+        group.MapPost("reports/{id:guid}/resolve", ResolveTagReport)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithOpenApi()
             .WithSummary("Mark report as resolved (admin).")
