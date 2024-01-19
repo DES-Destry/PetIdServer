@@ -39,7 +39,7 @@ public class AdminEndpoints : ICarterModule
         group.MapPost("login", LoginAdmin)
             .WithOpenApi()
             .WithSummary("Login existed administrator in system (admin).")
-            .Produces<LoginAdminDto>();
+            .Produces<LoginAdminResponseDto>();
 
         group.MapPut("password", ChangePassword)
             .RequireAuthorization(AuthSchemas.Admin)
