@@ -22,13 +22,11 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
         return model is null ? null : mapper.Map<OwnerModel, OwnerEntity>(model);
     }
 
-    public async Task<OwnerEntity?> CreateOwner(OwnerEntity owner)
+    public async Task CreateOwner(OwnerEntity owner)
     {
         var model = mapper.Map<OwnerEntity, OwnerModel>(owner);
-        var saved = await database.Owners.AddAsync(model);
+        database.Entry(model).State = EntityState.Added;
         await database.SaveChangesAsync();
-
-        return mapper.Map<OwnerModel, OwnerEntity>(saved.Entity);
     }
 
     public async Task UpdateOwner(OwnerId id, OwnerEntity owner)

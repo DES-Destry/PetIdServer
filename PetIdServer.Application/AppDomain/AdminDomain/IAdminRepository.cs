@@ -6,6 +6,6 @@ public interface IAdminRepository
 {
     Task<AdminEntity?> GetAdminById(AdminId id);
     Task<AdminEntity?> GetAdminByUsername(string username);
-    Task<AdminEntity?> CreateAdmin(AdminEntity admin);
+    Task CreateAdmin(AdminEntity admin);
     Task UpdateAdmin(AdminId adminId, AdminEntity admin);
 }

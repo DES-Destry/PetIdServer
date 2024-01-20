@@ -20,13 +20,11 @@ public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepo
         return model is null ? null : mapper.Map<AdminModel, AdminEntity>(model);
     }
 
-    public async Task<AdminEntity?> CreateAdmin(AdminEntity admin)
+    public async Task CreateAdmin(AdminEntity admin)
     {
         var model = mapper.Map<AdminEntity, AdminModel>(admin);
-        var saved = await database.Admins.AddAsync(model);
+        database.Entry(model).State = EntityState.Added;
         await database.SaveChangesAsync();
-
-        return mapper.Map<AdminModel, AdminEntity>(saved.Entity);
     }
 
     public async Task UpdateAdmin(AdminId id, AdminEntity admin)

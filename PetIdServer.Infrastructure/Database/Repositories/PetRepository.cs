@@ -15,12 +15,11 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
         return model is null ? null : mapper.Map<PetModel, PetEntity>(model);
     }
 
-    public async Task<PetEntity?> CreatePet(PetEntity pet)
+    public async Task CreatePet(PetEntity pet)
     {
         var model = mapper.Map<PetEntity, PetModel>(pet);
-        var saved = await database.Pets.AddAsync(model);
-
-        return mapper.Map<PetModel, PetEntity>(saved.Entity);
+        database.Entry(model).State = EntityState.Added;
+        await database.SaveChangesAsync();
     }
 
     public async Task UpdatePet(PetId id, PetEntity pet)
