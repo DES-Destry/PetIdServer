@@ -29,6 +29,7 @@
         <ProjectReference Include="..\PetIdServer.Application\PetIdServer.Application.csproj"/>
         <ProjectReference Include="..\PetIdServer.Core\PetIdServer.Core.csproj"/>
         <ProjectReference Include="..\PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj"/>
+        <ProjectReference Include="..\PetIdServer.ServiceDefaults\PetIdServer.ServiceDefaults.csproj"/>
 
 
     </ItemGroup>
