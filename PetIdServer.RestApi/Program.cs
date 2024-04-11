@@ -6,7 +6,7 @@ using PetIdServer.RestApi.Mapper;
 using PetIdServer.RestApi.Response.Error.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddServiceDefaults();
+builder.AddServiceDefaults().AddDefaultHealthChecks();
 
 var configuration = builder.Configuration;
 var environment = builder.Environment;

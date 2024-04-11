@@ -23,9 +23,6 @@ public static class Extensions
         {
             // Turn on resilience by default
             http.AddStandardResilienceHandler();
-
-            // Turn on service discovery by default
-            http.UseServiceDiscovery();
         });
 
         return builder;
@@ -51,10 +48,8 @@ public static class Extensions
             .WithTracing(tracing =>
             {
                 if (builder.Environment.IsDevelopment())
-                {
                     // We want to view all traces in development
                     tracing.SetSampler(new AlwaysOnSampler());
-                }
 
                 tracing.AddAspNetCoreInstrumentation()
                     .AddGrpcClientInstrumentation()
