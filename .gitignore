@@ -9,3 +9,8 @@ riderModule.iml
 
 PetIdServer.RestApi/appsettings.json
 PetIdServer.RestApi/appsettings.Development.json
+
+PetIdServer.AppHost/appsettings.json
+PetIdServer.AppHost/appsettings.Development.json
+
+**/.DS_Store
