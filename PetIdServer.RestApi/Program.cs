@@ -1,6 +1,5 @@
 using Carter;
 using PetIdServer.Application.Common.Extensions;
-using PetIdServer.Infrastructure.Database;
 using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Extensions;
 using PetIdServer.RestApi.Mapper;
@@ -8,11 +7,8 @@ using PetIdServer.RestApi.Response.Error.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
-builder.AddNpgsqlDataSource("pet-id");
-builder.AddNpgsqlDbContext<PetIdContext>("pet-id");
 
 var configuration = builder.Configuration;
-var environment = builder.Environment;
 
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
@@ -22,7 +18,7 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwagger()
     .AddApplication()
-    .AddInfrastructure(configuration, environment)
+    .AddInfrastructure(builder)
     .AddServerErrorHandling()
     .AddAutoMapper(typeof(RestApiMappingProfile))
     .AddCarter()

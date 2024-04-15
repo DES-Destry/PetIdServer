@@ -1,12 +1,13 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PetIdServer.Application.AppDomain.AdminDomain;
 using PetIdServer.Application.AppDomain.OwnerDomain;
 using PetIdServer.Application.AppDomain.PetDomain;
 using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Application.AppDomain.TagReportDomain;
 using PetIdServer.Application.Common.Services;
+using PetIdServer.Infrastructure.Database;
 using PetIdServer.Infrastructure.Database.Repositories;
 using PetIdServer.Infrastructure.Mapper;
 using PetIdServer.Infrastructure.Services;
@@ -17,11 +18,10 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment environment)
+        WebApplicationBuilder builder)
     {
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));
-        services.AddDbConnection(configuration, environment);
+        builder.AddDbConnection();
 
         services.AddRepositories();
         services.AddServices();
@@ -50,21 +50,12 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IServiceCollection AddDbConnection(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment environment)
+    private static IHostApplicationBuilder AddDbConnection(
+        this IHostApplicationBuilder builder)
     {
-        // var connectionString = configuration.GetConnectionString("Postgres") ??
-        //                        throw new MisconfigurationException().WithMeta(new
-        //                        {
-        //                            configuration,
-        //                            value = "ConnectionStrings:Postgres",
-        //                            @class = "Infrastructure.Extensions"
-        //                        });
+        builder.AddNpgsqlDataSource("pet-id");
+        builder.AddNpgsqlDbContext<PetIdContext>("pet-id");
 
-        // services.AddNpgsql<PetIdContext>("db");
-
-        return services;
+        return builder;
     }
 }
