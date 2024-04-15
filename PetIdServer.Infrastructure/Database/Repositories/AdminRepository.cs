@@ -1,12 +1,14 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using PetIdServer.Application.AppDomain.AdminDomain;
 using PetIdServer.Core.Domain.Admin;
 using PetIdServer.Infrastructure.Database.Models;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 
-public class AdminRepository(IMapper mapper, PetIdContext database) : IAdminRepository
+public class AdminRepository(IMapper mapper, PetIdContext database, NpgsqlDataSource source)
+    : IAdminRepository
 {
     public async Task<AdminEntity?> GetAdminById(AdminId id)
     {

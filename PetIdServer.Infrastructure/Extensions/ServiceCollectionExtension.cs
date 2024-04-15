@@ -1,16 +1,12 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using PetIdServer.Application.AppDomain.AdminDomain;
 using PetIdServer.Application.AppDomain.OwnerDomain;
 using PetIdServer.Application.AppDomain.PetDomain;
 using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Application.AppDomain.TagReportDomain;
-using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.Application.Common.Services;
-using PetIdServer.Infrastructure.Database;
 using PetIdServer.Infrastructure.Database.Repositories;
 using PetIdServer.Infrastructure.Mapper;
 using PetIdServer.Infrastructure.Services;
@@ -59,24 +55,15 @@ public static class ServiceCollectionExtension
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
-        var connectionString = configuration.GetConnectionString("Postgres") ??
-                               throw new MisconfigurationException().WithMeta(new
-                               {
-                                   configuration,
-                                   value = "ConnectionStrings:Postgres",
-                                   @class = "Infrastructure.Extensions"
-                               });
+        // var connectionString = configuration.GetConnectionString("Postgres") ??
+        //                        throw new MisconfigurationException().WithMeta(new
+        //                        {
+        //                            configuration,
+        //                            value = "ConnectionStrings:Postgres",
+        //                            @class = "Infrastructure.Extensions"
+        //                        });
 
-        services.AddDbContext<PetIdContext>(options =>
-        {
-            options.UseNpgsql(connectionString);
-
-            if (environment.IsProduction()) return;
-
-            // Debug options section
-            options.EnableSensitiveDataLogging();
-            options.EnableDetailedErrors();
-        });
+        // services.AddNpgsql<PetIdContext>("db");
 
         return services;
     }
