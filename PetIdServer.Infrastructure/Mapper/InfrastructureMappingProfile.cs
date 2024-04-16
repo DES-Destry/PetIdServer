@@ -15,7 +15,7 @@ public class InfrastructureMappingProfile : Profile
         CreateMap<OwnerModel, OwnerEntity>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (OwnerId) model.Id))
             .ReverseMap()
-            .ForMember(model => model.Email,
+            .ForMember(model => model.Id,
                 expression => expression.MapFrom(domain => domain.Id));
 
         CreateMap<OwnerContactModel, OwnerContactVo>().ReverseMap();
