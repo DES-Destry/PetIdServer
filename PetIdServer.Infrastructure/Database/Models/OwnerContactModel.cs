@@ -8,7 +8,7 @@ namespace PetIdServer.Infrastructure.Database.Models;
 [PrimaryKey(nameof(OwnerId), nameof(ContactType))]
 public class OwnerContactModel
 {
-    [Column("owner_id")] [Required] [Key] public string OwnerId { get; set; }
+    [Column("owner_id")] [Required] [Key] public Guid OwnerId { get; set; }
 
     [Column("contact_type")]
     [Required]

@@ -35,6 +35,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                 schema: "pet",
                 columns: table => new
                 {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false),
                     password = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
@@ -43,7 +44,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_owners", x => x.email);
+                    table.PrimaryKey("PK_owners", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,7 +52,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                 schema: "pet",
                 columns: table => new
                 {
-                    owner_id = table.Column<string>(type: "text", nullable: false),
+                    owner_id = table.Column<Guid>(type: "uuid", nullable: false),
                     contact_type = table.Column<string>(type: "text", nullable: false),
                     contact = table.Column<string>(type: "text", nullable: false)
                 },
@@ -63,7 +64,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         column: x => x.owner_id,
                         principalSchema: "pet",
                         principalTable: "owners",
-                        principalColumn: "email",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -73,7 +74,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    owner_id = table.Column<string>(type: "text", nullable: false),
+                    owner_id = table.Column<Guid>(type: "uuid", nullable: false),
                     type = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     sex = table.Column<bool>(type: "boolean", nullable: false),
@@ -89,7 +90,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         column: x => x.owner_id,
                         principalSchema: "pet",
                         principalTable: "owners",
-                        principalColumn: "email",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -118,17 +119,72 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         principalColumn: "id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "tag_reports",
+                schema: "pet",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    corrupted_tag_id = table.Column<int>(type: "integer", nullable: false),
+                    reporter_id = table.Column<string>(type: "character varying(32)", nullable: false),
+                    resolver_id = table.Column<string>(type: "character varying(32)", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    resolved_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tag_reports", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_tag_reports_admins_reporter_id",
+                        column: x => x.reporter_id,
+                        principalSchema: "pet",
+                        principalTable: "admins",
+                        principalColumn: "username",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tag_reports_admins_resolver_id",
+                        column: x => x.resolver_id,
+                        principalSchema: "pet",
+                        principalTable: "admins",
+                        principalColumn: "username");
+                    table.ForeignKey(
+                        name: "FK_tag_reports_tags_corrupted_tag_id",
+                        column: x => x.corrupted_tag_id,
+                        principalSchema: "pet",
+                        principalTable: "tags",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 schema: "pet",
                 table: "admins",
                 columns: new[] { "username", "created_at", "password", "password_last_changed_at" },
-                values: new object[] { "Andrey.Kirik", new DateTime(2023, 11, 29, 12, 30, 45, 372, DateTimeKind.Utc).AddTicks(950), null, null });
+                values: new object[] { "Andrey.Kirik", new DateTime(2024, 4, 16, 14, 0, 49, 628, DateTimeKind.Utc).AddTicks(4440), null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_pets_owner_id",
                 schema: "pet",
                 table: "pets",
                 column: "owner_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tag_reports_corrupted_tag_id",
+                schema: "pet",
+                table: "tag_reports",
+                column: "corrupted_tag_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tag_reports_reporter_id",
+                schema: "pet",
+                table: "tag_reports",
+                column: "reporter_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tag_reports_resolver_id",
+                schema: "pet",
+                table: "tag_reports",
+                column: "resolver_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tags_pet_id",
@@ -141,11 +197,15 @@ namespace PetIdServer.Infrastructure.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "admins",
+                name: "owners_contacts",
                 schema: "pet");
 
             migrationBuilder.DropTable(
-                name: "owners_contacts",
+                name: "tag_reports",
+                schema: "pet");
+
+            migrationBuilder.DropTable(
+                name: "admins",
                 schema: "pet");
 
             migrationBuilder.DropTable(
