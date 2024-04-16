@@ -14,7 +14,7 @@ public class OwnerEntity : Entity<OwnerId>
 
     public OwnerEntity(OwnerId id) : base(id) { }
 
-    public string Email => Id;
+    public string Email { get; set; }
 
     /// <summary>
     ///     Storing only as a hash
