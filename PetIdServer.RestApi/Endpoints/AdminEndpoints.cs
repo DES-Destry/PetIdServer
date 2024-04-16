@@ -28,71 +28,53 @@ public class AdminEndpoints : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup(EndpointBase).RequireSecurityKey();
+        var group = app.MapGroup(EndpointBase).RequireSecurityKey().WithOpenApi();
+        var authorizedGroup = group.RequireAuthorization(AuthSchemas.Admin);
 
-        group.MapGet("auth", Authenticate)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapGet("auth", Authenticate)
             .WithSummary("Get information about admin from token (admin).")
             .Produces<AdminDto>();
 
         group.MapPost("login", LoginAdmin)
-            .WithOpenApi()
             .WithSummary("Login existed administrator in system (admin).")
             .Produces<LoginAdminResponseDto>();
 
-        group.MapPut("password", ChangePassword)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapPut("password", ChangePassword)
             .WithSummary("Change password as authenticated admin.")
             .Produces<SingleTokenDto>();
 
-        group.MapGet("tags", GetAllTags)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapGet("tags", GetAllTags)
             .WithSummary("Get all tags (admin).")
             .WithDescription("Get all tags with shorted amount of fields.")
             .Produces<TagReviewList>();
 
-        group.MapGet("tags/{id:int}", GetDecodedTag)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapGet("tags/{id:int}", GetDecodedTag)
             .WithSummary("Get decoded tag (admin).")
             .WithDescription("Get tag with his public code with admin credentials.")
             .Produces<TagForAdminDto>();
 
-        group.MapPost("tags", CreateTags)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapPost("tags", CreateTags)
             .WithSummary("Create tags range (admin).")
             .WithDescription(
                 "Describe range and it will create all tags from x to y. Be careful with conflicts!")
             .Produces<VoidResponseDto>();
 
-        group.MapPost("tags/{id:int}/clear", ClearTag)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapPost("tags/{id:int}/clear", ClearTag)
             .WithSummary("Remove the pet from tag (admin).")
             .WithDescription("Remove the pet from tag force with admin permissions.")
             .Produces<VoidResponseDto>();
 
-        group.MapGet("tags/reports", GetAllTagReports)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapGet("tags/reports", GetAllTagReports)
             .WithSummary("Get all reports (admin).")
             .WithDescription("Get all reports with abused tags with filters(isResolved, tagId).")
             .Produces<TagReportsDto>();
 
-        group.MapPost("tags/{id:int}/reports", CreateTagReport)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapPost("tags/{id:int}/reports", CreateTagReport)
             .WithSummary("Create report for tag (admin).")
             .WithDescription("Create report that by opinion of admin was abused.")
             .Produces<VoidResponseDto>();
 
-        group.MapPost("reports/{id:guid}/resolve", ResolveTagReport)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithOpenApi()
+        authorizedGroup.MapPost("reports/{id:guid}/resolve", ResolveTagReport)
             .WithSummary("Mark report as resolved (admin).")
             .WithDescription(
                 "To not pay attention for already resolved reports it must be marked as resolved.")

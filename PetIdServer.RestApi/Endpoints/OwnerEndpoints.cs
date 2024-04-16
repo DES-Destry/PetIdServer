@@ -21,6 +21,7 @@ public class OwnerEndpoints : ICarterModule
             .WithDescription(
                 "Create new account of owner and get pair of tokens that will able to create new pets.")
             .Produces<TokenPairDto>();
+
         group.MapPost("login", LoginOwner)
             .WithSummary("Login as owner.")
             .WithDescription("Get new token pairs with owner's creds.")
