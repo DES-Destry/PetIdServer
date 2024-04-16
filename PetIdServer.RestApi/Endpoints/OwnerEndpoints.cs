@@ -3,6 +3,7 @@ using Carter;
 using MediatR;
 using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Registration;
+using PetIdServer.Application.Common.Dto;
 using PetIdServer.RestApi.Endpoints.Dto.Owner;
 
 namespace PetIdServer.RestApi.Endpoints;
@@ -15,8 +16,16 @@ public class OwnerEndpoints : ICarterModule
     {
         var group = app.MapGroup(EndpointBase).WithOpenApi();
 
-        group.MapPost("", CreateOwner);
-        group.MapPost("login", LoginOwner);
+        group.MapPost("", CreateOwner)
+            .WithSummary("Create new account.")
+            .WithDescription(
+                "Create new account of owner and get pair of tokens that will able to create new pets.")
+            .Produces<TokenPairDto>();
+        group.MapPost("login", LoginOwner)
+            .WithSummary("Login as owner.")
+            .WithDescription("Get new token pairs with owner's creds.")
+            .Produces<LoginOwnerResponseDto>();
+        ;
     }
 
     private static async Task<IResult> CreateOwner(
