@@ -7,5 +7,5 @@ namespace PetIdServer.Core.Domain.Owner;
 public record OwnerId(Guid Value)
 {
     public static implicit operator Guid(OwnerId adminId) => adminId.Value;
-    public static explicit operator OwnerId(string id) => new(Guid.Parse(id));
+    public static explicit operator OwnerId(Guid id) => new(id);
 }
