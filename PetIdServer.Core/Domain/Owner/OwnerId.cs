@@ -4,8 +4,8 @@ namespace PetIdServer.Core.Domain.Owner;
 ///     Owner Id
 /// </summary>
 /// <param name="Value">Also used as email of owner</param>
-public record OwnerId(string Value)
+public record OwnerId(Guid Value)
 {
-    public static implicit operator string(OwnerId adminId) => adminId.Value;
-    public static explicit operator OwnerId(string id) => new(id);
+    public static implicit operator Guid(OwnerId adminId) => adminId.Value;
+    public static explicit operator OwnerId(Guid id) => new(id);
 }

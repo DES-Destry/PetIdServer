@@ -5,16 +5,16 @@ namespace PetIdServer.Core.Domain.Owner;
 
 public class OwnerEntity : Entity<OwnerId>
 {
-    public OwnerEntity(CreationAttributes creationAttributes) : base(
-        (OwnerId) creationAttributes.Email)
+    public OwnerEntity(CreationAttributes creationAttributes) : base((OwnerId) Guid.NewGuid())
     {
+        Email = creationAttributes.Email;
         Password = creationAttributes.Password;
         Name = creationAttributes.Name;
     }
 
     public OwnerEntity(OwnerId id) : base(id) { }
 
-    public string Email => Id;
+    public string Email { get; set; }
 
     /// <summary>
     ///     Storing only as a hash

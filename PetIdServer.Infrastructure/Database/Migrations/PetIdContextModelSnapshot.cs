@@ -18,7 +18,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("pet")
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -50,14 +50,14 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         new
                         {
                             Username = "Andrey.Kirik",
-                            CreatedAt = new DateTime(2024, 1, 10, 12, 1, 14, 983, DateTimeKind.Utc).AddTicks(750)
+                            CreatedAt = new DateTime(2024, 4, 16, 14, 0, 49, 628, DateTimeKind.Utc).AddTicks(4440)
                         });
                 });
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerContactModel", b =>
                 {
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("text")
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
                     b.Property<string>("ContactType")
@@ -76,9 +76,10 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerModel", b =>
                 {
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Address")
                         .HasColumnType("text")
@@ -88,6 +89,11 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasMaxLength(4096)
                         .HasColumnType("character varying(4096)")
                         .HasColumnName("description");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -100,7 +106,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.ToTable("owners", "pet");
                 });
@@ -127,9 +133,8 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasColumnType("character varying(32)")
                         .HasColumnName("name");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
                     b.Property<string>("Photo")

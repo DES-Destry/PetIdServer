@@ -1,6 +1,5 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
-using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Core.Domain.Owner;
 using PetIdServer.Core.Domain.Owner.Exceptions;
@@ -30,13 +29,7 @@ public class RegistrationOwnerCommandHandler(
             new OwnerEntity.CreationAttributes(request.Email, passwordHash, request.Name);
         var owner = new OwnerEntity(creationAttributes);
 
-        var createdOwner = await ownerRepository.CreateOwner(owner) ??
-                           throw new SomethingWentWrongException(new
-                           {
-                               Reason =
-                                   "Owner created successfully in core, but not saved in infrastructure",
-                               Email = owner.Id
-                           });
-        return await ownerTokenService.GenerateTokens(createdOwner);
+        await ownerRepository.CreateOwner(owner);
+        return await ownerTokenService.GenerateTokens(owner);
     }
 }

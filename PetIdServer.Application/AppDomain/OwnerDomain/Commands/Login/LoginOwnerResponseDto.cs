@@ -4,5 +4,5 @@ namespace PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 
 public class LoginOwnerResponseDto : TokenPairDto
 {
-    public string OwnerId { get; set; }
+    public Guid OwnerId { get; set; }
 }

@@ -12,7 +12,7 @@ using PetIdServer.Infrastructure.Database;
 namespace PetIdServer.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PetIdContext))]
-    [Migration("20231129123045_Initial")]
+    [Migration("20240416140049_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("pet")
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -53,14 +53,14 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         new
                         {
                             Username = "Andrey.Kirik",
-                            CreatedAt = new DateTime(2023, 11, 29, 12, 30, 45, 372, DateTimeKind.Utc).AddTicks(950)
+                            CreatedAt = new DateTime(2024, 4, 16, 14, 0, 49, 628, DateTimeKind.Utc).AddTicks(4440)
                         });
                 });
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerContactModel", b =>
                 {
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("text")
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
                     b.Property<string>("ContactType")
@@ -79,9 +79,10 @@ namespace PetIdServer.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerModel", b =>
                 {
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Address")
                         .HasColumnType("text")
@@ -91,6 +92,11 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasMaxLength(4096)
                         .HasColumnType("character varying(4096)")
                         .HasColumnName("description");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -103,7 +109,7 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.ToTable("owners", "pet");
                 });
@@ -130,9 +136,8 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasColumnType("character varying(32)")
                         .HasColumnName("name");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
                     b.Property<string>("Photo")
@@ -197,6 +202,45 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                     b.ToTable("tags", "pet");
                 });
 
+            modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.TagReportModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("CorruptedTagId")
+                        .HasColumnType("integer")
+                        .HasColumnName("corrupted_tag_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("ReporterId")
+                        .IsRequired()
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("reporter_id");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("resolved_at");
+
+                    b.Property<string>("ResolverId")
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("resolver_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorruptedTagId");
+
+                    b.HasIndex("ReporterId");
+
+                    b.HasIndex("ResolverId");
+
+                    b.ToTable("tag_reports", "pet");
+                });
+
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerContactModel", b =>
                 {
                     b.HasOne("PetIdServer.Infrastructure.Database.Models.OwnerModel", "Owner")
@@ -226,6 +270,31 @@ namespace PetIdServer.Infrastructure.Database.Migrations
                         .HasForeignKey("PetId");
 
                     b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.TagReportModel", b =>
+                {
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.TagModel", "CorruptedTag")
+                        .WithMany()
+                        .HasForeignKey("CorruptedTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.AdminModel", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetIdServer.Infrastructure.Database.Models.AdminModel", "Resolver")
+                        .WithMany()
+                        .HasForeignKey("ResolverId");
+
+                    b.Navigation("CorruptedTag");
+
+                    b.Navigation("Reporter");
+
+                    b.Navigation("Resolver");
                 });
 
             modelBuilder.Entity("PetIdServer.Infrastructure.Database.Models.OwnerModel", b =>
