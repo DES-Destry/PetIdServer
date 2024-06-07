@@ -10,12 +10,13 @@ var db = builder
     .AddDatabase("pet-id");
 
 
-var redis = builder
-    .AddRedis("redis")
-    .WithDataVolume("petidserver_pet-id_redis-data");
+// var redis = builder
+//     .AddRedis("redis")
+//     .WithDataVolume("petidserver_pet-id_redis-data");
 
-builder.AddProject<PetIdServer_RestApi>("api")
-    .WithReference(db)
-    .WithReference(redis);
+builder
+    .AddProject<PetIdServer_RestApi>("api")
+    .WithReference(db);
+// .WithReference(redis);
 
 builder.Build().Run();
