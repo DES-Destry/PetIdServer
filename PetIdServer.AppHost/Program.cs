@@ -1,5 +1,3 @@
-using Projects;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var pgPassword = builder.AddParameter("pgPassword", true);
@@ -14,8 +12,8 @@ var redis = builder
     .AddRedis("redis")
     .WithDataVolume("petidserver_pet-id_redis-data");
 
-builder.AddProject<PetIdServer_RestApi>("api")
-    .WithReference(db)
-    .WithReference(redis);
+// builder.AddProject<Projects.>("api")
+//     .WithReference(db)
+//     .WithReference(redis);
 
 builder.Build().Run();
