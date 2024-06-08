@@ -13,4 +13,8 @@ builder
     .AddProject<PetIdServer_RestApi>("api")
     .WithReference(db);
 
+builder
+    .AddProject<PetIdServer_MigrationService>("migrations")
+    .WithReference(db);
+
 builder.Build().Run();

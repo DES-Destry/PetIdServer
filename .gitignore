@@ -13,4 +13,7 @@ PetIdServer.RestApi/appsettings.Development.json
 PetIdServer.AppHost/appsettings.json
 PetIdServer.AppHost/appsettings.Development.json
 
+PetIdServer.MigrationService/appsettings.json
+PetIdServer.MigrationService/appsettings.Development.json
+
 **/.DS_Store

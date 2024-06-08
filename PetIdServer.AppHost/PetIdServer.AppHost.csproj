@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\PetIdServer.MigrationService\PetIdServer.MigrationService.csproj" />
         <ProjectReference Include="..\PetIdServer.RestApi\PetIdServer.RestApi.csproj"/>
     </ItemGroup>
 

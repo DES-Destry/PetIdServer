@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-PetIdServer.MigrationService-1a56198f-ff9f-4382-9cae-9d2b1b1f9784</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj"/>
+        <ProjectReference Include="..\PetIdServer.ServiceDefaults\PetIdServer.ServiceDefaults.csproj"/>
+    </ItemGroup>
+</Project>
