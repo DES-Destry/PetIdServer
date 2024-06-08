@@ -7,11 +7,11 @@ using PetIdServer.Infrastructure.Database;
 
 namespace PetIdServer.MigrationService;
 
-public class Worker(
+public class MigrationWorker(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
 {
-    private const string ActivitySourceName = "Migrations";
+    private const string ActivitySourceName = "Database/Migrations";
     private static readonly ActivitySource SActivitySource = new(ActivitySourceName);
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)

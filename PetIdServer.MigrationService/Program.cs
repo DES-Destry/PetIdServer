@@ -1,7 +1,8 @@
+using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.MigrationService;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+builder.Services.AddInfrastructure(builder).AddHostedService<MigrationWorker>();
 
 var host = builder.Build();
 host.Run();

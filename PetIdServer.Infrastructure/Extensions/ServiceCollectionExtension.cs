@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PetIdServer.Application.AppDomain.AdminDomain;
@@ -18,7 +17,7 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        WebApplicationBuilder builder)
+        IHostApplicationBuilder builder)
     {
         services.AddAutoMapper(typeof(InfrastructureMappingProfile));
         builder.AddDbConnection();
