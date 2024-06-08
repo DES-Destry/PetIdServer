@@ -24,7 +24,7 @@ namespace PetIdServer.RestApi.Endpoints;
 
 public class AdminEndpoints : ICarterModule
 {
-    private const string EndpointBase = "api/admin";
+    private const string EndpointBase = "admin";
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {

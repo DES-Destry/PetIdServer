@@ -10,7 +10,7 @@ namespace PetIdServer.RestApi.Endpoints;
 
 public class OwnerEndpoints : ICarterModule
 {
-    private const string EndpointBase = "api/owner";
+    private const string EndpointBase = "owner";
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {

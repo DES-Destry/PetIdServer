@@ -7,9 +7,11 @@ namespace PetIdServer.RestApi.Endpoints;
 
 public class TagEndpoints : ICarterModule
 {
+    private const string EndpointBase = "tag";
+    
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("tag");
+        var group = app.MapGroup(EndpointBase);
 
         group.MapGet("pre-sell/{controlCode:long}", TagControlCheck)
             .WithOpenApi()
