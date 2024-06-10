@@ -8,6 +8,7 @@ using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagId;
 using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services.Dto;
 using PetIdServer.Core.Domain.Owner;
 using PetIdServer.RestApi.Auth;
 using PetIdServer.RestApi.Binding;

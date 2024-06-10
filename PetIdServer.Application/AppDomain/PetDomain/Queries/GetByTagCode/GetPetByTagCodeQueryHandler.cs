@@ -1,8 +1,7 @@
 using AutoMapper;
 using MediatR;
-using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.TagDomain;
-using PetIdServer.Core.Domain.Pet;
+using PetIdServer.Application.Common.Services.Dto;
 using PetIdServer.Core.Domain.Pet.Exceptions;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
@@ -21,10 +20,8 @@ public class GetPetByTagCodeQueryHandler(ITagRepository tagRepository, IMapper m
                       Query = nameof(GetPetByTagCodeQuery), request.Code
                   });
 
-        var pet = tag.Pet ??
-                  throw new PetNotFoundException($"Tag {tag.Id.Value} has no attached pet!",
-                      new {Query = nameof(GetPetByTagCodeQuery), TagId = tag.Id.Value});
-
-        return mapper.Map<PetEntity, PetDto>(pet);
+        return tag.Pet ??
+               throw new PetNotFoundException($"Tag {tag.Id.Value} has no attached pet!",
+                   new {Query = nameof(GetPetByTagCodeQuery), TagId = tag.Id.Value});
     }
 }
