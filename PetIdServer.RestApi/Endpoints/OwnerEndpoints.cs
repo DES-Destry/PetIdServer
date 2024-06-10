@@ -4,6 +4,9 @@ using MediatR;
 using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Registration;
 using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services.Dto;
+using PetIdServer.RestApi.Auth;
+using PetIdServer.RestApi.Binding;
 using PetIdServer.RestApi.Endpoints.Dto.Owner;
 
 namespace PetIdServer.RestApi.Endpoints;
@@ -15,6 +18,12 @@ public class OwnerEndpoints : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup(EndpointBase).WithOpenApi();
+
+        group.MapGet("auth", Authenticate)
+            .RequireAuthorization(AuthSchemas.Owner)
+            .WithSummary("Authenticate owner")
+            .WithDescription("Get information about admin from token (owner).")
+            .Produces<OwnerDto>();
 
         group.MapPost("", CreateOwner)
             .WithSummary("Create new account.")
@@ -28,6 +37,9 @@ public class OwnerEndpoints : ICarterModule
             .Produces<LoginOwnerResponseDto>();
         ;
     }
+
+    private static async Task<IResult> Authenticate(RequestOwner owner) =>
+        await Task.FromResult(Results.Ok(owner));
 
     private static async Task<IResult> CreateOwner(
         CreateOwnerDto dto,

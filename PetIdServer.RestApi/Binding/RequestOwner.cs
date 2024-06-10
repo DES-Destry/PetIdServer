@@ -8,8 +8,7 @@ public class RequestOwner : OwnerDto
 {
     public static ValueTask<RequestOwner> BindAsync(HttpContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         var claimsPrincipal = context.User;
         var owner = ExtractOwner(claimsPrincipal);
