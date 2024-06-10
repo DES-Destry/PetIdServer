@@ -6,7 +6,7 @@ using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Pet.Exceptions;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
-namespace PetIdServer.Application.AppDomain.PetDomain.Queries;
+namespace PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
 
 public class GetPetByTagCodeQueryHandler(ITagRepository tagRepository, IMapper mapper)
     : IRequestHandler<GetPetByTagCodeQuery, PetDto>
@@ -18,8 +18,7 @@ public class GetPetByTagCodeQueryHandler(ITagRepository tagRepository, IMapper m
         var tag = await tagRepository.GetByCode(request.Code) ??
                   throw new TagNotFoundException("Tag with this code doesn't exists", new
                   {
-                      Query = nameof(GetPetByTagCodeQueryHandler),
-                      Code = request.Code
+                      Query = nameof(GetPetByTagCodeQueryHandler), request.Code
                   });
 
         var pet = tag.Pet ??
