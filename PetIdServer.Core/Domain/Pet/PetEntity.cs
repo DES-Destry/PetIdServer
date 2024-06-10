@@ -11,6 +11,7 @@ public class PetEntity : Entity<PetId>
         Name = creationAttributes.Name;
         Sex = creationAttributes.Sex;
         IsCastrated = creationAttributes.IsCastrated;
+        Owner = creationAttributes.Owner;
     }
 
     // Mapper require this constructor
@@ -28,6 +29,7 @@ public class PetEntity : Entity<PetId>
         string Type,
         string Name,
         bool Sex,
-        bool IsCastrated
+        bool IsCastrated,
+        OwnerEntity Owner
     );
 }

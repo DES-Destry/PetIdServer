@@ -1,5 +1,6 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
+using PetIdServer.Core.Domain.Owner;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
 
@@ -9,4 +10,7 @@ public class CreatePetCommand : IRequest<VoidResponseDto>
     public string Name { get; set; }
     public bool Sex { get; set; }
     public bool IsCastrated { get; set; }
+
+    // Authorized field
+    public OwnerEntity Owner { get; set; }
 }
