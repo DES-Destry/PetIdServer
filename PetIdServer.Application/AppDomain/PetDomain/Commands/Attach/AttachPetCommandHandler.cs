@@ -10,6 +10,7 @@ namespace PetIdServer.Application.AppDomain.PetDomain.Commands.Attach;
 public class AttachPetCommandHandler(IPetRepository petRepository, ITagRepository tagRepository)
     : IRequestHandler<AttachPetCommand, VoidResponseDto>
 {
+    // TODO make request authorized
     public async Task<VoidResponseDto> Handle(
         AttachPetCommand request,
         CancellationToken cancellationToken)

@@ -18,12 +18,12 @@ public class GetPetByTagCodeQueryHandler(ITagRepository tagRepository, IMapper m
         var tag = await tagRepository.GetByCode(request.Code) ??
                   throw new TagNotFoundException("Tag with this code doesn't exists", new
                   {
-                      Query = nameof(GetPetByTagCodeQueryHandler), request.Code
+                      Query = nameof(GetPetByTagCodeQuery), request.Code
                   });
 
         var pet = tag.Pet ??
                   throw new PetNotFoundException($"Tag {tag.Id.Value} has no attached pet!",
-                      new {Query = nameof(GetPetByTagCodeQueryHandler), TagId = tag.Id.Value});
+                      new {Query = nameof(GetPetByTagCodeQuery), TagId = tag.Id.Value});
 
         return mapper.Map<PetEntity, PetDto>(pet);
     }
