@@ -3,7 +3,7 @@ using PetIdServer.Application.AppDomain.PetDomain.Dto;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Queries;
 
-public class GetPetByCodeQuery : IRequest<PetDto>
+public class GetPetByTagCodeQuery : IRequest<PetDto>
 {
-    public string PublicCode { get; set; }
+    public string Code { get; set; }
 }

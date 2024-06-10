@@ -8,23 +8,23 @@ using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Queries;
 
-public class GetPetByCodeQueryHandler(ITagRepository tagRepository, IMapper mapper)
-    : IRequestHandler<GetPetByCodeQuery, PetDto>
+public class GetPetByTagCodeQueryHandler(ITagRepository tagRepository, IMapper mapper)
+    : IRequestHandler<GetPetByTagCodeQuery, PetDto>
 {
     public async Task<PetDto> Handle(
-        GetPetByCodeQuery request,
+        GetPetByTagCodeQuery request,
         CancellationToken cancellationToken)
     {
-        var tag = await tagRepository.GetByCode(request.PublicCode) ??
+        var tag = await tagRepository.GetByCode(request.Code) ??
                   throw new TagNotFoundException("Tag with this code doesn't exists", new
                   {
-                      Query = nameof(GetPetByCodeQueryHandler),
-                      Code = request.PublicCode
+                      Query = nameof(GetPetByTagCodeQueryHandler),
+                      Code = request.Code
                   });
 
         var pet = tag.Pet ??
                   throw new PetNotFoundException($"Tag {tag.Id.Value} has no attached pet!",
-                      new {Query = nameof(GetPetByCodeQueryHandler), TagId = tag.Id.Value});
+                      new {Query = nameof(GetPetByTagCodeQueryHandler), TagId = tag.Id.Value});
 
         return mapper.Map<PetEntity, PetDto>(pet);
     }
