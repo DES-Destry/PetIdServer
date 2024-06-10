@@ -1,8 +1,16 @@
+using AutoMapper;
 using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
 using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagId;
+using PetIdServer.Application.Common.Dto;
+using PetIdServer.Core.Domain.Owner;
+using PetIdServer.RestApi.Auth;
+using PetIdServer.RestApi.Binding;
+using PetIdServer.RestApi.Endpoints.Dto.Pet;
 
 namespace PetIdServer.RestApi.Endpoints;
 
@@ -23,6 +31,12 @@ public class PetEndpoints : ICarterModule
             .WithSummary("Get pet by his Tag code")
             .WithDescription("Get pet by his unreadable Tag code that encoded in the QR code")
             .Produces<PetDto>();
+
+        group.MapPost("", CreatePet)
+            .RequireAuthorization(AuthSchemas.Owner)
+            .WithSummary("Create new pet")
+            .WithDescription("Create new pet for further attaching to the Tag")
+            .Produces<VoidResponseDto>();
     }
 
     private static async Task<IResult> GetByTagId(ISender sender, int id)
@@ -37,6 +51,25 @@ public class PetEndpoints : ICarterModule
     {
         var query = new GetPetByTagCodeQuery {Code = code};
         var response = await sender.Send(query);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> CreatePet(
+        ISender sender,
+        IMapper mapper,
+        RequestOwner owner,
+        [FromBody] CreatePetDto body)
+    {
+        var command = new CreatePetCommand
+        {
+            Name = body.Name,
+            Type = body.Type,
+            Sex = body.Sex,
+            IsCastrated = body.IsCastrated,
+            Owner = mapper.Map<RequestOwner, OwnerEntity>(owner)
+        };
+        var response = await sender.Send(command);
 
         return Results.Ok(response);
     }
