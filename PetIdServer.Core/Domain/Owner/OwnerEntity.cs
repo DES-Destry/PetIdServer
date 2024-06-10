@@ -30,6 +30,8 @@ public class OwnerEntity : Entity<OwnerId>
     public record CreationAttributes(
         string Email,
         string Password,
-        string Name
+        string Name,
+        string? Address = null,
+        string? Description = null
     );
 }
