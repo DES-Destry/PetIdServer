@@ -2,6 +2,7 @@ using AutoMapper;
 using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PetIdServer.Application.AppDomain.PetDomain.Commands.Attach;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
 using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
@@ -37,6 +38,12 @@ public class PetEndpoints : ICarterModule
             .WithSummary("Create new pet")
             .WithDescription("Create new pet for further attaching to the Tag")
             .Produces<VoidResponseDto>();
+
+        group.MapPost("attach", AttachPet)
+            .RequireAuthorization(AuthSchemas.Owner)
+            .WithSummary("Attach pet")
+            .WithDescription("Attach a pet to the Tag")
+            .Produces<VoidResponseDto>();
     }
 
     private static async Task<IResult> GetByTagId(ISender sender, int id)
@@ -69,6 +76,17 @@ public class PetEndpoints : ICarterModule
             IsCastrated = body.IsCastrated,
             Owner = mapper.Map<RequestOwner, OwnerEntity>(owner)
         };
+        var response = await sender.Send(command);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> AttachPet(
+        ISender sender,
+        IMapper mapper,
+        [FromBody] AttachPetDto body)
+    {
+        var command = mapper.Map<AttachPetDto, AttachPetCommand>(body);
         var response = await sender.Send(command);
 
         return Results.Ok(response);
