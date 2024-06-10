@@ -1,5 +1,5 @@
 using MediatR;
-using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Core.Domain.Owner;
 using PetIdServer.Core.Domain.Owner.Exceptions;
@@ -10,9 +10,9 @@ public class RegistrationOwnerCommandHandler(
     IOwnerTokenService ownerTokenService,
     IPasswordService passwordService,
     IOwnerRepository ownerRepository)
-    : IRequestHandler<RegistrationOwnerCommand, TokenPairDto>
+    : IRequestHandler<RegistrationOwnerCommand, LoginOwnerResponseDto>
 {
-    public async Task<TokenPairDto> Handle(
+    public async Task<LoginOwnerResponseDto> Handle(
         RegistrationOwnerCommand request,
         CancellationToken cancellationToken)
     {
@@ -35,6 +35,13 @@ public class RegistrationOwnerCommandHandler(
         var owner = new OwnerEntity(creationAttributes);
 
         await ownerRepository.CreateOwner(owner);
-        return await ownerTokenService.GenerateTokens(owner);
+        var tokenPair = await ownerTokenService.GenerateTokens(owner);
+
+        return new LoginOwnerResponseDto
+        {
+            AccessToken = tokenPair.AccessToken,
+            RefreshToken = tokenPair.RefreshToken,
+            OwnerId = owner.Id
+        };
     }
 }

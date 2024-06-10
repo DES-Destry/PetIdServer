@@ -29,7 +29,7 @@ public class OwnerEndpoints : ICarterModule
             .WithSummary("Create new account.")
             .WithDescription(
                 "Create new account of owner and get pair of tokens that will able to create new pets.")
-            .Produces<TokenPairDto>();
+            .Produces<LoginOwnerResponseDto>();
 
         group.MapPost("login", LoginOwner)
             .WithSummary("Login as owner.")

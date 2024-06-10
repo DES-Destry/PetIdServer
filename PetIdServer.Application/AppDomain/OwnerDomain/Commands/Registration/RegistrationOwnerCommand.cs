@@ -1,9 +1,9 @@
 using MediatR;
-using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 
 namespace PetIdServer.Application.AppDomain.OwnerDomain.Commands.Registration;
 
-public class RegistrationOwnerCommand : IRequest<TokenPairDto>
+public class RegistrationOwnerCommand : IRequest<LoginOwnerResponseDto>
 {
     public string Email { get; set; }
     public string Password { get; set; }
