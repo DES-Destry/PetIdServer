@@ -10,6 +10,7 @@ public class CreatePetCommand : IRequest<VoidResponseDto>
     public string Name { get; set; }
     public bool Sex { get; set; }
     public bool IsCastrated { get; set; }
+    public string Description { get; set; }
 
     // Authorized field
     public OwnerEntity Owner { get; set; }

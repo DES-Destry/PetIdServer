@@ -10,6 +10,8 @@ public class OwnerEntity : Entity<OwnerId>
         Email = creationAttributes.Email;
         Password = creationAttributes.Password;
         Name = creationAttributes.Name;
+        Address = creationAttributes.Address;
+        Description = creationAttributes.Description;
     }
 
     public OwnerEntity(OwnerId id) : base(id) { }

@@ -16,6 +16,7 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
             request.Name,
             request.Sex,
             request.IsCastrated,
+            request.Description,
             request.Owner);
         var pet = new PetEntity(creationAttributes);
 

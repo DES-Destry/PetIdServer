@@ -11,6 +11,7 @@ public class PetEntity : Entity<PetId>
         Name = creationAttributes.Name;
         Sex = creationAttributes.Sex;
         IsCastrated = creationAttributes.IsCastrated;
+        Description = creationAttributes.Description;
         Owner = creationAttributes.Owner;
     }
 
@@ -30,6 +31,7 @@ public class PetEntity : Entity<PetId>
         string Name,
         bool Sex,
         bool IsCastrated,
+        string Description,
         OwnerEntity Owner
     );
 }

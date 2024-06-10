@@ -74,6 +74,7 @@ public class PetEndpoints : ICarterModule
             Type = body.Type,
             Sex = body.Sex,
             IsCastrated = body.IsCastrated,
+            Description = body.Description,
             Owner = mapper.Map<RequestOwner, OwnerEntity>(owner)
         };
         var response = await sender.Send(command);
