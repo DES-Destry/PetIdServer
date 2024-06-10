@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Attach;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
-using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagId;
 using PetIdServer.Application.Common.Dto;
