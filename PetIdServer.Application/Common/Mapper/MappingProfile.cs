@@ -1,6 +1,7 @@
 using AutoMapper;
 using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Update;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Update;
+using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.TagDomain.Dto;
 using PetIdServer.Application.AppDomain.TagReportDomain.Dto;
 using PetIdServer.Core.Domain.Owner;
@@ -14,6 +15,8 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<PetEntity, PetDto>();
+
         CreateMap<TagEntity, TagReviewForAdminDto>();
 
         CreateMap<UpdateOwnerCommand, OwnerEntity>();
