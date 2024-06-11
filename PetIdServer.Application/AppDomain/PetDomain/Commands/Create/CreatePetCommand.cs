@@ -1,10 +1,10 @@
 using MediatR;
-using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Core.Domain.Owner;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
 
-public class CreatePetCommand : IRequest<VoidResponseDto>
+public class CreatePetCommand : IRequest<CreatePetResponseDto>
 {
     public string Type { get; set; }
     public string Name { get; set; }

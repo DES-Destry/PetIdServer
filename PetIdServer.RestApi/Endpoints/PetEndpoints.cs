@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Attach;
 using PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
+using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagCode;
 using PetIdServer.Application.AppDomain.PetDomain.Queries.GetByTagId;
 using PetIdServer.Application.Common.Dto;
@@ -37,7 +38,7 @@ public class PetEndpoints : ICarterModule
             .RequireAuthorization(AuthSchemas.Owner)
             .WithSummary("Create new pet")
             .WithDescription("Create new pet for further attaching to the Tag")
-            .Produces<VoidResponseDto>();
+            .Produces<CreatePetResponseDto>();
 
         group.MapPost("attach", AttachPet)
             .RequireAuthorization(AuthSchemas.Owner)

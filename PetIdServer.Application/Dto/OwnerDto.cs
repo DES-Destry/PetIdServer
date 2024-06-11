@@ -1,9 +1,11 @@
+using PetIdServer.Application.Common.Services.Dto;
 using PetIdServer.Core.Domain.Owner;
 
-namespace PetIdServer.Application.Common.Services.Dto;
+namespace PetIdServer.Application.Dto;
 
 public class OwnerDto
 {
+    public Guid Id { get; set; }
     public string Email { get; set; }
     public string Name { get; set; }
     public string? Address { get; set; }
@@ -15,6 +17,7 @@ public class OwnerDto
     {
         return new OwnerDto
         {
+            Id = owner.Id,
             Email = owner.Email,
             Name = owner.Name,
             Address = owner.Address,

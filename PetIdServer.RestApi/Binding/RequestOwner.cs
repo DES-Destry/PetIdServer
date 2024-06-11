@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json;
-using PetIdServer.Application.Common.Services.Dto;
+using PetIdServer.Application.Dto;
 
 namespace PetIdServer.RestApi.Binding;
 

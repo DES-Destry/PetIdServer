@@ -1,13 +1,13 @@
 using MediatR;
-using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.AppDomain.PetDomain.Dto;
 using PetIdServer.Core.Domain.Pet;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Commands.Create;
 
 public class CreatePetCommandHandler(IPetRepository petRepository)
-    : IRequestHandler<CreatePetCommand, VoidResponseDto>
+    : IRequestHandler<CreatePetCommand, CreatePetResponseDto>
 {
-    public async Task<VoidResponseDto> Handle(
+    public async Task<CreatePetResponseDto> Handle(
         CreatePetCommand request,
         CancellationToken cancellationToken)
     {
@@ -22,6 +22,6 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
 
         await petRepository.CreatePet(pet);
 
-        return VoidResponseDto.Executed;
+        return new CreatePetResponseDto {PetId = pet.Id};
     }
 }

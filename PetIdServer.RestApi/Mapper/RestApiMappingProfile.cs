@@ -19,7 +19,8 @@ public class RestApiMappingProfile : Profile
         CreateMap<LoginAdminDto, LoginAdminCommand>();
         CreateMap<CreateTagsDto, CreateTagsBatchCommand>();
 
-        CreateMap<RequestOwner, OwnerEntity>();
+        CreateMap<RequestOwner, OwnerEntity>().ForCtorParam("id",
+            expression => expression.MapFrom(model => model.Id));
 
         CreateMap<CreateOwnerDto, RegistrationOwnerCommand>();
         CreateMap<LoginOwnerDto, LoginOwnerCommand>();

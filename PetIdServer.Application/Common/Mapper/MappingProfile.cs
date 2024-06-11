@@ -16,7 +16,9 @@ public class MappingProfile : Profile
     {
         CreateMap<TagEntity, TagReviewForAdminDto>();
 
-        CreateMap<UpdateOwnerCommand, OwnerEntity>();
+        CreateMap<UpdateOwnerCommand, OwnerEntity>().ForCtorParam("id",
+            expression => expression.MapFrom(model => model.Id));
+        ;
         CreateMap<UpdatePetCommand, PetEntity>();
 
         CreateMap<TagReportEntity, TagReportShortDto>();
