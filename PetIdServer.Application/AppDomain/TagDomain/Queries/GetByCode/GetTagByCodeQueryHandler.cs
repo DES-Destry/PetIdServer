@@ -13,7 +13,7 @@ public class GetTagByCodeQueryHandler(ITagRepository tagRepository, ICodeDecoder
         GetTagByCodeQuery request,
         CancellationToken cancellationToken)
     {
-        var privateCode = await codeDecoder.GetPublicCodeOriginal(request.Code);
+        var privateCode = await codeDecoder.EncodePublicCode(request.Code);
         var tag = await tagRepository.GetByCode(privateCode) ??
                   throw new TagNotFoundException("Tag with this code doesn't exists", new
                   {
