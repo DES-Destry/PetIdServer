@@ -3,6 +3,7 @@ using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Application.Common.Dto;
 using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Pet.Exceptions;
+using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.AppDomain.PetDomain.Commands.Attach;
@@ -19,10 +20,10 @@ public class AttachPetCommandHandler(IPetRepository petRepository, ITagRepositor
                   throw new PetNotFoundException($"Pet with Id {request.PetId} not found!",
                       new {Command = nameof(AttachPetCommand), request.PetId});
 
-        var tag = await tagRepository.GetByCode(request.TagCode) ??
-                  throw new TagNotFoundException("Tag with this code doesn't exists", new
+        var tag = await tagRepository.GetTagById(new TagId(request.TagId)) ??
+                  throw new TagNotFoundException("Tag with this Id doesn't exists", new
                   {
-                      Command = nameof(AttachPetCommand), request.TagCode
+                      Command = nameof(AttachPetCommand), request.TagId
                   });
 
         // TODO why domain logic is in repository...
