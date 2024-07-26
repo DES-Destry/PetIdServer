@@ -36,7 +36,7 @@ app.MapDefaultEndpoints();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseExceptionHandler("/error");
+app.UseExceptionHandler();
 app.UseSecurityKey();
 app.MapCarter();
 
