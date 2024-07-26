@@ -1,19 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>12</LangVersion>
     </PropertyGroup>
-
-    <ItemGroup>
-        <Folder Include="AppDomain\AdminDomain\Commands\"/>
-        <Folder Include="AppDomain\OwnerDomain\Commands\ChangePassword\"/>
-        <Folder Include="AppDomain\OwnerDomain\Commands\ForgotPassword\"/>
-        <Folder Include="AppDomain\OwnerDomain\Commands\RestorePassword\"/>
-        <Folder Include="AppDomain\TagDomain\Queries\"/>
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1"/>
@@ -23,5 +14,4 @@
     <ItemGroup>
         <ProjectReference Include="..\PetIdServer.Core\PetIdServer.Core.csproj"/>
     </ItemGroup>
-
 </Project>
