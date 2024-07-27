@@ -12,10 +12,10 @@ public class ServerProblemDetailsDefaults
 
     public const int DefaultIntegrationErrorStatusCode = 503;
 
-    public const string DefaultTitle = "Some error occurred in Pet ID Server.";
+    public const string DefaultTitle = "Some error occurred in PetID Server.";
 
     public const string DefaultHiddenErrorMessage =
-        "Unknown error occurred in Quantum War API. Contact with developers to resolve this problem (better don't contact)";
+        "Unknown error occurred in PetID API. Contact with developers to resolve this problem (better don't contact)";
 
     public static readonly Dictionary<CoreExceptionKind, int> HttpErrorCodesByErrorKind = new()
     {
