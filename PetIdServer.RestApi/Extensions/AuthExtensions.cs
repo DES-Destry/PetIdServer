@@ -1,9 +1,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
+using PetIdServer.Core.Domain.Admin.Exceptions;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 
@@ -56,15 +55,6 @@ public static class AuthExtensions
             });
     }
 
-    private static async Task HandleAuthErrorAsync(AuthenticationFailedContext context)
-    {
-        var factory =
-            context.HttpContext.RequestServices.GetService<ProblemDetailsFactory>();
-
-        var problemDetails = factory == null
-            ? new ProblemDetails()
-            : factory.CreateProblemDetails(context.HttpContext);
-
-        await context.Response.WriteAsJsonAsync(problemDetails);
-    }
+    private static Task HandleAuthErrorAsync(AuthenticationFailedContext context) =>
+        throw new AdminUnauthenticatedException();
 }

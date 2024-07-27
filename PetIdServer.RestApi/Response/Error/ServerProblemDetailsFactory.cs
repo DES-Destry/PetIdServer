@@ -64,9 +64,7 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
         string? detail = null,
         string? instance = null)
     {
-        if (modelStateDictionary == null)
-            throw new ArgumentNullException(nameof(modelStateDictionary));
-
+        ArgumentNullException.ThrowIfNull(modelStateDictionary);
         statusCode ??= ServerProblemDetailsDefaults.DefaultValidationErrorStatusCode;
 
         var problemDetails = new ValidationProblemDetails(modelStateDictionary)

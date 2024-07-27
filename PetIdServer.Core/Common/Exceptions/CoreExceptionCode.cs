@@ -25,4 +25,6 @@ public static class CoreExceptionCode
 
     public const string AdminNotFound = DefaultScope + "ADMIN_NOT_FOUND";
     public const string AdminAlreadyCreated = DefaultScope + "ADMIN_ALREADY_CREATED";
+
+    public const string Unauthenticated = DefaultScope + "UNAUTHENTICATED";
 }
