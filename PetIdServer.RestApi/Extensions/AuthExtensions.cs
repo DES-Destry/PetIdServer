@@ -1,5 +1,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
@@ -29,6 +32,9 @@ public static class AuthExtensions
                         new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
                 };
+
+                options.Events = new JwtBearerEvents
+                    {OnAuthenticationFailed = HandleAuthErrorAsync};
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
@@ -44,6 +50,21 @@ public static class AuthExtensions
                         new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
                 };
+
+                options.Events = new JwtBearerEvents
+                    {OnAuthenticationFailed = HandleAuthErrorAsync};
             });
+    }
+
+    private static async Task HandleAuthErrorAsync(AuthenticationFailedContext context)
+    {
+        var factory =
+            context.HttpContext.RequestServices.GetService<ProblemDetailsFactory>();
+
+        var problemDetails = factory == null
+            ? new ProblemDetails()
+            : factory.CreateProblemDetails(context.HttpContext);
+
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

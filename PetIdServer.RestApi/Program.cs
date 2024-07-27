@@ -16,10 +16,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication().AddPetIdAuthSchemas(configuration);
 builder.Services
     .AddEndpointsApiExplorer()
+    .AddServerErrorHandling()
     .AddSwagger()
     .AddApplication()
     .AddInfrastructure(builder)
-    .AddServerErrorHandling()
     .AddAutoMapper(typeof(RestApiMappingProfile))
     .AddCarter()
     .AddPetIdAuthPolicies();
@@ -32,11 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.MapDefaultEndpoints();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseExceptionHandler();
 app.UseSecurityKey();
 app.MapCarter();
 
