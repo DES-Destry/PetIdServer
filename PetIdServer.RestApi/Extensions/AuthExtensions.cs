@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Core.Domain.Admin.Exceptions;
+using PetIdServer.Core.Domain.Owner.Exceptions;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 
@@ -33,7 +34,7 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                    {OnAuthenticationFailed = HandleAuthErrorAsync};
+                    {OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException()};
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
@@ -51,10 +52,7 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                    {OnAuthenticationFailed = HandleAuthErrorAsync};
+                    {OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException()};
             });
     }
-
-    private static Task HandleAuthErrorAsync(AuthenticationFailedContext context) =>
-        throw new AdminUnauthenticatedException();
 }
