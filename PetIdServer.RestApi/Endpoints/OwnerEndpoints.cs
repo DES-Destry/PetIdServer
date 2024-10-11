@@ -14,7 +14,7 @@ public class OwnerEndpoints : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup(EndpointBase).WithOpenApi();
+        RouteGroupBuilder group = app.MapGroup(EndpointBase).WithOpenApi();
 
         group.MapPost("", CreateOwner)
             .WithSummary("Create new account.")
@@ -34,16 +34,16 @@ public class OwnerEndpoints : ICarterModule
         ISender sender,
         IMapper mapper)
     {
-        var command = mapper.Map<CreateOwnerDto, RegistrationOwnerCommand>(dto);
-        var response = await sender.Send(command);
+        RegistrationOwnerCommand? command = mapper.Map<CreateOwnerDto, RegistrationOwnerCommand>(dto);
+        TokenPairDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> LoginOwner(LoginOwnerDto dto, ISender sender, IMapper mapper)
     {
-        var command = mapper.Map<LoginOwnerDto, LoginOwnerCommand>(dto);
-        var response = await sender.Send(command);
+        LoginOwnerCommand? command = mapper.Map<LoginOwnerDto, LoginOwnerCommand>(dto);
+        LoginOwnerResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }

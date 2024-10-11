@@ -9,7 +9,7 @@ public class TagEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("tag");
+        RouteGroupBuilder group = app.MapGroup("tag");
 
         group.MapGet("pre-sell/{controlCode:long}", TagControlCheck)
             .WithOpenApi()
@@ -19,8 +19,11 @@ public class TagEndpoints : ICarterModule
 
     private static async Task<IResult> TagControlCheck(long controlCode, ISender sender)
     {
-        var query = new TagControlCheckQuery { ControlCode = controlCode };
-        var response = await sender.Send(query);
+        TagControlCheckQuery query = new()
+        {
+            ControlCode = controlCode
+        };
+        CheckTagDto response = await sender.Send(query);
 
         return Results.Ok(response);
     }

@@ -28,7 +28,7 @@ public class AdminEndpoints : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup(EndpointBase).RequireSecurityKey().WithOpenApi();
+        RouteGroupBuilder group = app.MapGroup(EndpointBase).RequireSecurityKey().WithOpenApi();
         // var authorizedGroup = group.RequireAuthorization(AuthSchemas.Admin);
 
         group.MapGet("auth", Authenticate)
@@ -97,8 +97,8 @@ public class AdminEndpoints : ICarterModule
 
     private static async Task<IResult> LoginAdmin(LoginAdminDto dto, ISender sender, IMapper mapper)
     {
-        var command = mapper.Map<LoginAdminDto, LoginAdminCommand>(dto);
-        var response = await sender.Send(command);
+        LoginAdminCommand? command = mapper.Map<LoginAdminDto, LoginAdminCommand>(dto);
+        LoginAdminResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
@@ -108,41 +108,49 @@ public class AdminEndpoints : ICarterModule
         ChangePasswordDto dto,
         ISender sender)
     {
-        var command = new ChangePasswordCommand
-        { Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword };
-        var response = await sender.Send(command);
+        ChangePasswordCommand command = new()
+        {
+            Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
+        };
+        SingleTokenDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> GetAllTags(ISender sender)
     {
-        var query = new GetAllTagsQuery();
-        var response = await sender.Send(query);
+        GetAllTagsQuery query = new();
+        TagReviewList response = await sender.Send(query);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> GetDecodedTag(int id, ISender sender)
     {
-        var query = new GetDecodedTagQuery { Id = id };
-        var response = await sender.Send(query);
+        GetDecodedTagQuery query = new()
+        {
+            Id = id
+        };
+        TagForAdminDto response = await sender.Send(query);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> CreateTags(CreateTagsDto dto, ISender sender, IMapper mapper)
     {
-        var command = mapper.Map<CreateTagsDto, CreateTagsBatchCommand>(dto);
-        var response = await sender.Send(command);
+        CreateTagsBatchCommand? command = mapper.Map<CreateTagsDto, CreateTagsBatchCommand>(dto);
+        VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> ClearTag(int id, RequestAdmin admin, ISender sender)
     {
-        var command = new ClearTagCommand { AdminId = admin.Username, TagId = id };
-        var response = await sender.Send(command);
+        ClearTagCommand command = new()
+        {
+            AdminId = admin.Username, TagId = id
+        };
+        VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
@@ -152,36 +160,33 @@ public class AdminEndpoints : ICarterModule
         [FromQuery] bool? isResolved,
         ISender sender)
     {
-        var query = new GetAllTagReportsQuery
+        GetAllTagReportsQuery query = new()
         {
-            TagId = tagId,
-            IsResolved = isResolved
+            TagId = tagId, IsResolved = isResolved
         };
-        var response = await sender.Send(query);
+        TagReportsDto response = await sender.Send(query);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> CreateTagReport(int id, RequestAdmin admin, ISender sender)
     {
-        var command = new CreateTagReportCommand
+        CreateTagReportCommand command = new()
         {
-            AdminId = admin.Username,
-            TagId = id
+            AdminId = admin.Username, TagId = id
         };
-        var response = await sender.Send(command);
+        VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
     private static async Task<IResult> ResolveTagReport(Guid id, RequestAdmin admin, ISender sender)
     {
-        var command = new ResolveTagReportCommand
+        ResolveTagReportCommand command = new()
         {
-            AdminId = admin.Username,
-            ReportId = id
+            AdminId = admin.Username, ReportId = id
         };
-        var response = await sender.Send(command);
+        VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
