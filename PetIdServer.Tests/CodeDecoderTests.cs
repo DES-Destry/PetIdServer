@@ -12,7 +12,7 @@ public class CodeDecoderTests
         throw new NullReferenceException(nameof(_codeDecoder));
 
     [Test]
-    public async Task EncodingAndDecodingEndsWithInitialValue()
+    public async Task EncodingAndDecodingEndsWithInitialValueTest()
     {
         var encoded = await _codeDecoder.EncodePublicCode(PublicCodeExample1);
         var decoded = await _codeDecoder.GetPublicCodeOriginal(encoded);
