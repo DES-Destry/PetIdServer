@@ -38,7 +38,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
             });
         }
 
-        TagEntity? tagCodeCandidate = await tagRepository.GetByHashCode(hashCode);
+        TagEntity? tagCodeCandidate = await tagRepository.GetTagByHashCode(hashCode);
 
         if (tagCodeCandidate is not null)
         {

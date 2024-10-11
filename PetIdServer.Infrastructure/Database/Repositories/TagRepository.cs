@@ -47,13 +47,13 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         return mapper.Map<TagModel, TagEntity>(saved.Entity);
     }
 
-    public async Task<TagEntity?> GetByHashCode(string hashCode)
+    public async Task<TagEntity?> GetTagByHashCode(string hashCode)
     {
         TagModel? model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.HashCode == hashCode);
         return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
     }
 
-    public async Task<TagEntity?> GetByControlCode(long controlCode)
+    public async Task<TagEntity?> GetTagByControlCode(long controlCode)
     {
         TagModel? model = await database.Tags
             .Include(tag => tag.Pet)

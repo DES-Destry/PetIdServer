@@ -12,7 +12,7 @@ public class TagControlCheckQueryHandler(ITagRepository tagRepository)
         TagControlCheckQuery request,
         CancellationToken cancellationToken)
     {
-        var tag = await tagRepository.GetByControlCode(request.ControlCode);
+        var tag = await tagRepository.GetTagByControlCode(request.ControlCode);
 
         if (tag is null)
             throw new TagNotFoundException($"Invalid control code: {request.ControlCode}", new

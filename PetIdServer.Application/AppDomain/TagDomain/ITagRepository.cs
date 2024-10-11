@@ -9,8 +9,8 @@ public interface ITagRepository
     Task<bool> AreHashCodesAvailable(IEnumerable<string> codes);
     Task<IEnumerable<TagEntity>> GetAllTags();
     Task<TagEntity?> GetTagById(TagId id);
-    Task<TagEntity?> GetByHashCode(string hashCode);
-    Task<TagEntity?> GetByControlCode(long controlCode);
+    Task<TagEntity?> GetTagByHashCode(string hashCode);
+    Task<TagEntity?> GetTagByControlCode(long controlCode);
 
     Task<TagEntity?> CreateTag(TagEntity tag);
     Task CreateTagsBatch(IEnumerable<TagEntity> tags);

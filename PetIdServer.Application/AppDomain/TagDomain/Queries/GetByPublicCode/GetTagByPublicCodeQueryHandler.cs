@@ -13,7 +13,7 @@ public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IHashS
     public async Task<TagDto> Handle(GetTagByPublicCodeQuery request, CancellationToken cancellationToken)
     {
         string hashCode = await hashService.Hash(request.Code);
-        TagEntity tag = await tagRepository.GetByHashCode(hashCode) ??
+        TagEntity tag = await tagRepository.GetTagByHashCode(hashCode) ??
                         throw new TagNotFoundException($"Tag with code {request.Code} not found", new
                         {
                             request.Code
