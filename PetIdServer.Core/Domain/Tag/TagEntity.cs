@@ -17,9 +17,9 @@ public class TagEntity : Entity<TagId>
 
     public TagEntity(TagId id) : base(id) { }
 
-    public required string PrivateCode { get; init; }
+    public string PrivateCode { get; init; } = string.Empty;
 
-    public required string HashCode { get; init; }
+    public string HashCode { get; init; } = string.Empty;
 
     public long ControlCode { get; init; }
     public PetEntity? Pet { get; private set; }
