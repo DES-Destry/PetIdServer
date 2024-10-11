@@ -8,7 +8,7 @@ public class TagEntity : Entity<TagId>
 {
     public TagEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
     {
-        Code = creationAttributes.Code;
+        PrivateCode = creationAttributes.PrivateCode;
         HashCode = creationAttributes.HashCode;
 
         ControlCode = Random.Shared.NextInt64();
@@ -17,12 +17,9 @@ public class TagEntity : Entity<TagId>
 
     public TagEntity(TagId id) : base(id) { }
 
-    /// <summary>
-    ///     A private code
-    /// </summary>
-    public string Code { get; init; } = string.Empty;
+    public required string PrivateCode { get; init; }
 
-    public string HashCode { get; init; } = string.Empty;
+    public required string HashCode { get; init; }
 
     public long ControlCode { get; init; }
     public PetEntity? Pet { get; private set; }
@@ -54,5 +51,5 @@ public class TagEntity : Entity<TagId>
         PetAddedAt = null;
     }
 
-    public record CreationAttributes(TagId Id, string Code, string HashCode);
+    public record CreationAttributes(TagId Id, string PrivateCode, string HashCode);
 }

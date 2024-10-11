@@ -27,9 +27,11 @@ public class InfrastructureMappingProfile : Profile
 
         CreateMap<TagModel, TagEntity>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (TagId)model.Id))
+            .ForMember(entity => entity.PrivateCode, expression => expression.MapFrom(model => model.Code))
             .ReverseMap()
             .ForMember(model => model.Id,
-                expression => expression.MapFrom(domain => domain.Id));
+                expression => expression.MapFrom(domain => domain.Id))
+            .ForMember(model => model.Code, expression => expression.MapFrom(entity => entity.PrivateCode));
 
         CreateMap<TagReportModel, TagReportEntity>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (TagReportId)model.Id))

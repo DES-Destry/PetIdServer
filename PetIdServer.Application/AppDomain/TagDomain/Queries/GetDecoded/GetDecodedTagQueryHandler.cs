@@ -13,15 +13,14 @@ public class GetDecodedTagQueryHandler(ITagRepository tagRepository, ICodeDecode
         GetDecodedTagQuery request,
         CancellationToken cancellationToken)
     {
-        var tag = await tagRepository.GetTagById((TagId)request.Id) ??
-                  throw new TagNotFoundException(
-                      $"Tag with Id {request.Id} not found", new
-                      {
-                          query = nameof(GetDecodedTagQuery),
-                          tagId = request.Id
-                      });
+        TagEntity tag = await tagRepository.GetTagById((TagId)request.Id) ??
+                        throw new TagNotFoundException(
+                            $"Tag with Id {request.Id} not found", new
+                            {
+                                query = nameof(GetDecodedTagQuery), tagId = request.Id
+                            });
 
-        var publicCode = await codeDecoder.GetPublicCodeOriginal(tag.Code);
+        string publicCode = await codeDecoder.GetPublicCodeOriginal(tag.PrivateCode);
 
         return new TagForAdminDto(
             tag.Id,
