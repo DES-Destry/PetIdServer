@@ -18,12 +18,12 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         return await Task.FromResult(result);
     }
 
-    public async Task<bool> AreCodesAvailable(IEnumerable<string> codes)
+    public async Task<bool> AreHashCodesAvailable(IEnumerable<string> hashCodes)
     {
-        int count = database.Tags.Count(tag => codes.Contains(tag.Code));
+        int count = await database.Tags.CountAsync(tag => hashCodes.Contains(tag.HashCode));
         bool result = count == 0;
 
-        return await Task.FromResult(result);
+        return result;
     }
 
     public async Task<IEnumerable<TagEntity>> GetAllTags()
@@ -47,9 +47,9 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         return mapper.Map<TagModel, TagEntity>(saved.Entity);
     }
 
-    public async Task<TagEntity?> GetByCode(string code)
+    public async Task<TagEntity?> GetByHashCode(string hashCode)
     {
-        TagModel? model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.Code == code);
+        TagModel? model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.HashCode == hashCode);
         return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
     }
 

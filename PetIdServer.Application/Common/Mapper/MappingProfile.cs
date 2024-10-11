@@ -15,6 +15,10 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<TagEntity, TagReviewForAdminDto>();
+        CreateMap<TagEntity, TagDto>()
+            .ForMember(dto => dto.Code, expression => expression.MapFrom(entity => entity.PrivateCode))
+            .ReverseMap()
+            .ForMember(entity => entity.PrivateCode, expression => expression.MapFrom(dto => dto.Code));
 
         CreateMap<UpdateOwnerCommand, OwnerEntity>();
         CreateMap<UpdatePetCommand, PetEntity>();

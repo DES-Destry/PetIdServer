@@ -13,10 +13,10 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         CreateTagCommand request,
         CancellationToken cancellationToken)
     {
-        await CheckDuplicates(request);
+        string hashCode = await hashService.Hash(request.Code);
+        await CheckDuplicates(request, hashCode);
 
         string privateCode = await codeDecoder.EncodePublicCode(request.Code);
-        string hashCode = await hashService.Hash(request.Code);
 
         TagEntity.CreationAttributes creationAttributes = new((TagId)request.Id, privateCode, hashCode);
         TagEntity tag = new(creationAttributes);
@@ -26,7 +26,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         return VoidResponseDto.Executed;
     }
 
-    private async Task CheckDuplicates(CreateTagCommand request)
+    private async Task CheckDuplicates(CreateTagCommand request, string hashCode)
     {
         TagEntity? tagIdCandidate = await tagRepository.GetTagById((TagId)request.Id);
 
@@ -38,7 +38,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
             });
         }
 
-        TagEntity? tagCodeCandidate = await tagRepository.GetByCode(request.Code);
+        TagEntity? tagCodeCandidate = await tagRepository.GetByHashCode(hashCode);
 
         if (tagCodeCandidate is not null)
         {

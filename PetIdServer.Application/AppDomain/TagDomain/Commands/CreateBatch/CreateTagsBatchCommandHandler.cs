@@ -15,9 +15,13 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         CreateTagsBatchCommand request,
         CancellationToken cancellationToken)
     {
-        await CheckDuplicates(request);
-
         int tagsCount = request.IdTo - request.IdFrom + 1;
+
+        ImmutableArray<string> hashCodes =
+            [..await Task.WhenAll(request.Codes.Select(async code => await hashService.Hash(code)))];
+
+        await CheckDuplicates(request, hashCodes);
+
         ImmutableArray<int> ids = [..Enumerable.Range(request.IdFrom, tagsCount)];
 
         if (ids.Length != request.Codes.Count())
@@ -50,7 +54,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         return VoidResponseDto.Executed;
     }
 
-    private async Task CheckDuplicates(CreateTagsBatchCommand request)
+    private async Task CheckDuplicates(CreateTagsBatchCommand request, ImmutableArray<string> hashCodes)
     {
         IEnumerable<int> ids = Enumerable.Range(request.IdFrom, request.IdTo);
         bool areIdsAvailable = await tagRepository.AreIdsAvailable(ids);
@@ -63,7 +67,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
             });
         }
 
-        bool areCodesAvailable = await tagRepository.AreCodesAvailable(request.Codes);
+        bool areCodesAvailable = await tagRepository.AreHashCodesAvailable(hashCodes);
 
         if (!areCodesAvailable)
         {

@@ -6,10 +6,10 @@ namespace PetIdServer.Application.AppDomain.TagDomain;
 public interface ITagRepository
 {
     Task<bool> AreIdsAvailable(IEnumerable<int> ids);
-    Task<bool> AreCodesAvailable(IEnumerable<string> codes);
+    Task<bool> AreHashCodesAvailable(IEnumerable<string> codes);
     Task<IEnumerable<TagEntity>> GetAllTags();
     Task<TagEntity?> GetTagById(TagId id);
-    Task<TagEntity?> GetByCode(string code);
+    Task<TagEntity?> GetByHashCode(string hashCode);
     Task<TagEntity?> GetByControlCode(long controlCode);
 
     Task<TagEntity?> CreateTag(TagEntity tag);
