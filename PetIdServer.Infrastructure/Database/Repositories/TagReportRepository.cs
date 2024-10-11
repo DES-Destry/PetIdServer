@@ -53,7 +53,8 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
         var incomingData = mapper.Map<TagReportEntity, TagReportModel>(updated);
         var model = await database.TagReports.FirstOrDefaultAsync(report => report.Id == id);
 
-        if (model is null) return;
+        if (model is null)
+            return;
 
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();

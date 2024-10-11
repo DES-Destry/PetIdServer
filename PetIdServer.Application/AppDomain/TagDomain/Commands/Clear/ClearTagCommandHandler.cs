@@ -19,14 +19,14 @@ public class ClearTagCommandHandler(
         ClearTagCommand request,
         CancellationToken cancellationToken)
     {
-        var admin = await adminRepository.GetAdminById((AdminId) request.AdminId) ??
+        var admin = await adminRepository.GetAdminById((AdminId)request.AdminId) ??
                     throw new AdminNotFoundException("Authorized admin not found", new
                     {
                         command = nameof(ClearTagCommand),
                         adminId = request.AdminId
                     });
 
-        var tag = await tagRepository.GetTagById((TagId) request.TagId) ??
+        var tag = await tagRepository.GetTagById((TagId)request.TagId) ??
                   throw new TagNotFoundException(new
                   {
                       command = nameof(ClearTagCommand),

@@ -38,7 +38,7 @@ public class OwnerTokenService : IOwnerTokenService
         var accessToken = GenerateAccessToken(owner);
         var refreshToken = GenerateRefreshToken(accessToken);
 
-        var tokenPair = new TokenPairDto {AccessToken = accessToken, RefreshToken = refreshToken};
+        var tokenPair = new TokenPairDto { AccessToken = accessToken, RefreshToken = refreshToken };
         return await Task.FromResult(tokenPair);
     }
 
@@ -136,7 +136,7 @@ public class OwnerTokenService : IOwnerTokenService
 
         if (!validated)
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new {Class = nameof(OwnerTokenService)});
+                new { Class = nameof(OwnerTokenService) });
     }
 
     private async Task ValidateExpiredAccessToken(string accessToken)
@@ -149,7 +149,7 @@ public class OwnerTokenService : IOwnerTokenService
 
         if (!validated)
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new {Class = nameof(OwnerTokenService)});
+                new { Class = nameof(OwnerTokenService) });
     }
 
     private async Task ValidateRefreshToken(string refreshToken)
@@ -162,7 +162,7 @@ public class OwnerTokenService : IOwnerTokenService
 
         if (!validated)
             throw new RefreshTokenMalformedException("Refresh token is not valid!",
-                new {Class = nameof(OwnerTokenService)});
+                new { Class = nameof(OwnerTokenService) });
     }
 
     private async Task<bool> ValidateTokens(string token)

@@ -17,14 +17,14 @@ public class ResolveTagReportCommandHandler(
         ResolveTagReportCommand request,
         CancellationToken cancellationToken)
     {
-        var admin = await adminRepository.GetAdminById((AdminId) request.AdminId) ??
+        var admin = await adminRepository.GetAdminById((AdminId)request.AdminId) ??
                     throw new AdminNotFoundException("Authorized admin not found", new
                     {
                         command = nameof(ResolveTagReportCommand),
                         adminId = request.AdminId
                     });
 
-        var report = await tagReportRepository.GetTagReportById((TagReportId) request.ReportId) ??
+        var report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
                      throw new TagReportNotFoundException(new
                      {
                          command = nameof(ResolveTagReportCommand),

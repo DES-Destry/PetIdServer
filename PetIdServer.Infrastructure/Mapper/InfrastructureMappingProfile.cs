@@ -13,37 +13,37 @@ public class InfrastructureMappingProfile : Profile
     public InfrastructureMappingProfile()
     {
         CreateMap<OwnerModel, OwnerEntity>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (OwnerId) model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => (OwnerId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                 expression => expression.MapFrom(domain => domain.Id));
 
         CreateMap<OwnerContactModel, OwnerContactVo>().ReverseMap();
         CreateMap<PetModel, PetEntity>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (PetId) model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => (PetId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                 expression => expression.MapFrom(domain => domain.Id));
 
         CreateMap<TagModel, TagEntity>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (TagId) model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => (TagId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                 expression => expression.MapFrom(domain => domain.Id));
 
         CreateMap<TagReportModel, TagReportEntity>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (TagReportId) model.Id))
+            .ForCtorParam("id", expression => expression.MapFrom(model => (TagReportId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                 expression => expression.MapFrom(domain => domain.Id))
             .ForMember(model => model.ReporterId,
-                expression => expression.MapFrom(domain => (string) domain.Reporter.Id))
+                expression => expression.MapFrom(domain => (string)domain.Reporter.Id))
             .ForMember(model => model.ResolverId,
-                expression => expression.MapFrom(domain => (string) domain!.Resolver!.Id));
+                expression => expression.MapFrom(domain => (string)domain!.Resolver!.Id));
 
         CreateMap<AdminModel, AdminEntity>()
             .ForCtorParam("id",
-                expression => expression.MapFrom(model => (AdminId) model.Username))
+                expression => expression.MapFrom(model => (AdminId)model.Username))
             .ReverseMap()
             .ForMember(model => model.Username,
                 expression => expression.MapFrom(domain => domain.Id));

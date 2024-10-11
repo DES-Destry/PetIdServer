@@ -34,7 +34,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
         var tags = ids.Select((id, index) =>
         {
             var creationAttributes =
-                new TagEntity.CreationAttributes((TagId) id, codes[index]);
+                new TagEntity.CreationAttributes((TagId)id, codes[index]);
             return new TagEntity(creationAttributes);
         });
 
@@ -49,11 +49,11 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
         var idsAvailable = await tagRepository.IsIdsAvailable(ids);
 
         if (!idsAvailable)
-            throw new TagAlreadyCreatedException(new {command = nameof(CreateTagsBatchCommand)});
+            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
 
         var codesAvailable = await tagRepository.IsCodesAvailable(request.Codes);
 
         if (!codesAvailable)
-            throw new TagAlreadyCreatedException(new {command = nameof(CreateTagsBatchCommand)});
+            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
     }
 }

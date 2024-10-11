@@ -21,17 +21,17 @@ public class LoginAdminCommandHandler(
         if (adminCandidate is null)
             throw new IncorrectCredentialsException(
                 $"Incorrect credentials for: {request.Username}",
-                new {request.Username, userType = nameof(AdminEntity)});
+                new { request.Username, userType = nameof(AdminEntity) });
 
         // validate password
         if (adminCandidate.Password != null &&
             !await passwordService.ValidatePassword(request.Password, adminCandidate.Password))
             throw new IncorrectCredentialsException(
                 $"Incorrect credentials for: {request.Username}",
-                new {request.Username, userType = nameof(AdminEntity)});
+                new { request.Username, userType = nameof(AdminEntity) });
 
         // generate tokens
         var token = await adminTokenService.GenerateToken(adminCandidate);
-        return new LoginAdminResponseDto {AccessToken = token, AdminId = adminCandidate.Id};
+        return new LoginAdminResponseDto { AccessToken = token, AdminId = adminCandidate.Id };
     }
 }

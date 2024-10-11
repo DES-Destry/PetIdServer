@@ -36,7 +36,8 @@ public class AdminRepository(IMapper mapper, PetIdContext database, NpgsqlDataSo
             await database.Admins.FirstOrDefaultAsync(adminModel =>
                 adminModel.Username == id);
 
-        if (model is null) return;
+        if (model is null)
+            return;
 
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();

@@ -20,14 +20,14 @@ public class CreateTagReportCommandHandler(
         CreateTagReportCommand request,
         CancellationToken cancellationToken)
     {
-        var admin = await adminRepository.GetAdminById((AdminId) request.AdminId) ??
+        var admin = await adminRepository.GetAdminById((AdminId)request.AdminId) ??
                     throw new AdminNotFoundException("Authorized admin not found!", new
                     {
                         command = nameof(CreateTagReportCommand),
                         adminId = request.AdminId
                     });
 
-        var reportedTag = await tagRepository.GetTagById((TagId) request.TagId) ??
+        var reportedTag = await tagRepository.GetTagById((TagId)request.TagId) ??
                           throw new TagNotFoundException(new
                           {
                               command = nameof(CreateTagReportCommand),

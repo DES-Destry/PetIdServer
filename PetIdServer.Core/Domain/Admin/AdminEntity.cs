@@ -5,7 +5,7 @@ namespace PetIdServer.Core.Domain.Admin;
 public class AdminEntity : Entity<AdminId>
 {
     public AdminEntity(CreationAttributes creationAttributes) : base(
-        (AdminId) creationAttributes.Username)
+        (AdminId)creationAttributes.Username)
     {
         Password = creationAttributes.Password;
 

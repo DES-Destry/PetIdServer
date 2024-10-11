@@ -35,7 +35,7 @@ public class TagEntity : Entity<TagId>
     public void SetupPet(PetEntity pet)
     {
         if (IsAlreadyInUse)
-            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new {Id, Pet});
+            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new { Id, Pet });
 
         Pet = pet;
     }

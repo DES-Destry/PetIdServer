@@ -13,10 +13,10 @@ public class UpdatePetCommandHandler(IMapper mapper, IPetRepository petRepositor
         UpdatePetCommand request,
         CancellationToken cancellationToken)
     {
-        var pet = await petRepository.GetPetById((PetId) request.Id) ??
+        var pet = await petRepository.GetPetById((PetId)request.Id) ??
                   throw new PetNotFoundException(
                       $"Pet with Id {request.Id} not found",
-                      new {request.Id});
+                      new { request.Id });
 
         var updatedPet = mapper.Map<UpdatePetCommand, PetEntity>(request);
         await petRepository.UpdatePet(pet.Id, updatedPet);

@@ -7,7 +7,7 @@ namespace PetIdServer.Core.Domain.TagReport;
 public class TagReportEntity : Entity<TagReportId>
 {
     public TagReportEntity(CreationAttributes creationAttributes) : base(
-        (TagReportId) Guid.NewGuid())
+        (TagReportId)Guid.NewGuid())
     {
         CorruptedTag = creationAttributes.CorruptedTag;
         Reporter = creationAttributes.Reporter;

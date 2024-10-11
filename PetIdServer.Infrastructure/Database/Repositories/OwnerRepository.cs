@@ -35,7 +35,8 @@ public class OwnerRepository(IMapper mapper, PetIdContext database) : IOwnerRepo
         var model =
             await database.Owners.FirstOrDefaultAsync(ownerModel => ownerModel.Id == id);
 
-        if (model is null) return;
+        if (model is null)
+            return;
 
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();

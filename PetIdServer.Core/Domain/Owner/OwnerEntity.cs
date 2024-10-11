@@ -5,7 +5,7 @@ namespace PetIdServer.Core.Domain.Owner;
 
 public class OwnerEntity : Entity<OwnerId>
 {
-    public OwnerEntity(CreationAttributes creationAttributes) : base((OwnerId) Guid.NewGuid())
+    public OwnerEntity(CreationAttributes creationAttributes) : base((OwnerId)Guid.NewGuid())
     {
         Email = creationAttributes.Email;
         Password = creationAttributes.Password;

@@ -27,7 +27,8 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
         var incomingData = mapper.Map<PetEntity, PetModel>(pet);
         var model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id);
 
-        if (model is null) return;
+        if (model is null)
+            return;
 
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();

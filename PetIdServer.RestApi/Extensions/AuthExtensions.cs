@@ -34,7 +34,7 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                    {OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException()};
+                { OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException() };
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
@@ -52,7 +52,7 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                    {OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException()};
+                { OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException() };
             });
     }
 }

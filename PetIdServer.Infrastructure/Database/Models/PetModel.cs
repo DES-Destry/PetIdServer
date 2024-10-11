@@ -6,9 +6,9 @@ namespace PetIdServer.Infrastructure.Database.Models;
 [Table("pets")]
 public class PetModel
 {
-    [Column("id")] [Required] [Key] public Guid Id { get; set; }
+    [Column("id")][Required][Key] public Guid Id { get; set; }
 
-    [Column("owner_id")] [Required] public Guid OwnerId { get; set; }
+    [Column("owner_id")][Required] public Guid OwnerId { get; set; }
 
     [Column("type")]
     [Required]
@@ -20,9 +20,9 @@ public class PetModel
     [MaxLength(32)]
     public string Name { get; set; }
 
-    [Column("sex")] [Required] public bool Sex { get; set; }
+    [Column("sex")][Required] public bool Sex { get; set; }
 
-    [Column("is_castrated")] [Required] public bool IsCastrated { get; set; }
+    [Column("is_castrated")][Required] public bool IsCastrated { get; set; }
 
     [Column("photo")] public string? Photo { get; set; }
 

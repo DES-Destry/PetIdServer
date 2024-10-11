@@ -14,7 +14,7 @@ public class AdminModel
 
     [Column("password")] public string? Password { get; set; }
 
-    [Column("created_at")] [Required] public DateTime CreatedAt { get; set; }
+    [Column("created_at")][Required] public DateTime CreatedAt { get; set; }
 
     [Column("password_last_changed_at")] public DateTime? PasswordLastChangedAt { get; set; }
 }

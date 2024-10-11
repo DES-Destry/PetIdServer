@@ -6,10 +6,10 @@ namespace PetIdServer.Infrastructure.Database.Models;
 [Table("owners")]
 public class OwnerModel
 {
-    [Column("id")] [Key] public Guid Id { get; set; }
-    [Column("email")] [Required] public string Email { get; set; }
+    [Column("id")][Key] public Guid Id { get; set; }
+    [Column("email")][Required] public string Email { get; set; }
 
-    [Column("password")] [Required] public string Password { get; set; }
+    [Column("password")][Required] public string Password { get; set; }
 
     [Column("name")]
     [Required]

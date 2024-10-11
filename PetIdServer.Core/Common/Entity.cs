@@ -24,7 +24,8 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override bool Equals(object? obj)
     {
-        if (obj is Entity<TId> entity) return Equals(entity);
+        if (obj is Entity<TId> entity)
+            return Equals(entity);
         return false;
     }
 

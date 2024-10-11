@@ -21,7 +21,7 @@ public class RegistrationOwnerCommandHandler(
         if (ownerCandidate is not null)
             throw new OwnerAlreadyRegisteredException(
                 $"Owner with email {request.Email} already registered",
-                new {request.Email});
+                new { request.Email });
 
         var passwordHash = await passwordService.HashPassword(request.Password);
 

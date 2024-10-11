@@ -98,7 +98,8 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
         }
 
         var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
-        if (traceId != null) problemDetails.Extensions["traceId"] = traceId;
+        if (traceId != null)
+            problemDetails.Extensions["traceId"] = traceId;
     }
 
     private string GetCodeFromException()
