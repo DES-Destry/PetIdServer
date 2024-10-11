@@ -24,12 +24,12 @@ public static class ServiceCollectionExtension
         builder.AddDbConnection();
 
         services.AddRepositories();
-        services.AddServices();
+        services.AddInfrastructureServices();
 
         return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddScoped<IPetRepository, PetRepository>();
@@ -40,7 +40,7 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
@@ -50,7 +50,7 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IHostApplicationBuilder AddDbConnection(
+    public static IHostApplicationBuilder AddDbConnection(
         this IHostApplicationBuilder builder)
     {
         builder.AddNpgsqlDataSource("pet-id");

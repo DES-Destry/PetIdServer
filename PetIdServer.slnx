@@ -10,4 +10,5 @@
   <Project Path="PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.RestApi\PetIdServer.RestApi.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.ServiceDefaults\PetIdServer.ServiceDefaults.csproj" Type="Classic C#" />
+  <Project Path="PetIdServer.Tests\PetIdServer.Tests.csproj" Type="Classic C#" />
 </Solution>
