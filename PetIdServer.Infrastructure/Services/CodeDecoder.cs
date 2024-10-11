@@ -31,7 +31,7 @@ public class CodeDecoder : ICodeDecoder
         {
             Action.Decrypt => rsaProvider.Decrypt(inputCodeBytes, RSAEncryptionPadding.OaepSHA256),
             Action.Encrypt => rsaProvider.Encrypt(inputCodeBytes, RSAEncryptionPadding.OaepSHA256),
-            _ => Array.Empty<byte>()
+            _ => []
         };
 
         var resultCode = Encoding.UTF8.GetString(resultCodeBytes);
