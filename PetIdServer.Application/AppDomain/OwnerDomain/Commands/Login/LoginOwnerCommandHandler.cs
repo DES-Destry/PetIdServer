@@ -1,4 +1,5 @@
 using MediatR;
+using PetIdServer.Application.Common.Dto;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Core.Common.Exceptions.Auth;
 using PetIdServer.Core.Domain.Owner;
@@ -7,7 +8,7 @@ namespace PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
 
 public class LoginOwnerCommandHandler(
     IOwnerTokenService ownerTokenService,
-    IPasswordService passwordService,
+    IHashService hashService,
     IOwnerRepository ownerRepository)
     : IRequestHandler<LoginOwnerCommand, LoginOwnerResponseDto>
 {
@@ -15,21 +16,27 @@ public class LoginOwnerCommandHandler(
         LoginOwnerCommand request,
         CancellationToken cancellationToken)
     {
-        var ownerCandidate =
+        OwnerEntity ownerCandidate =
             await ownerRepository.GetOwnerByEmail(request.Email) ??
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new { request.Email, userType = nameof(OwnerEntity) });
+                new
+                {
+                    request.Email, userType = nameof(OwnerEntity)
+                });
 
-        if (!await passwordService.ValidatePassword(request.Password, ownerCandidate.Password))
+        if (!await hashService.Validate(request.Password, ownerCandidate.Password))
+        {
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
-                new { request.Email, userType = nameof(OwnerEntity) });
+                new
+                {
+                    request.Email, userType = nameof(OwnerEntity)
+                });
+        }
 
-        var tokenPair = await ownerTokenService.GenerateTokens(ownerCandidate);
+        TokenPairDto tokenPair = await ownerTokenService.GenerateTokens(ownerCandidate);
         return new LoginOwnerResponseDto
         {
-            AccessToken = tokenPair.AccessToken,
-            RefreshToken = tokenPair.RefreshToken,
-            OwnerId = ownerCandidate.Id
+            AccessToken = tokenPair.AccessToken, RefreshToken = tokenPair.RefreshToken, OwnerId = ownerCandidate.Id
         };
     }
 }

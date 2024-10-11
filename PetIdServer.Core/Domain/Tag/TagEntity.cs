@@ -9,6 +9,7 @@ public class TagEntity : Entity<TagId>
     public TagEntity(CreationAttributes creationAttributes) : base(creationAttributes.Id)
     {
         Code = creationAttributes.Code;
+        HashCode = creationAttributes.HashCode;
 
         ControlCode = Random.Shared.NextInt64();
         CreatedAt = DateTime.UtcNow;
@@ -19,14 +20,16 @@ public class TagEntity : Entity<TagId>
     /// <summary>
     ///     A private code
     /// </summary>
-    public string Code { get; set; } = string.Empty;
+    public string Code { get; init; } = string.Empty;
 
-    public long ControlCode { get; set; }
+    public string HashCode { get; init; } = string.Empty;
+
+    public long ControlCode { get; init; }
     public PetEntity? Pet { get; private set; }
 
     public bool IsAlreadyInUse => Pet is not null;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
 
     public DateTime? PetAddedAt { get; set; }
 
@@ -35,7 +38,12 @@ public class TagEntity : Entity<TagId>
     public void SetupPet(PetEntity pet)
     {
         if (IsAlreadyInUse)
-            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new { Id, Pet });
+        {
+            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new
+            {
+                Id, Pet
+            });
+        }
 
         Pet = pet;
     }
@@ -46,5 +54,5 @@ public class TagEntity : Entity<TagId>
         PetAddedAt = null;
     }
 
-    public record CreationAttributes(TagId Id, string Code);
+    public record CreationAttributes(TagId Id, string Code, string HashCode);
 }

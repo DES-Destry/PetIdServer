@@ -8,7 +8,7 @@ namespace PetIdServer.Application.AppDomain.OwnerDomain.Commands.Registration;
 
 public class RegistrationOwnerCommandHandler(
     IOwnerTokenService ownerTokenService,
-    IPasswordService passwordService,
+    IHashService hashService,
     IOwnerRepository ownerRepository)
     : IRequestHandler<RegistrationOwnerCommand, TokenPairDto>
 {
@@ -16,18 +16,23 @@ public class RegistrationOwnerCommandHandler(
         RegistrationOwnerCommand request,
         CancellationToken cancellationToken)
     {
-        var ownerCandidate = await ownerRepository.GetOwnerByEmail(request.Email);
+        OwnerEntity? ownerCandidate = await ownerRepository.GetOwnerByEmail(request.Email);
 
         if (ownerCandidate is not null)
+        {
             throw new OwnerAlreadyRegisteredException(
                 $"Owner with email {request.Email} already registered",
-                new { request.Email });
+                new
+                {
+                    request.Email
+                });
+        }
 
-        var passwordHash = await passwordService.HashPassword(request.Password);
+        string passwordHash = await hashService.Hash(request.Password);
 
-        var creationAttributes =
+        OwnerEntity.CreationAttributes creationAttributes =
             new OwnerEntity.CreationAttributes(request.Email, passwordHash, request.Name);
-        var owner = new OwnerEntity(creationAttributes);
+        OwnerEntity owner = new OwnerEntity(creationAttributes);
 
         await ownerRepository.CreateOwner(owner);
         return await ownerTokenService.GenerateTokens(owner);

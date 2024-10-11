@@ -8,7 +8,7 @@ namespace PetIdServer.Application.AppDomain.AdminDomain.Commands.Login;
 public class LoginAdminCommandHandler(
     IAdminRepository adminRepository,
     IAdminTokenService adminTokenService,
-    IPasswordService passwordService)
+    IHashService hashService)
     : IRequestHandler<LoginAdminCommand, LoginAdminResponseDto>
 {
     public async Task<LoginAdminResponseDto> Handle(
@@ -16,22 +16,35 @@ public class LoginAdminCommandHandler(
         CancellationToken cancellationToken)
     {
         // try find admin
-        var adminCandidate = await adminRepository.GetAdminByUsername(request.Username);
+        AdminEntity? adminCandidate = await adminRepository.GetAdminByUsername(request.Username);
 
         if (adminCandidate is null)
+        {
             throw new IncorrectCredentialsException(
                 $"Incorrect credentials for: {request.Username}",
-                new { request.Username, userType = nameof(AdminEntity) });
+                new
+                {
+                    request.Username, userType = nameof(AdminEntity)
+                });
+        }
 
         // validate password
         if (adminCandidate.Password != null &&
-            !await passwordService.ValidatePassword(request.Password, adminCandidate.Password))
+            !await hashService.Validate(request.Password, adminCandidate.Password))
+        {
             throw new IncorrectCredentialsException(
                 $"Incorrect credentials for: {request.Username}",
-                new { request.Username, userType = nameof(AdminEntity) });
+                new
+                {
+                    request.Username, userType = nameof(AdminEntity)
+                });
+        }
 
         // generate tokens
-        var token = await adminTokenService.GenerateToken(adminCandidate);
-        return new LoginAdminResponseDto { AccessToken = token, AdminId = adminCandidate.Id };
+        string token = await adminTokenService.GenerateToken(adminCandidate);
+        return new LoginAdminResponseDto
+        {
+            AccessToken = token, AdminId = adminCandidate.Id
+        };
     }
 }

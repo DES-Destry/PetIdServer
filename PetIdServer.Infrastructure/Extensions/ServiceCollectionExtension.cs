@@ -42,7 +42,7 @@ public static class ServiceCollectionExtension
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IHashService, HashService>();
         services.AddScoped<IOwnerTokenService, OwnerTokenService>();
         services.AddScoped<IAdminTokenService, AdminTokenService>();
         services.AddScoped<ICodeDecoder, CodeDecoder>();

@@ -1,13 +1,14 @@
 using System.Collections.Immutable;
 using MediatR;
 using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services;
 using PetIdServer.Core.Common.Exceptions.Common;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.AppDomain.TagDomain.Commands.CreateBatch;
 
-public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
+public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDecoder codeDecoder, IHashService hashService)
     : IRequestHandler<CreateTagsBatchCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(
@@ -16,27 +17,33 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
     {
         await CheckDuplicates(request);
 
-        var tagsCount = request.IdTo - request.IdFrom + 1;
-        var ids = Enumerable.Range(request.IdFrom, tagsCount).ToList();
+        int tagsCount = request.IdTo - request.IdFrom + 1;
+        ImmutableArray<int> ids = [..Enumerable.Range(request.IdFrom, tagsCount)];
 
-        if (ids.Count != request.Codes.Count())
+        if (ids.Length != request.Codes.Count())
+        {
             throw new ValidationException("Id range must be same with codes count", new
             {
                 command = nameof(CreateTagsBatchCommand),
                 idFrom = request.IdFrom,
                 idTo = request.IdTo,
-                idsCount = ids.Count,
+                idsCount = ids.Length,
                 codesCount = request.Codes.Count()
             });
+        }
 
-        var codes = request.Codes.ToImmutableArray();
+        ImmutableArray<string> codes = [..request.Codes];
+        TagEntity[] tags = new TagEntity[ids.Length];
 
-        var tags = ids.Select((id, index) =>
+        // TODO replace with .NET 9 Index in the future
+        foreach ((string code, int index) in codes.Select((code, index) => (code, index)))
         {
-            var creationAttributes =
-                new TagEntity.CreationAttributes((TagId)id, codes[index]);
-            return new TagEntity(creationAttributes);
-        });
+            string privateCode = await codeDecoder.EncodePublicCode(code);
+            string hashCode = await hashService.Hash(code);
+
+            TagEntity.CreationAttributes creationAttributes = new((TagId)index, privateCode, hashCode);
+            tags[index] = new TagEntity(creationAttributes);
+        }
 
         await tagRepository.CreateTagsBatch(tags);
 
@@ -45,15 +52,25 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository)
 
     private async Task CheckDuplicates(CreateTagsBatchCommand request)
     {
-        var ids = Enumerable.Range(request.IdFrom, request.IdTo);
-        var idsAvailable = await tagRepository.IsIdsAvailable(ids);
+        IEnumerable<int> ids = Enumerable.Range(request.IdFrom, request.IdTo);
+        bool areIdsAvailable = await tagRepository.AreIdsAvailable(ids);
 
-        if (!idsAvailable)
-            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
+        if (!areIdsAvailable)
+        {
+            throw new TagAlreadyCreatedException(new
+            {
+                command = nameof(CreateTagsBatchCommand)
+            });
+        }
 
-        var codesAvailable = await tagRepository.IsCodesAvailable(request.Codes);
+        bool areCodesAvailable = await tagRepository.AreCodesAvailable(request.Codes);
 
-        if (!codesAvailable)
-            throw new TagAlreadyCreatedException(new { command = nameof(CreateTagsBatchCommand) });
+        if (!areCodesAvailable)
+        {
+            throw new TagAlreadyCreatedException(new
+            {
+                command = nameof(CreateTagsBatchCommand)
+            });
+        }
     }
 }

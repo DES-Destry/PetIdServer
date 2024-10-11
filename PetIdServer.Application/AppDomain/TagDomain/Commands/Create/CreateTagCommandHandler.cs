@@ -1,11 +1,12 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
+using PetIdServer.Application.Common.Services;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 
 namespace PetIdServer.Application.AppDomain.TagDomain.Commands.Create;
 
-public class CreateTagCommandHandler(ITagRepository tagRepository)
+public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder codeDecoder, IHashService hashService)
     : IRequestHandler<CreateTagCommand, VoidResponseDto>
 {
     public async Task<VoidResponseDto> Handle(
@@ -14,9 +15,11 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
     {
         await CheckDuplicates(request);
 
-        var creationAttributes =
-            new TagEntity.CreationAttributes((TagId)request.Id, request.Code);
-        var tag = new TagEntity(creationAttributes);
+        string privateCode = await codeDecoder.EncodePublicCode(request.Code);
+        string hashCode = await hashService.Hash(request.Code);
+
+        TagEntity.CreationAttributes creationAttributes = new((TagId)request.Id, privateCode, hashCode);
+        TagEntity tag = new(creationAttributes);
 
         await tagRepository.CreateTag(tag);
 
@@ -25,16 +28,24 @@ public class CreateTagCommandHandler(ITagRepository tagRepository)
 
     private async Task CheckDuplicates(CreateTagCommand request)
     {
-        var tagIdCandidate = await tagRepository.GetTagById((TagId)request.Id);
+        TagEntity? tagIdCandidate = await tagRepository.GetTagById((TagId)request.Id);
 
         if (tagIdCandidate is not null)
+        {
             throw new TagAlreadyInUseException(new
-            { command = nameof(CreateTagCommand), tagId = request.Id });
+            {
+                command = nameof(CreateTagCommand), tagId = request.Id
+            });
+        }
 
-        var tagCodeCandidate = await tagRepository.GetByCode(request.Code);
+        TagEntity? tagCodeCandidate = await tagRepository.GetByCode(request.Code);
 
         if (tagCodeCandidate is not null)
+        {
             throw new TagAlreadyInUseException(new
-            { command = nameof(CreateTagCommand), code = request.Code });
+            {
+                command = nameof(CreateTagCommand), code = request.Code
+            });
+        }
     }
 }
