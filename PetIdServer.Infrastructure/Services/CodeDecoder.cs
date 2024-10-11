@@ -10,7 +10,8 @@ public class CodeDecoder : ICodeDecoder
 
     public CodeDecoder()
     {
-        var privateKey = File.ReadAllText("./Keys/private.pem");
+        var privateKey = File.ReadAllText(Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory + "../../../", "Keys", "private.pem"));
         _rsaParameters = ExtractRsaParameters(privateKey);
     }
 
