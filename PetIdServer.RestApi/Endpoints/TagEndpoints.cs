@@ -2,6 +2,7 @@ using Carter;
 using MediatR;
 using PetIdServer.Application.AppDomain.TagDomain.Dto;
 using PetIdServer.Application.AppDomain.TagDomain.Queries.ControlCheck;
+using PetIdServer.Application.AppDomain.TagDomain.Queries.GetByPublicCode;
 
 namespace PetIdServer.RestApi.Endpoints;
 
@@ -15,6 +16,11 @@ public class TagEndpoints : ICarterModule
             .WithOpenApi()
             .WithSummary("Get pre-sell info by control code.")
             .Produces<CheckTagDto>();
+
+        group.MapGet("code/{code}", GetTagByCode)
+            .WithOpenApi()
+            .WithSummary("Get all info for user by code.")
+            .Produces<TagDto>();
     }
 
     private static async Task<IResult> TagControlCheck(long controlCode, ISender sender)
@@ -24,6 +30,17 @@ public class TagEndpoints : ICarterModule
             ControlCode = controlCode
         };
         CheckTagDto response = await sender.Send(query);
+
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> GetTagByCode(string code, ISender sender)
+    {
+        GetTagByPublicCodeQuery query = new()
+        {
+            Code = code
+        };
+        TagDto response = await sender.Send(query);
 
         return Results.Ok(response);
     }
