@@ -23,8 +23,8 @@ public class HashService : IHashService
     {
         string[] parts = valueHash.Split('-');
 
-        byte[] salt = Convert.FromHexString(parts[0]);
-        byte[] hash = Convert.FromHexString(parts[1]);
+        byte[] hash = Convert.FromHexString(parts[0]);
+        byte[] salt = Convert.FromHexString(parts[1]);
 
         byte[] inputHash = KeyDerivation.Pbkdf2(value, salt, HashAlgorithm, Iterations, HashSize);
 
