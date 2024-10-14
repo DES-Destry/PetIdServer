@@ -15,8 +15,8 @@ public static class AuthExtensions
         this AuthenticationBuilder authBuilder,
         IConfiguration configuration)
     {
-        var ownerTokenParameters = new OwnerTokenParameters(configuration);
-        var adminTokenParameters = new AdminTokenParameters(configuration);
+        OwnerTokensParameters? ownerTokenParameters = new(configuration);
+        AdminTokenParameters? adminTokenParameters = new(configuration);
 
         return authBuilder.AddJwtBearer(AuthSchemas.Owner, options =>
             {
@@ -34,7 +34,9 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                { OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException() };
+                {
+                    OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException()
+                };
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
@@ -52,7 +54,9 @@ public static class AuthExtensions
                 };
 
                 options.Events = new JwtBearerEvents
-                { OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException() };
+                {
+                    OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException()
+                };
             });
     }
 }

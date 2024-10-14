@@ -12,164 +12,213 @@ using PetIdServer.Infrastructure.Configuration;
 
 namespace PetIdServer.Infrastructure.Services;
 
+public enum OwnerTokenType { Access, Refresh }
+
 public class OwnerTokenService : IOwnerTokenService
 {
-    private readonly OwnerTokenParameters _parameters;
+    private readonly TokenValidationParameters _accessTokenSoftValidationParameters;
+    private readonly TokenValidationParameters _accessTokenValidationParameters;
+    private readonly OwnerTokensParameters _parameters;
+    private readonly TokenValidationParameters _refreshTokenValidationParameters;
     private readonly JwtSecurityTokenHandler _tokenHandler;
-    private readonly TokenValidationParameters _tokenValidation;
 
     public OwnerTokenService(IConfiguration configuration)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
-        _parameters = new OwnerTokenParameters(configuration);
+        _parameters = new OwnerTokensParameters(configuration);
 
-        _tokenValidation = new TokenValidationParameters
-        {
-            ValidAudience = _parameters.Audience,
-            ValidIssuer = _parameters.Issuer,
-            ValidateAudience = true,
-            ValidateIssuer = true,
-            ValidateIssuerSigningKey = true
-        };
+        _accessTokenValidationParameters = CreateTokenValidationParameters(OwnerTokenType.Access, true);
+        _accessTokenSoftValidationParameters = CreateTokenValidationParameters(OwnerTokenType.Access, false);
+        _refreshTokenValidationParameters = CreateTokenValidationParameters(OwnerTokenType.Refresh, true);
     }
 
-    public async Task<TokenPairDto> GenerateTokens(OwnerDto owner)
+    public Task<TokenPairDto> GenerateTokens(OwnerDto owner)
     {
-        var accessToken = GenerateAccessToken(owner);
-        var refreshToken = GenerateRefreshToken(accessToken);
-
-        var tokenPair = new TokenPairDto { AccessToken = accessToken, RefreshToken = refreshToken };
-        return await Task.FromResult(tokenPair);
+        string accessToken = GenerateAccessToken(owner);
+        string refreshToken = GenerateRefreshToken(accessToken);
+        return Task.FromResult(new TokenPairDto
+        {
+            AccessToken = accessToken, RefreshToken = refreshToken
+        });
     }
 
     public async Task<TokenPairDto> RefreshTokens(string refreshToken)
     {
-        var accessToken = await DecryptAccessToken(refreshToken);
-        var owner = await DecryptExpiredOwner(accessToken);
-
+        string accessToken = await GetAccessTokenFromRefreshToken(refreshToken);
+        OwnerDto owner = await GetOwnerFromTokenEvenIfExpired(accessToken);
         return await GenerateTokens(owner);
     }
 
-    public async Task<OwnerDto> DecryptOwner(string accessToken)
+    public async Task<OwnerDto> GetOwnerFromToken(string accessToken)
     {
         await ValidateAccessToken(accessToken);
-
-        var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
-        var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
-
-        return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ??
-               throw new ArgumentException(nameof(ownerJson));
+        return DeserializeOwnerFromToken(accessToken);
     }
 
-    private string GenerateAccessToken(OwnerDto owner)
+    // -------------------------------------------------
+    // Generate tokens
+    // -------------------------------------------------
+
+    private SecurityTokenDescriptor GetTokenParametersForGenerating(List<Claim> claims, OwnerTokenType tokenType)
     {
-        var ownerString = JsonSerializer.Serialize(owner) ??
-                          throw new ArgumentException(nameof(owner));
-
-        var claims = new List<Claim>
+        string secret = tokenType switch
         {
-            new(ClaimTypes.Email, owner.Email),
-            new(ClaimTypes.UserData, ownerString)
+            OwnerTokenType.Access => _parameters.AtSecret,
+            OwnerTokenType.Refresh => _parameters.RtSecret,
+            _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
 
-        var tokenDescriptor = new SecurityTokenDescriptor
+        string ttl = tokenType switch
+        {
+            OwnerTokenType.Access => _parameters.AtTtl,
+            OwnerTokenType.Refresh => _parameters.RtTtl,
+            _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
+        };
+
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(secret));
+
+        SecurityTokenDescriptor tokenDescriptor = new()
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.AtTtl)),
+            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(ttl)),
             Audience = _parameters.Audience,
             Issuer = _parameters.Issuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
-        var token = _tokenHandler.CreateToken(tokenDescriptor);
+        return tokenDescriptor;
+    }
+
+    private string GenerateAccessToken(OwnerDto owner)
+    {
+        string ownerJson = JsonSerializer.Serialize(owner) ??
+                           throw new ArgumentException("Cannot make JSON from object", nameof(owner));
+
+        List<Claim> claims = [new(ClaimTypes.Email, owner.Email), new(ClaimTypes.UserData, ownerJson)];
+        SecurityTokenDescriptor tokenDescriptor = GetTokenParametersForGenerating(claims, OwnerTokenType.Access);
+
+        SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
     }
 
     private string GenerateRefreshToken(string accessToken)
     {
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Hash, accessToken)
-        };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
+        List<Claim> claims = [new(ClaimTypes.Hash, accessToken)];
+        SecurityTokenDescriptor tokenDescriptor = GetTokenParametersForGenerating(claims, OwnerTokenType.Refresh);
 
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_parameters.RtTtl)),
-            Audience = _parameters.Audience,
-            Issuer = _parameters.Issuer,
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
-        };
-
-        var token = _tokenHandler.CreateToken(tokenDescriptor);
+        SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
     }
 
-    private async Task<OwnerDto> DecryptExpiredOwner(string accessToken)
+    // -------------------------------------------------
+    // Get information from tokens
+    // -------------------------------------------------
+
+    private static string GetPayloadFromToken(JwtSecurityToken jwtSecurityToken, OwnerTokenType tokenType) => tokenType switch
     {
-        await ValidateExpiredAccessToken(accessToken);
+        OwnerTokenType.Access => jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value,
+        OwnerTokenType.Refresh => jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.Hash).Value,
+        _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
+    };
 
-        var jwtToken = _tokenHandler.ReadJwtToken(accessToken);
-        var ownerJson = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value;
-
+    private OwnerDto DeserializeOwnerFromToken(string accessToken)
+    {
+        JwtSecurityToken jwtToken = _tokenHandler.ReadJwtToken(accessToken) ??
+                                    throw new ArgumentException("Access token invalid format", nameof(accessToken));
+        string ownerJson = GetPayloadFromToken(jwtToken, OwnerTokenType.Access);
         return JsonSerializer.Deserialize<OwnerDto>(ownerJson) ??
                throw new ArgumentException(nameof(ownerJson));
     }
 
-    private async Task<string> DecryptAccessToken(string refreshToken)
+    private async Task<OwnerDto> GetOwnerFromTokenEvenIfExpired(string accessToken)
+    {
+        await ValidateAccessTokenEvenIfExpired(accessToken);
+        return DeserializeOwnerFromToken(accessToken);
+    }
+
+    private async Task<string> GetAccessTokenFromRefreshToken(string refreshToken)
     {
         await ValidateRefreshToken(refreshToken);
 
-        var jwtToken = _tokenHandler.ReadJwtToken(refreshToken);
-        return jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Hash).Value;
+        JwtSecurityToken jwtToken = _tokenHandler.ReadJwtToken(refreshToken) ??
+                                    throw new ArgumentException("Refresh token invalid format", nameof(refreshToken));
+        return GetPayloadFromToken(jwtToken, OwnerTokenType.Refresh);
+    }
+
+    // -------------------------------------------------
+    // Token validations
+    // -------------------------------------------------
+
+    private TokenValidationParameters CreateTokenValidationParameters(OwnerTokenType tokenType,
+        bool validateLifetime)
+    {
+        string secret = tokenType switch
+        {
+            OwnerTokenType.Access => _parameters.AtSecret,
+            OwnerTokenType.Refresh => _parameters.RtSecret,
+            _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
+        };
+
+        return new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+            ValidAudience = _parameters.Audience,
+            ValidIssuer = _parameters.Issuer,
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = validateLifetime
+        };
     }
 
     private async Task ValidateAccessToken(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
-        _tokenValidation.ValidateLifetime = true;
-
-        var validated = await ValidateTokens(accessToken);
+        bool validated = await ValidateTokens(accessToken, _accessTokenValidationParameters);
 
         if (!validated)
+        {
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new { Class = nameof(OwnerTokenService) });
+                                                    new
+                                                    {
+                                                        Class = nameof(OwnerTokenService)
+                                                    });
+        }
     }
 
-    private async Task ValidateExpiredAccessToken(string accessToken)
+    private async Task ValidateAccessTokenEvenIfExpired(string accessToken)
     {
-        _tokenValidation.IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.AtSecret));
-        _tokenValidation.ValidateLifetime = false;
-
-        var validated = await ValidateTokens(accessToken);
+        bool validated = await ValidateTokens(accessToken, _accessTokenSoftValidationParameters);
 
         if (!validated)
+        {
             throw new AccessTokenMalformedException("Access token is not valid!",
-                new { Class = nameof(OwnerTokenService) });
+                                                    new
+                                                    {
+                                                        Class = nameof(OwnerTokenService)
+                                                    });
+        }
     }
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
-        _tokenValidation.IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.RtSecret));
-        _tokenValidation.ValidateLifetime = true;
-
-        var validated = await ValidateTokens(refreshToken);
+        bool validated = await ValidateTokens(refreshToken, _refreshTokenValidationParameters);
 
         if (!validated)
+        {
             throw new RefreshTokenMalformedException("Refresh token is not valid!",
-                new { Class = nameof(OwnerTokenService) });
+                                                     new
+                                                     {
+                                                         Class = nameof(OwnerTokenService)
+                                                     });
+        }
     }
 
-    private async Task<bool> ValidateTokens(string token)
+    private async Task<bool> ValidateTokens(string token, TokenValidationParameters validationParameters)
     {
         try
         {
-            var validatedToken = await _tokenHandler.ValidateTokenAsync(token, _tokenValidation);
+            TokenValidationResult? validatedToken =
+                await _tokenHandler.ValidateTokenAsync(token, validationParameters);
             return validatedToken != null;
         }
         catch (SecurityTokenException)

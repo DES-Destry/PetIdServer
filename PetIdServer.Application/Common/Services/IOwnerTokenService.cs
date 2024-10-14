@@ -8,5 +8,5 @@ public interface IOwnerTokenService
     Task<TokenPairDto> GenerateTokens(OwnerDto owner);
     Task<TokenPairDto> RefreshTokens(string refreshToken);
 
-    Task<OwnerDto> DecryptOwner(string accessToken);
+    Task<OwnerDto> GetOwnerFromToken(string accessToken);
 }
