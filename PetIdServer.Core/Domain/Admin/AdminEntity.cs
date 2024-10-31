@@ -10,7 +10,8 @@ public class AdminEntity : Entity<AdminId>
         Password = creationAttributes.Password;
 
         CreatedAt = DateTime.UtcNow;
-        PasswordLastChangedAt = DateTime.UtcNow;
+        PasswordMustBeChangedBefore = DateTime.UtcNow.AddHours(12);
+        PasswordLastChangedAt = null;
     }
 
     public AdminEntity(AdminId id) : base(id) { }
@@ -24,9 +25,13 @@ public class AdminEntity : Entity<AdminId>
 
     public DateTime CreatedAt { get; set; }
 
+    public DateTime? PasswordMustBeChangedBefore { get; set; }
+
     public DateTime? PasswordLastChangedAt { get; set; }
 
-    public bool IsNotCapable => Password is null;
+    public bool CanDoActions => Password is not null;
+
+    public bool MustBeDeleted => DateTime.UtcNow.CompareTo(PasswordMustBeChangedBefore) == 1;
 
     public record EntityId(string Value);
 

@@ -10,7 +10,7 @@ public class AdminDto
 
     public DateTime? PasswordLastChangedAt { get; set; }
 
-    public bool IsNotCapable { get; set; }
+    public bool CanDoActions { get; set; }
 
     public static implicit operator AdminDto(AdminEntity admin)
     {
@@ -19,7 +19,7 @@ public class AdminDto
             Username = admin.Username,
             CreatedAt = admin.CreatedAt,
             PasswordLastChangedAt = admin.PasswordLastChangedAt,
-            IsNotCapable = admin.IsNotCapable
+            CanDoActions = admin.CanDoActions
         };
     }
 }
