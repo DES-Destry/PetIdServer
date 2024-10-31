@@ -1,28 +1,16 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using PetIdServer.Infrastructure.Database.Domain.Pet;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Owner;
 
-[Table("owners")]
 public class OwnerModel
 {
-    [Column("id")][Key] public Guid Id { get; set; }
-    [Column("email")][Required] public string Email { get; set; }
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required string Email { get; init; }
+    public required string Password { get; init; }
+    public string? Address { get; init; }
+    public string? Description { get; init; }
 
-    [Column("password")][Required] public string Password { get; set; }
-
-    [Column("name")]
-    [Required]
-    [MaxLength(32)]
-    public string Name { get; set; }
-
-    [Column("address")] public string? Address { get; set; }
-
-    [Column("description")]
-    [MaxLength(4096)]
-    public string? Description { get; set; }
-
-    public virtual ICollection<OwnerContactModel> Contacts { get; set; }
-    public virtual ICollection<PetModel> Pets { get; set; }
+    public ICollection<OwnerContactModel> Contacts { get; } = [];
+    public ICollection<PetModel> Pets { get; } = [];
 }

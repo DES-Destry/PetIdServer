@@ -32,7 +32,7 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
 
     public async Task<IEnumerable<TagReportEntity>> GetReportsByTagId(TagId tagId)
     {
-        List<TagReportModel>? reportModels = await database.TagReports
+        List<TagReportModel> reportModels = await database.TagReports
             .Where(report => report.CorruptedTagId == tagId)
             .ToListAsync();
 

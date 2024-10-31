@@ -6,37 +6,29 @@ using PetIdServer.Infrastructure.Database.Domain.Tag;
 
 namespace PetIdServer.Infrastructure.Database;
 
-public class PetIdContext : DbContext
+public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(options)
 {
-    public PetIdContext(DbContextOptions<PetIdContext> options) : base(options) { }
-    public DbSet<OwnerModel> Owners { get; set; }
-    public DbSet<OwnerContactModel> OwnerContacts { get; set; }
-    public DbSet<PetModel> Pets { get; set; }
-    public DbSet<TagModel> Tags { get; set; }
-    public DbSet<TagReportModel> TagReports { get; set; }
+    public DbSet<OwnerModel> Owners { get; init; }
+    public DbSet<OwnerContactModel> OwnerContacts { get; init; }
+    public DbSet<PetModel> Pets { get; init; }
+    public DbSet<TagModel> Tags { get; init; }
+    public DbSet<TagReportModel> TagReports { get; init; }
 
-    public DbSet<AdminModel> Admins { get; set; }
+    public DbSet<AdminModel> Admins { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("pet");
 
-        modelBuilder.Entity<OwnerModel>().Navigation(owner => owner.Pets).AutoInclude();
-        modelBuilder.Entity<OwnerModel>().Navigation(owner => owner.Contacts).AutoInclude();
+        new AdminEntityTypeConfiguration().Configure(modelBuilder.Entity<AdminModel>());
 
-        modelBuilder.Entity<TagModel>().Navigation(tag => tag.Pet).AutoInclude();
+        new OwnerEntityTypeConfiguration().Configure(modelBuilder.Entity<OwnerModel>());
+        new OwnerContactEntityTypeConfiguration().Configure(modelBuilder.Entity<OwnerContactModel>());
 
-        modelBuilder
-            .Entity<TagReportModel>()
-            .Navigation(report => report.CorruptedTag)
-            .AutoInclude();
-        modelBuilder.Entity<TagReportModel>().Navigation(report => report.Reporter).AutoInclude();
-        modelBuilder.Entity<TagReportModel>().Navigation(report => report.Resolver).AutoInclude();
+        new PetEntityTypeConfiguration().Configure(modelBuilder.Entity<PetModel>());
 
-        modelBuilder.Entity<AdminModel>().HasData(new AdminModel
-        {
-            Username = "Andrey.Kirik", Password = null, CreatedAt = DateTime.UtcNow, PasswordLastChangedAt = null
-        });
+        new TagEntityTypeConfiguration().Configure(modelBuilder.Entity<TagModel>());
+        new TagReportEntityTypeConfiguration().Configure(modelBuilder.Entity<TagReportModel>());
 
         base.OnModelCreating(modelBuilder);
     }

@@ -1,20 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using PetIdServer.Infrastructure.Database.Domain.Tag;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Admin;
 
-[Table("admins")]
 public class AdminModel
 {
-    [Column("username")]
-    [Required]
-    [Key]
-    [MaxLength(32)]
-    public string Username { get; set; }
+    public required string Username { get; init; }
+    public string? Password { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? PasswordLastChangedAt { get; init; }
 
-    [Column("password")] public string? Password { get; set; }
-
-    [Column("created_at")][Required] public DateTime CreatedAt { get; set; }
-
-    [Column("password_last_changed_at")] public DateTime? PasswordLastChangedAt { get; set; }
+    public ICollection<TagReportModel> TagReportsCreated { get; } = [];
+    public ICollection<TagReportModel> TagReportsResolved { get; } = [];
 }

@@ -1,24 +1,17 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using PetIdServer.Infrastructure.Database.Domain.Admin;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Tag;
 
-[Table("tag_reports")]
 public class TagReportModel
 {
-    [Column("id")][Required][Key] public Guid Id { get; set; }
+    public required Guid Id { get; init; }
+    public required int CorruptedTagId { get; init; }
+    public required string ReporterId { get; init; }
+    public string? ResolverId { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? ResolvedAt { get; init; }
 
-    [Column("corrupted_tag_id")]
-    [Required]
-    public int CorruptedTagId { get; set; }
-
-    [Column("reporter_id")][Required] public string ReporterId { get; set; }
-    [Column("resolver_id")] public string? ResolverId { get; set; }
-    [Column("created_at")][Required] public DateTime CreatedAt { get; set; }
-    [Column("resolved_at")] public DateTime? ResolvedAt { get; set; }
-
-    [ForeignKey(nameof(CorruptedTagId))] public virtual TagModel CorruptedTag { get; set; }
-    [ForeignKey(nameof(ReporterId))] public virtual AdminModel Reporter { get; set; }
-    [ForeignKey(nameof(ResolverId))] public virtual AdminModel? Resolver { get; set; }
+    public TagModel CorruptedTag { get; } = null!;
+    public AdminModel Reporter { get; } = null!;
+    public AdminModel? Resolver { get; } = null;
 }
