@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace PetIdServer.Infrastructure.Database.Models;
+namespace PetIdServer.Infrastructure.Database.Domain.Owner;
 
 [Table("owners_contacts")]
 [PrimaryKey(nameof(OwnerId), nameof(ContactType))]

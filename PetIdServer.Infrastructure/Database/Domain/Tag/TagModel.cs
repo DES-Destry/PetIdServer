@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PetIdServer.Infrastructure.Database.Domain.Pet;
 
-namespace PetIdServer.Infrastructure.Database.Models;
+namespace PetIdServer.Infrastructure.Database.Domain.Tag;
 
 [Table("tags")]
 public class TagModel

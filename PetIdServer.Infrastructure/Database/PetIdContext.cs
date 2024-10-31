@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Infrastructure.Database.Models;
+using PetIdServer.Infrastructure.Database.Domain.Admin;
+using PetIdServer.Infrastructure.Database.Domain.Owner;
+using PetIdServer.Infrastructure.Database.Domain.Pet;
+using PetIdServer.Infrastructure.Database.Domain.Tag;
 
 namespace PetIdServer.Infrastructure.Database;
 
@@ -32,10 +35,7 @@ public class PetIdContext : DbContext
 
         modelBuilder.Entity<AdminModel>().HasData(new AdminModel
         {
-            Username = "Andrey.Kirik",
-            Password = null,
-            CreatedAt = DateTime.UtcNow,
-            PasswordLastChangedAt = null
+            Username = "Andrey.Kirik", Password = null, CreatedAt = DateTime.UtcNow, PasswordLastChangedAt = null
         });
 
         base.OnModelCreating(modelBuilder);

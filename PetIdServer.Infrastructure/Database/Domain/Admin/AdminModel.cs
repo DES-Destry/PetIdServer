@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PetIdServer.Infrastructure.Database.Models;
+namespace PetIdServer.Infrastructure.Database.Domain.Admin;
 
 [Table("admins")]
 public class AdminModel

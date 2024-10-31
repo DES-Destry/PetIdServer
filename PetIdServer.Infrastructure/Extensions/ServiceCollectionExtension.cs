@@ -8,7 +8,10 @@ using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Application.AppDomain.TagReportDomain;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Infrastructure.Database;
-using PetIdServer.Infrastructure.Database.Repositories;
+using PetIdServer.Infrastructure.Database.Domain.Admin;
+using PetIdServer.Infrastructure.Database.Domain.Owner;
+using PetIdServer.Infrastructure.Database.Domain.Pet;
+using PetIdServer.Infrastructure.Database.Domain.Tag;
 using PetIdServer.Infrastructure.Mapper;
 using PetIdServer.Infrastructure.Services;
 

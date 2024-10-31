@@ -4,27 +4,18 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PetIdServer.Application.AppDomain.TagDomain;
 using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Models;
+using PetIdServer.Infrastructure.Database.Domain.Pet;
 
-namespace PetIdServer.Infrastructure.Database.Repositories;
+namespace PetIdServer.Infrastructure.Database.Domain.Tag;
 
 public class TagRepository(IMapper mapper, PetIdContext database) : ITagRepository
 {
-    public async Task<bool> AreIdsAvailable(IEnumerable<int> ids)
-    {
-        int count = database.Tags.Count(tag => ids.Contains(tag.Id));
-        bool result = count == 0;
+    public async Task<bool> AreIdsAvailable(IEnumerable<int> ids) => await database.Tags.AnyAsync(tag => ids.Contains(tag.Id));
 
-        return await Task.FromResult(result);
-    }
 
-    public async Task<bool> AreHashCodesAvailable(IEnumerable<string> hashCodes)
-    {
-        int count = await database.Tags.CountAsync(tag => hashCodes.Contains(tag.HashCode));
-        bool result = count == 0;
+    public async Task<bool> AreHashCodesAvailable(IEnumerable<string> hashCodes) =>
+        await database.Tags.AnyAsync(tag => hashCodes.Contains(tag.HashCode));
 
-        return result;
-    }
 
     public async Task<IEnumerable<TagEntity>> GetAllTags()
     {
