@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Application.AppDomain.TagReportDomain;
-using PetIdServer.Application.AppDomain.TagReportDomain.Dto.Input;
+using PetIdServer.Application.Domain.TagReport;
+using PetIdServer.Application.Domain.TagReport.Dto.Input;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.TagReport;
 

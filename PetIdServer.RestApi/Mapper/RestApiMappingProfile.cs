@@ -1,8 +1,8 @@
 using AutoMapper;
-using PetIdServer.Application.AppDomain.AdminDomain.Commands.Login;
-using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Login;
-using PetIdServer.Application.AppDomain.OwnerDomain.Commands.Registration;
-using PetIdServer.Application.AppDomain.TagDomain.Commands.CreateBatch;
+using PetIdServer.Application.Domain.Admin.Commands.Login;
+using PetIdServer.Application.Domain.Owner.Commands.Login;
+using PetIdServer.Application.Domain.Owner.Commands.Registration;
+using PetIdServer.Application.Domain.Tag.Commands.CreateBatch;
 using PetIdServer.RestApi.Endpoints.Dto.Admin;
 using PetIdServer.RestApi.Endpoints.Dto.Owner;
 

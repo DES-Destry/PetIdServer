@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PetIdServer.Application.AppDomain.AdminDomain;
-using PetIdServer.Application.AppDomain.OwnerDomain;
-using PetIdServer.Application.AppDomain.PetDomain;
-using PetIdServer.Application.AppDomain.TagDomain;
-using PetIdServer.Application.AppDomain.TagReportDomain;
 using PetIdServer.Application.Common.Services;
+using PetIdServer.Application.Domain.Admin;
+using PetIdServer.Application.Domain.Owner;
+using PetIdServer.Application.Domain.Pet;
+using PetIdServer.Application.Domain.Tag;
+using PetIdServer.Application.Domain.TagReport;
 using PetIdServer.Infrastructure.Database;
 using PetIdServer.Infrastructure.Database.Domain.Admin;
 using PetIdServer.Infrastructure.Database.Domain.Owner;

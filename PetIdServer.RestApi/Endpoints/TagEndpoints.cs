@@ -1,8 +1,8 @@
 using Carter;
 using MediatR;
-using PetIdServer.Application.AppDomain.TagDomain.Dto;
-using PetIdServer.Application.AppDomain.TagDomain.Queries.ControlCheck;
-using PetIdServer.Application.AppDomain.TagDomain.Queries.GetByPublicCode;
+using PetIdServer.Application.Domain.Tag.Dto;
+using PetIdServer.Application.Domain.Tag.Queries.ControlCheck;
+using PetIdServer.Application.Domain.Tag.Queries.GetByPublicCode;
 
 namespace PetIdServer.RestApi.Endpoints;
 

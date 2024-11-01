@@ -1,6 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Application.AppDomain.AdminDomain;
+using PetIdServer.Application.Domain.Admin;
 using PetIdServer.Core.Domain.Admin;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Admin;
