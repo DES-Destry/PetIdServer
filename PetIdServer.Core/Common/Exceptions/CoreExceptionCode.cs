@@ -11,8 +11,8 @@ public static class CoreExceptionCode
     public const string AccessTokenMalformed = DefaultScope + "ACCESS_TOKEN_MALFORMED";
     public const string RefreshTokenMalformed = DefaultScope + "REFRESH_TOKEN_MALFORMED";
 
-    public const string OwnerNotFound = DefaultScope + "OWNER_NOT_FOUND";
-    public const string OwnerAlreadyRegistered = DefaultScope + "OWNER_ALREADY_REGISTERED";
+    public const string UserNotFound = DefaultScope + "USER_NOT_FOUND";
+    public const string UserAlreadyRegistered = DefaultScope + "USER_ALREADY_REGISTERED";
 
     public const string PetNotFound = DefaultScope + "PET_NOT_FOUND";
 
@@ -27,4 +27,5 @@ public static class CoreExceptionCode
     public const string AdminAlreadyCreated = DefaultScope + "ADMIN_ALREADY_CREATED";
 
     public const string Unauthenticated = DefaultScope + "UNAUTHENTICATED";
+    public const string Unauthorized = DefaultScope + "UNAUTHORIZED";
 }

@@ -5,8 +5,8 @@ namespace PetIdServer.Application.Domain.Pet.Commands.Create;
 
 public class CreatePetCommand : IRequest<VoidResponseDto>
 {
-    public string Type { get; set; }
-    public string Name { get; set; }
-    public bool Sex { get; set; }
-    public bool IsCastrated { get; set; }
+    public required string Type { get; init; }
+    public required string Name { get; init; }
+    public required bool Sex { get; init; }
+    public required bool IsCastrated { get; init; }
 }

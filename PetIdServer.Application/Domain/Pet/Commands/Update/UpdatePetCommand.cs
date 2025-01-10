@@ -5,10 +5,10 @@ namespace PetIdServer.Application.Domain.Pet.Commands.Update;
 
 public class UpdatePetCommand : IRequest<VoidResponseDto>
 {
-    public Guid Id { get; set; }
-    public string Type { get; set; }
-    public string Name { get; set; }
-    public bool Sex { get; set; }
-    public bool IsCastrated { get; set; }
-    public string Description { get; set; }
+    public required Guid Id { get; init; }
+    public string? Type { get; init; }
+    public string? Name { get; init; }
+    public bool? Sex { get; init; }
+    public bool? IsCastrated { get; init; }
+    public string? Description { get; init; }
 }

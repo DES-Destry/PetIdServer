@@ -28,19 +28,18 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new ValidationException("Id range must be same with codes count", new
             {
-                command = nameof(CreateTagsBatchCommand),
-                idFrom = request.IdFrom,
-                idTo = request.IdTo,
-                idsCount = ids.Length,
-                codesCount = request.Codes.Count()
+                UseCase = nameof(CreateTagsBatchCommand),
+                request.IdFrom,
+                request.IdTo,
+                IdsCount = ids.Length,
+                CodesCount = request.Codes.Count()
             });
         }
 
         ImmutableArray<string> codes = [..request.Codes];
         TagEntity[] tags = new TagEntity[ids.Length];
 
-        // TODO replace with .NET 9 Index in the future
-        foreach ((string code, int index) in codes.Select((code, index) => (code, index)))
+        foreach ((int index, string code) in codes.Index())
         {
             string privateCode = await codeDecoder.EncodePublicCode(code);
             string hashCode = await hashService.Hash(code);
@@ -63,7 +62,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                command = nameof(CreateTagsBatchCommand)
+                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the ids are already in use"
             });
         }
 
@@ -73,7 +72,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                command = nameof(CreateTagsBatchCommand)
+                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the codes are already in use"
             });
         }
     }

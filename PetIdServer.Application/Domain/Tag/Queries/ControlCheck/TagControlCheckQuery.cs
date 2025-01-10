@@ -5,5 +5,5 @@ namespace PetIdServer.Application.Domain.Tag.Queries.ControlCheck;
 
 public class TagControlCheckQuery : IRequest<CheckTagDto>
 {
-    public long ControlCode { get; set; }
+    public required long ControlCode { get; init; }
 }

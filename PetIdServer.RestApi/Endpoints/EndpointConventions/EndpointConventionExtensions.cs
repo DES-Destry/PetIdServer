@@ -8,7 +8,8 @@ public static class EndpointConventionExtensions
         where TBuilder : IEndpointConventionBuilder
     {
         builder.Add(endpointBuilder =>
-            endpointBuilder.Metadata.Add(new RequireSecurityKeyAttribute()));
+                        endpointBuilder.Metadata.Add(new RequireSecurityKeyAttribute()));
+
         return builder;
     }
 }

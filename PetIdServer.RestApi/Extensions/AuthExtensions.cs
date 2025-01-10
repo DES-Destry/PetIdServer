@@ -1,9 +1,10 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using PetIdServer.Core.Domain.Admin.Exceptions;
-using PetIdServer.Core.Domain.Owner.Exceptions;
+using PetIdServer.Core.Domain.User;
+using PetIdServer.Core.Domain.User.Exceptions;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 
@@ -15,10 +16,9 @@ public static class AuthExtensions
         this AuthenticationBuilder authBuilder,
         IConfiguration configuration)
     {
-        OwnerTokensParameters? ownerTokenParameters = new(configuration);
-        AdminTokenParameters? adminTokenParameters = new(configuration);
+        JwtTokensParameters jwtTokenParameters = new(configuration);
 
-        return authBuilder.AddJwtBearer(AuthSchemas.Owner, options =>
+        return authBuilder.AddJwtBearer(AuthSchemas.PetOwner, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -26,16 +26,16 @@ public static class AuthExtensions
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
-                    ValidIssuer = ownerTokenParameters.Issuer,
-                    ValidAudience = ownerTokenParameters.Audience,
+                    ValidIssuer = jwtTokenParameters.Issuer,
+                    ValidAudience = jwtTokenParameters.Audience,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(ownerTokenParameters.AtSecret))
+                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
                 };
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = _ => throw new OwnerUnauthenticatedException()
+                    OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
                 };
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
@@ -46,17 +46,40 @@ public static class AuthExtensions
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
-                    ValidIssuer = adminTokenParameters.Issuer,
-                    ValidAudience = adminTokenParameters.Audience,
+                    ValidIssuer = jwtTokenParameters.Issuer,
+                    ValidAudience = jwtTokenParameters.Audience,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(adminTokenParameters.JwtSecret))
+                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
                 };
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = _ => throw new AdminUnauthenticatedException()
+                    OnTokenValidated = ValidateRole(UserRole.Admin),
+                    OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
                 };
             });
     }
+
+    private static Func<TokenValidatedContext, Task> ValidateRole(UserRole requiredRole) => context =>
+    {
+        Claim? permissionClaim = context.Principal?.FindFirst("WithPermissionsOf");
+        bool tokenHasPermissionsOfRequiredRole =
+            UserRole.TryParse(permissionClaim?.Value, out UserRole? permissionRole) &&
+            permissionRole.HasPermissionsOf(requiredRole);
+
+        if (!tokenHasPermissionsOfRequiredRole)
+        {
+            throw new UserUnauthorizedException("User does not have the required permissions",
+                                                new
+                                                {
+                                                    CurrentRole = permissionClaim?.Value ?? UserRole.LeastPrivileged.Name,
+                                                    CurrentRoleLevel = permissionRole?.Level ?? UserRole.LeastPrivileged.Level,
+                                                    RequiredRoleName = requiredRole.Name,
+                                                    RequiredRoleLevel = requiredRole.Level
+                                                });
+        }
+
+        return Task.CompletedTask;
+    };
 }

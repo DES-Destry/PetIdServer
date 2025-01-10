@@ -16,7 +16,7 @@ public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IHashS
         TagEntity tag = await tagRepository.GetTagByHashCode(hashCode) ??
                         throw new TagNotFoundException($"Tag with code {request.Code} not found", new
                         {
-                            request.Code
+                            request.Code, UseCase = nameof(GetTagByPublicCodeQuery)
                         });
 
         return mapper.Map<TagDto>(tag);

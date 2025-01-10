@@ -1,13 +1,11 @@
 using AutoMapper;
-using PetIdServer.Core.Domain.Admin;
-using PetIdServer.Core.Domain.Owner;
 using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.TagReport;
-using PetIdServer.Infrastructure.Database.Domain.Admin;
-using PetIdServer.Infrastructure.Database.Domain.Owner;
+using PetIdServer.Core.Domain.User;
 using PetIdServer.Infrastructure.Database.Domain.Pet;
 using PetIdServer.Infrastructure.Database.Domain.Tag;
+using PetIdServer.Infrastructure.Database.Domain.User;
 
 namespace PetIdServer.Infrastructure.Mapper;
 
@@ -15,13 +13,13 @@ public class InfrastructureMappingProfile : Profile
 {
     public InfrastructureMappingProfile()
     {
-        CreateMap<OwnerModel, OwnerEntity>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (OwnerId)model.Id))
+        CreateMap<UserModel, UserEntity>()
+            .ForCtorParam("id", expression => expression.MapFrom(model => (UserId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id));
 
-        CreateMap<OwnerContactModel, OwnerContactVo>().ReverseMap();
+        CreateMap<UserContactModel, UserContactVo>().ReverseMap();
         CreateMap<PetModel, PetEntity>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (PetId)model.Id))
             .ReverseMap()
@@ -42,15 +40,8 @@ public class InfrastructureMappingProfile : Profile
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id))
             .ForMember(model => model.ReporterId,
-                       expression => expression.MapFrom(domain => (string)domain.Reporter.Id))
+                       expression => expression.MapFrom(domain => (Guid)domain.Reporter.Id))
             .ForMember(model => model.ResolverId,
-                       expression => expression.MapFrom(domain => (string)domain!.Resolver!.Id));
-
-        CreateMap<AdminModel, AdminEntity>()
-            .ForCtorParam("id",
-                          expression => expression.MapFrom(model => (AdminId)model.Username))
-            .ReverseMap()
-            .ForMember(model => model.Username,
-                       expression => expression.MapFrom(domain => domain.Id));
+                       expression => expression.MapFrom(domain => (Guid)domain!.Resolver!.Id));
     }
 }

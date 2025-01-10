@@ -1,6 +1,6 @@
 using PetIdServer.Core.Common;
-using PetIdServer.Core.Domain.Admin;
 using PetIdServer.Core.Domain.Tag;
+using PetIdServer.Core.Domain.User;
 
 namespace PetIdServer.Core.Domain.TagReport;
 
@@ -19,9 +19,9 @@ public class TagReportEntity : Entity<TagReportId>
 
     public TagEntity CorruptedTag { get; set; }
 
-    public AdminEntity Reporter { get; set; }
+    public UserEntity Reporter { get; set; }
 
-    public AdminEntity? Resolver { get; set; }
+    public UserEntity? Resolver { get; set; }
 
     public bool IsResolved => Resolver is not null;
 
@@ -29,11 +29,11 @@ public class TagReportEntity : Entity<TagReportId>
 
     public DateTime? ResolvedAt { get; set; }
 
-    public void ResolvedBy(AdminEntity admin)
+    public void ResolvedBy(UserEntity admin)
     {
         Resolver = admin;
         ResolvedAt = DateTime.UtcNow;
     }
 
-    public record CreationAttributes(TagEntity CorruptedTag, AdminEntity Reporter);
+    public record CreationAttributes(TagEntity CorruptedTag, UserEntity Reporter);
 }

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetIdServer.Infrastructure.Database.Domain.Owner;
 using PetIdServer.Infrastructure.Database.Domain.Tag;
+using PetIdServer.Infrastructure.Database.Domain.User;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Pet;
 
@@ -17,9 +17,9 @@ public class PetEntityTypeConfiguration : IEntityTypeConfiguration<PetModel>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<OwnerModel>()
-            .WithMany(owner => owner.Pets)
-            .HasForeignKey(owner => owner.OwnerId)
+        builder.HasOne<UserModel>()
+            .WithMany(user => user.Pets)
+            .HasForeignKey(user => user.UserId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -28,8 +28,8 @@ public class PetEntityTypeConfiguration : IEntityTypeConfiguration<PetModel>
             .HasDefaultValueSql("uuid_generate_v4()")
             .IsRequired();
 
-        builder.Property(pet => pet.OwnerId)
-            .HasColumnName("owner_id")
+        builder.Property(pet => pet.UserId)
+            .HasColumnName("user_id")
             .IsRequired();
 
         builder.Property(pet => pet.Type)

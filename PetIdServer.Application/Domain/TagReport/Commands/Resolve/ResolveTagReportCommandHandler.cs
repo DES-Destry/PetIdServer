@@ -1,15 +1,15 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
-using PetIdServer.Application.Domain.Admin;
-using PetIdServer.Core.Domain.Admin;
-using PetIdServer.Core.Domain.Admin.Exceptions;
+using PetIdServer.Application.Domain.User;
 using PetIdServer.Core.Domain.TagReport;
 using PetIdServer.Core.Domain.TagReport.Exceptions;
+using PetIdServer.Core.Domain.User;
+using PetIdServer.Core.Domain.User.Exceptions;
 
 namespace PetIdServer.Application.Domain.TagReport.Commands.Resolve;
 
 public class ResolveTagReportCommandHandler(
-    IAdminRepository adminRepository,
+    IUserRepository userRepository,
     ITagReportRepository tagReportRepository)
     : IRequestHandler<ResolveTagReportCommand, VoidResponseDto>
 {
@@ -17,17 +17,17 @@ public class ResolveTagReportCommandHandler(
         ResolveTagReportCommand request,
         CancellationToken cancellationToken)
     {
-        AdminEntity? admin = await adminRepository.GetAdminById((AdminId)request.AdminId) ??
-                             throw new AdminNotFoundException("Authorized admin not found", new
-                             {
-                                 command = nameof(ResolveTagReportCommand), adminId = request.AdminId
-                             });
+        UserEntity admin = await userRepository.GetUserById((UserId)request.AdminId) ??
+                           throw new UserNotFoundException("Authorized admin not found", new
+                           {
+                               command = nameof(ResolveTagReportCommand), adminId = request.AdminId
+                           });
 
-        TagReportEntity? report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
-                                  throw new TagReportNotFoundException(new
-                                  {
-                                      command = nameof(ResolveTagReportCommand), reportId = request.ReportId
-                                  });
+        TagReportEntity report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
+                                 throw new TagReportNotFoundException(new
+                                 {
+                                     command = nameof(ResolveTagReportCommand), reportId = request.ReportId
+                                 });
 
         report.ResolvedBy(admin);
 

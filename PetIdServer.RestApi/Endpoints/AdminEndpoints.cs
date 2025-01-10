@@ -3,9 +3,6 @@ using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.Common.Dto;
-using PetIdServer.Application.Common.Services.Dto;
-using PetIdServer.Application.Domain.Admin.Commands.ChangePassword;
-using PetIdServer.Application.Domain.Admin.Commands.Login;
 using PetIdServer.Application.Domain.Tag.Commands.Clear;
 using PetIdServer.Application.Domain.Tag.Commands.CreateBatch;
 using PetIdServer.Application.Domain.Tag.Dto;
@@ -31,19 +28,10 @@ public class AdminEndpoints : ICarterModule
         RouteGroupBuilder group = app.MapGroup(EndpointBase).RequireSecurityKey().WithOpenApi();
         // var authorizedGroup = group.RequireAuthorization(AuthSchemas.Admin);
 
-        group.MapGet("auth", Authenticate)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithSummary("Get information about admin from token (admin).")
-            .Produces<AdminDto>();
-
-        group.MapPost("login", LoginAdmin)
-            .WithSummary("Login existed administrator in system (admin).")
-            .Produces<LoginAdminResponseDto>();
-
-        group.MapPut("password", ChangePassword)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithSummary("Change password as authenticated admin.")
-            .Produces<SingleTokenDto>();
+        // group.MapPut("password", ChangePassword)
+        //     .RequireAuthorization(AuthSchemas.Admin)
+        //     .WithSummary("Change password as authenticated admin.")
+        //     .Produces<SingleTokenDto>();
 
         group.MapGet("tags", GetAllTags)
             .RequireAuthorization(AuthSchemas.Admin)
@@ -90,32 +78,20 @@ public class AdminEndpoints : ICarterModule
             .Produces<VoidResponseDto>();
     }
 
-    private static async Task<IResult> Authenticate(
-        RequestAdmin admin,
-        ISender sender,
-        IMapper mapper) => await Task.FromResult(Results.Ok(admin));
-
-    private static async Task<IResult> LoginAdmin(LoginAdminDto dto, ISender sender, IMapper mapper)
-    {
-        LoginAdminCommand? command = mapper.Map<LoginAdminDto, LoginAdminCommand>(dto);
-        LoginAdminResponseDto response = await sender.Send(command);
-
-        return Results.Ok(response);
-    }
-
-    private static async Task<IResult> ChangePassword(
-        RequestAdmin admin,
-        ChangePasswordDto dto,
-        ISender sender)
-    {
-        ChangePasswordCommand command = new()
-        {
-            Id = admin.Username, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
-        };
-        SingleTokenDto response = await sender.Send(command);
-
-        return Results.Ok(response);
-    }
+    // TODO: Move to user controller
+    // private static async Task<IResult> ChangePassword(
+    //     RequestUser admin,
+    //     ChangePasswordDto dto,
+    //     ISender sender)
+    // {
+    //     ChangePasswordCommand command = new()
+    //     {
+    //         Id = admin.Email, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
+    //     };
+    //     SingleTokenDto response = await sender.Send(command);
+    //
+    //     return Results.Ok(response);
+    // }
 
     private static async Task<IResult> GetAllTags(ISender sender)
     {
@@ -144,11 +120,11 @@ public class AdminEndpoints : ICarterModule
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> ClearTag(int id, RequestAdmin admin, ISender sender)
+    private static async Task<IResult> ClearTag(int id, RequestUser admin, ISender sender)
     {
         ClearTagCommand command = new()
         {
-            AdminId = admin.Username, TagId = id
+            AdminId = admin.Id, TagId = id
         };
         VoidResponseDto response = await sender.Send(command);
 
@@ -169,22 +145,22 @@ public class AdminEndpoints : ICarterModule
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> CreateTagReport(int id, RequestAdmin admin, ISender sender)
+    private static async Task<IResult> CreateTagReport(int id, RequestUser admin, ISender sender)
     {
         CreateTagReportCommand command = new()
         {
-            AdminId = admin.Username, TagId = id
+            AdminId = admin.Id, TagId = id
         };
         VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> ResolveTagReport(Guid id, RequestAdmin admin, ISender sender)
+    private static async Task<IResult> ResolveTagReport(Guid id, RequestUser admin, ISender sender)
     {
         ResolveTagReportCommand command = new()
         {
-            AdminId = admin.Username, ReportId = id
+            AdminId = admin.Id, ReportId = id
         };
         VoidResponseDto response = await sender.Send(command);
 

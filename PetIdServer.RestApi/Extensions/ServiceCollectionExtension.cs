@@ -12,9 +12,7 @@ public static class ServiceCollectionExtension
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "PetID API - V1",
-                Version = "v1",
-                Description = "PetID Server."
+                Title = "PetID API - V1", Version = "v1", Description = "PetID Server."
             });
 
             c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
@@ -41,17 +39,27 @@ public static class ServiceCollectionExtension
                     new OpenApiSecurityScheme
                     {
                         Reference = new OpenApiReference
-                            {Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"}
+                        {
+                            Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"
+                        }
                     },
-                    new[] {"SwaggerAuthScheme"}
+                    new[]
+                    {
+                        "SwaggerAuthScheme"
+                    }
                 },
                 {
                     new OpenApiSecurityScheme
                     {
                         Reference = new OpenApiReference
-                            {Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
+                        {
+                            Type = ReferenceType.SecurityScheme, Id = "bearerAuth"
+                        }
                     },
-                    new[] {"SwaggerAuthScheme"}
+                    new[]
+                    {
+                        "SwaggerAuthScheme"
+                    }
                 }
             });
         });
@@ -63,17 +71,17 @@ public static class ServiceCollectionExtension
     {
         return services.AddAuthorization(options =>
         {
-            var ownerPolicy = new AuthorizationPolicyBuilder()
+            AuthorizationPolicy petOwnerPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddAuthenticationSchemes(AuthSchemas.Owner)
+                .AddAuthenticationSchemes(AuthSchemas.PetOwner)
                 .Build();
 
-            var adminPolicy = new AuthorizationPolicyBuilder()
+            AuthorizationPolicy adminPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthSchemas.Admin)
                 .Build();
 
-            options.AddPolicy(AuthSchemas.Owner, ownerPolicy);
+            options.AddPolicy(AuthSchemas.PetOwner, petOwnerPolicy);
             options.AddPolicy(AuthSchemas.Admin, adminPolicy);
         });
     }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetIdServer.Infrastructure.Database.Domain.Admin;
+using PetIdServer.Infrastructure.Database.Domain.User;
 
 namespace PetIdServer.Infrastructure.Database.Domain.Tag;
 
@@ -15,12 +15,12 @@ public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagRepo
             .HasForeignKey(report => report.CorruptedTagId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<AdminModel>()
+        builder.HasOne<UserModel>()
             .WithMany(admin => admin.TagReportsCreated)
             .HasForeignKey(report => report.ReporterId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne<AdminModel>()
+        builder.HasOne<UserModel>()
             .WithMany(admin => admin.TagReportsResolved)
             .HasForeignKey(report => report.ResolverId)
             .OnDelete(DeleteBehavior.NoAction);
@@ -29,7 +29,7 @@ public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagRepo
         builder.Navigation(report => report.Reporter).AutoInclude();
         builder.Navigation(report => report.Resolver).AutoInclude();
 
-        builder.HasOne<AdminModel>();
+        builder.HasOne<UserModel>();
 
         builder.Property(report => report.Id)
             .HasColumnName("id")

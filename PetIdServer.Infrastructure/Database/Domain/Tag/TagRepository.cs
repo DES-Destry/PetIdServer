@@ -48,7 +48,7 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
     {
         TagModel? model = await database.Tags
             .Include(tag => tag.Pet)
-            .ThenInclude(pet => pet!.Owner)
+            .ThenInclude(pet => pet!.User)
             .FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
 
         return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
