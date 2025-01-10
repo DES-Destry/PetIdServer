@@ -76,12 +76,18 @@ public static class ServiceCollectionExtension
                 .AddAuthenticationSchemes(AuthSchemas.PetOwner)
                 .Build();
 
+            AuthorizationPolicy tagCheckerPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthSchemas.TagChecker)
+                .Build();
+
             AuthorizationPolicy adminPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthSchemas.Admin)
                 .Build();
 
             options.AddPolicy(AuthSchemas.PetOwner, petOwnerPolicy);
+            options.AddPolicy(AuthSchemas.TagChecker, tagCheckerPolicy);
             options.AddPolicy(AuthSchemas.Admin, adminPolicy);
         });
     }

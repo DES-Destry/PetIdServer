@@ -38,6 +38,27 @@ public static class AuthExtensions
                     OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
                 };
             })
+            .AddJwtBearer(AuthSchemas.TagChecker, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = jwtTokenParameters.Issuer,
+                    ValidAudience = jwtTokenParameters.Audience,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = ValidateRole(UserRole.TagChecker),
+                    OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
+                };
+            })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters

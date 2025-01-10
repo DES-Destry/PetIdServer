@@ -6,13 +6,13 @@ namespace PetIdServer.Core.Domain.User;
 public abstract record UserRole(string Name, ushort Level) : IComparable<UserRole>, IParsable<UserRole>
 {
     private const string PetOwnerName = nameof(PetOwner);
-    private const string SalesManagerName = nameof(SalesManager);
+    private const string TagCheckerName = nameof(TagChecker);
     private const string AdminName = nameof(Admin);
 
     private static readonly ImmutableDictionary<string, UserRole> s_rolesByName;
 
     public static readonly UserRole PetOwner = new PetOwnerRole();
-    public static readonly UserRole SalesManager = new SalesManagerRole();
+    public static readonly UserRole TagChecker = new TagCheckerRole();
     public static readonly UserRole Admin = new AdminRole();
 
     public static readonly UserRole LeastPrivileged = PetOwner;
@@ -22,7 +22,7 @@ public abstract record UserRole(string Name, ushort Level) : IComparable<UserRol
     {
         s_rolesByName = ImmutableDictionary.CreateRange(StringComparer.OrdinalIgnoreCase, [
             new KeyValuePair<string, UserRole>(PetOwnerName, PetOwner),
-            new KeyValuePair<string, UserRole>(SalesManagerName, SalesManager),
+            new KeyValuePair<string, UserRole>(TagCheckerName, TagChecker),
             new KeyValuePair<string, UserRole>(AdminName, Admin)
         ]);
     }
@@ -77,7 +77,7 @@ public abstract record UserRole(string Name, ushort Level) : IComparable<UserRol
 
     private sealed record PetOwnerRole() : UserRole(PetOwnerName, 0);
 
-    private sealed record SalesManagerRole() : UserRole(SalesManagerName, 1000);
+    private sealed record TagCheckerRole() : UserRole(TagCheckerName, 1000);
 
     private sealed record AdminRole() : UserRole(AdminName, ushort.MaxValue);
 }
