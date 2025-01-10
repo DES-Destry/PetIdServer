@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using PetIdServer.Application.Common.Services;
+using PetIdServer.Core.Domain.User;
 
 namespace PetIdServer.Infrastructure.Services;
 
@@ -11,12 +12,13 @@ public class HashService : IHashService
     private const int Iterations = 100_000;
     private const KeyDerivationPrf HashAlgorithm = KeyDerivationPrf.HMACSHA512;
 
-    public async Task<string> Hash(string password)
+    public async Task<PasswordHash> Hash(string password)
     {
         byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
         byte[] hash = KeyDerivation.Pbkdf2(password, salt, HashAlgorithm, Iterations, HashSize);
 
-        return await Task.FromResult($"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}");
+        PasswordHash passwordHash = PasswordHash.FromHash($"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}");
+        return await Task.FromResult(passwordHash);
     }
 
     public async Task<bool> Validate(string value, string valueHash)

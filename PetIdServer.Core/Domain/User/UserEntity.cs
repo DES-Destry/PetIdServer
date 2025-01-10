@@ -20,7 +20,7 @@ public class UserEntity : Entity<UserId>
     /// <summary>
     ///     Storing only as a hash
     /// </summary>
-    public string? Password { get; private set; }
+    public PasswordHash? Password { get; private set; }
 
     public string Name { get; set; }
     public string? Address { get; set; }
@@ -29,7 +29,7 @@ public class UserEntity : Entity<UserId>
     public IList<UserContactVo> Contacts { get; set; } = [];
     public IList<PetEntity> Pets { get; set; } = [];
 
-    public void ChangePasswordHash(string passwordHash)
+    public void ChangePasswordHash(PasswordHash passwordHash)
     {
         Password = passwordHash;
     }
@@ -58,7 +58,7 @@ public class UserEntity : Entity<UserId>
 
     public record CreationAttributes(
         string Email,
-        string Password,
+        PasswordHash Password,
         string Name,
         UserRole? Role = null
     );

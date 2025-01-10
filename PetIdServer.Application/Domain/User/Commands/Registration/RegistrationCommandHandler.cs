@@ -28,7 +28,7 @@ public class RegistrationCommandHandler(
                 });
         }
 
-        string passwordHash = await hashService.Hash(request.Password);
+        PasswordHash passwordHash = await hashService.Hash(request.Password);
 
         // Registration creates user with the least privileged role
         UserEntity.CreationAttributes creationAttributes = new(request.Email, passwordHash, request.Name);

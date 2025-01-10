@@ -24,7 +24,7 @@ public class ChangePasswordCommandHandler(
                                                               UserId = request.Id, UseCase = nameof(ChangePasswordCommand)
                                                           });
 
-        if (!string.IsNullOrWhiteSpace(user.Password))
+        if (user.Password != null && !string.IsNullOrWhiteSpace(user.Password))
         {
             if (request.OldPassword is null)
             {
@@ -46,7 +46,7 @@ public class ChangePasswordCommandHandler(
         }
 
 
-        string newHashedPassword = await hashService.Hash(request.NewPassword);
+        PasswordHash newHashedPassword = await hashService.Hash(request.NewPassword);
         user.ChangePasswordHash(newHashedPassword);
         await userRepository.UpdateUser(user);
 
