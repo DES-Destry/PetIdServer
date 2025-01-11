@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PetIdServer.Application.Common\PetIdServer.Application.Common.csproj"/>
     <ProjectReference Include="..\PetIdServer.Core\PetIdServer.Core.csproj"/>
   </ItemGroup>
 </Project>

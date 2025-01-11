@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using PetIdServer.Application.Common.Exceptions;
+using PetIdServer.Infrastructure.Exceptions;
 
 namespace PetIdServer.Infrastructure.Configuration;
 

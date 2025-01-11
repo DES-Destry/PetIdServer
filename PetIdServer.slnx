@@ -5,6 +5,7 @@
     <File Path="docker-compose.infrastructure.yaml" />
   </Folder>
   <Project Path="PetIdServer.AppHost\PetIdServer.AppHost.csproj" Type="Classic C#" />
+  <Project Path="PetIdServer.Application.Common\PetIdServer.Application.Common.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Application\PetIdServer.Application.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Core.Common\PetIdServer.Core.Common.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Core\PetIdServer.Core.csproj" Type="Classic C#" />

@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 using PetIdServer.Application.Common.Exceptions;
+using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.RestApi.Attributes;
 
 namespace PetIdServer.RestApi.Middlewares;
@@ -17,8 +19,8 @@ public class SecurityKeyMiddleware(
 
     public async Task Invoke(HttpContext httpContext)
     {
-        var endpoint = httpContext.GetEndpoint();
-        var isSecurityCodeRequired = endpoint?.Metadata.GetMetadata<RequireSecurityKeyAttribute>();
+        Endpoint? endpoint = httpContext.GetEndpoint();
+        RequireSecurityKeyAttribute? isSecurityCodeRequired = endpoint?.Metadata.GetMetadata<RequireSecurityKeyAttribute>();
 
         if (isSecurityCodeRequired is null || environment.IsDevelopment())
         {
@@ -26,32 +28,35 @@ public class SecurityKeyMiddleware(
             return;
         }
 
-        if (!httpContext.Request.Headers.TryGetValue(SecurityKeyHeader, out var securityKey))
+        if (!httpContext.Request.Headers.TryGetValue(SecurityKeyHeader, out StringValues securityKey))
+        {
             throw new YourMomIsBitchException();
+        }
 
-        var expectedKey = GetExpectedKey();
+        string? expectedKey = GetExpectedKey();
 
         if (!securityKey.Equals(expectedKey))
+        {
             throw new YourMomIsBitchException();
+        }
 
         await next(httpContext);
     }
 
     private string GetExpectedKey()
     {
-        var date = DateTime.UtcNow.ToString("O")[..15];
+        string? date = DateTime.UtcNow.ToString("O")[..15];
 
-        var privatePart = configuration["Security:SecurityKeySecret"] ??
-                          throw new MisconfigurationException().WithMeta(new
-                          {
-                              _configuration = configuration,
-                              value = "Security:SecurityKeySecret"
-                          });
-        var dateSecret = string.Concat(privatePart, "_", date);
-        var srcBytes = Encoding.UTF8.GetBytes(dateSecret);
-        var hashBytes = MD5.HashData(srcBytes);
+        string? privatePart = configuration["Security:SecurityKeySecret"] ??
+                              throw new MisconfigurationException().WithMeta(new
+                              {
+                                  _configuration = configuration, value = "Security:SecurityKeySecret"
+                              });
+        string? dateSecret = string.Concat(privatePart, "_", date);
+        byte[]? srcBytes = Encoding.UTF8.GetBytes(dateSecret);
+        byte[]? hashBytes = MD5.HashData(srcBytes);
 
-        var hexString = BitConverter.ToString(hashBytes);
+        string? hexString = BitConverter.ToString(hashBytes);
         return hexString.Replace("-", "");
     }
 }

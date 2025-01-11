@@ -2,15 +2,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PetIdServer.Application.Common.Services;
-using PetIdServer.Application.Domain.Pet;
-using PetIdServer.Application.Domain.Tag;
-using PetIdServer.Application.Domain.TagReport;
-using PetIdServer.Application.Domain.User;
+using PetIdServer.Application.Pet;
+using PetIdServer.Application.Tag;
+using PetIdServer.Application.Tag.Services;
+using PetIdServer.Application.TagReport;
+using PetIdServer.Application.User;
+using PetIdServer.Application.User.Services;
 using PetIdServer.Infrastructure.Database;
 using PetIdServer.Infrastructure.Database.Domain.Pet;
 using PetIdServer.Infrastructure.Database.Domain.Tag;
 using PetIdServer.Infrastructure.Database.Domain.User;
-using PetIdServer.Infrastructure.Mapper;
 using PetIdServer.Infrastructure.Services;
 
 namespace PetIdServer.Infrastructure.Extensions;
@@ -21,16 +22,25 @@ public static class ServiceCollectionExtension
         this IServiceCollection services,
         WebApplicationBuilder builder)
     {
-        services.AddAutoMapper(typeof(InfrastructureMappingProfile));
-        builder.AddDbConnection();
+        // Add infrastructure
+        services.AddAutoMapper(AssemblyReference.Assembly)
+            .AddRepositories()
+            .AddInfrastructureServices();
 
-        services.AddRepositories();
-        services.AddInfrastructureServices();
+        // Add application
+        services
+            .AddAutoMapper(Application.AssemblyReference.Assembly)
+            .AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly);
+            });
+
+        builder.AddDbConnection();
 
         return services;
     }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPetRepository, PetRepository>();
@@ -49,7 +59,7 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    public static IHostApplicationBuilder AddDbConnection(
+    private static IHostApplicationBuilder AddDbConnection(
         this IHostApplicationBuilder builder)
     {
         builder.AddNpgsqlDataSource("pet-id");
