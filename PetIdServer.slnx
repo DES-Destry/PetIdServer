@@ -6,6 +6,7 @@
   </Folder>
   <Project Path="PetIdServer.AppHost\PetIdServer.AppHost.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Application\PetIdServer.Application.csproj" Type="Classic C#" />
+  <Project Path="PetIdServer.Core.Common\PetIdServer.Core.Common.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Core\PetIdServer.Core.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.RestApi\PetIdServer.RestApi.csproj" Type="Classic C#" />

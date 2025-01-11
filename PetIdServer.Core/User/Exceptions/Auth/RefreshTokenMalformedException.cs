@@ -1,4 +1,6 @@
-namespace PetIdServer.Core.Common.Exceptions.Auth;
+using PetIdServer.Core.Common.Exceptions;
+
+namespace PetIdServer.Core.User.Exceptions.Auth;
 
 public class RefreshTokenMalformedException : CoreException
 {

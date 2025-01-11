@@ -1,4 +1,4 @@
-namespace PetIdServer.Core.Common.Exceptions.Common;
+namespace PetIdServer.Core.Common.Exceptions;
 
 public class ValidationException : CoreException
 {

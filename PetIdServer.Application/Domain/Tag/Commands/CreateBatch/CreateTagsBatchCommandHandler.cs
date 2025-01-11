@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using MediatR;
 using PetIdServer.Application.Common.Dto;
 using PetIdServer.Application.Common.Services;
-using PetIdServer.Core.Common.Exceptions.Common;
+using PetIdServer.Core.Common.Exceptions;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.Tag.Exceptions;
 

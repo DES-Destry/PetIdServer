@@ -5,4 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetIdServer.Core.Common\PetIdServer.Core.Common.csproj"/>
+  </ItemGroup>
 </Project>

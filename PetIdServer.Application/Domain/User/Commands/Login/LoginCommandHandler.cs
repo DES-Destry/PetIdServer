@@ -1,9 +1,9 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
 using PetIdServer.Application.Common.Services;
-using PetIdServer.Core.Common.Exceptions.Auth;
 using PetIdServer.Core.Domain.User;
 using PetIdServer.Core.Domain.User.Exceptions;
+using PetIdServer.Core.User.Exceptions.Auth;
 
 namespace PetIdServer.Application.Domain.User.Commands.Login;
 
