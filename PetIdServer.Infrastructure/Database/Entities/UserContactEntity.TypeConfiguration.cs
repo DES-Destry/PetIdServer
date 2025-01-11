@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace PetIdServer.Infrastructure.Database.Domain.User;
+namespace PetIdServer.Infrastructure.Database.Entities;
 
 public class UserContactEntityTypeConfiguration : IEntityTypeConfiguration<UserContactModel>
 {

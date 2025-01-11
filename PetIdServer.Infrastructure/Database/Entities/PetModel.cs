@@ -1,7 +1,4 @@
-using PetIdServer.Infrastructure.Database.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Domain.User;
-
-namespace PetIdServer.Infrastructure.Database.Domain.Pet;
+namespace PetIdServer.Infrastructure.Database.Entities;
 
 public class PetModel
 {

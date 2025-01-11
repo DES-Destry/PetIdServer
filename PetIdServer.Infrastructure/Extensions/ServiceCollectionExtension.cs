@@ -9,9 +9,7 @@ using PetIdServer.Application.TagReport;
 using PetIdServer.Application.User;
 using PetIdServer.Application.User.Services;
 using PetIdServer.Infrastructure.Database;
-using PetIdServer.Infrastructure.Database.Domain.Pet;
-using PetIdServer.Infrastructure.Database.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Domain.User;
+using PetIdServer.Infrastructure.Database.Repositories;
 using PetIdServer.Infrastructure.Services;
 
 namespace PetIdServer.Infrastructure.Extensions;

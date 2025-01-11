@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetIdServer.Infrastructure.Database.Domain.Pet;
 
-namespace PetIdServer.Infrastructure.Database.Domain.Tag;
+namespace PetIdServer.Infrastructure.Database.Entities;
 
 public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagModel>
 {

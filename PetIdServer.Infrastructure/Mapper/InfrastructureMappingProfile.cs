@@ -3,9 +3,7 @@ using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.TagReport;
 using PetIdServer.Core.Domain.User;
-using PetIdServer.Infrastructure.Database.Domain.Pet;
-using PetIdServer.Infrastructure.Database.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Domain.User;
+using PetIdServer.Infrastructure.Database.Entities;
 
 namespace PetIdServer.Infrastructure.Mapper;
 

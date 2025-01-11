@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Infrastructure.Database.Domain.Pet;
-using PetIdServer.Infrastructure.Database.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Domain.User;
+using PetIdServer.Infrastructure.Database.Entities;
 
 namespace PetIdServer.Infrastructure.Database;
 

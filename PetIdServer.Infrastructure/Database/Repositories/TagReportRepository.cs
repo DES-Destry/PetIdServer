@@ -4,8 +4,9 @@ using PetIdServer.Application.TagReport;
 using PetIdServer.Application.TagReport.Dto.Input;
 using PetIdServer.Core.Domain.Tag;
 using PetIdServer.Core.Domain.TagReport;
+using PetIdServer.Infrastructure.Database.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Domain.Tag;
+namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagReportRepository
 {

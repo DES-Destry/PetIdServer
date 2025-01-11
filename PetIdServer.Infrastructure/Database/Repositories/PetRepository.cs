@@ -2,8 +2,9 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Pet;
 using PetIdServer.Core.Domain.Pet;
+using PetIdServer.Infrastructure.Database.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Domain.Pet;
+namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class PetRepository(IMapper mapper, PetIdContext database) : IPetRepository
 {

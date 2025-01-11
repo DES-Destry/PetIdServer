@@ -2,8 +2,9 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.User;
 using PetIdServer.Core.Domain.User;
+using PetIdServer.Infrastructure.Database.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Domain.User;
+namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class UserRepository(IMapper mapper, PetIdContext database) : IUserRepository
 {

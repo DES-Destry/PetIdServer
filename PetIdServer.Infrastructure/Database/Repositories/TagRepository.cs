@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PetIdServer.Application.Tag;
 using PetIdServer.Core.Domain.Pet;
 using PetIdServer.Core.Domain.Tag;
-using PetIdServer.Infrastructure.Database.Domain.Pet;
+using PetIdServer.Infrastructure.Database.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Domain.Tag;
+namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class TagRepository(IMapper mapper, PetIdContext database) : ITagRepository
 {
