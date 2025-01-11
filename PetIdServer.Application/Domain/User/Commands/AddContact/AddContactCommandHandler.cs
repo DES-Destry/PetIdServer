@@ -20,7 +20,7 @@ public class AddContactCommandHandler(IUserRepository userRepository)
                                   Id = request.UserId, UseCase = nameof(AddContactCommand)
                               });
 
-        UserContactVo contact = new()
+        UserContact contact = new()
         {
             Contact = request.Contact, ContactType = request.ContactType
         };

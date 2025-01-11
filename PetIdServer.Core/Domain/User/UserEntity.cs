@@ -26,7 +26,7 @@ public class UserEntity : Entity<UserId>
     public string? Address { get; set; }
     public string? Description { get; set; }
     public UserRole Role { get; init; }
-    public IList<UserContactVo> Contacts { get; set; } = [];
+    public IList<UserContact> Contacts { get; set; } = [];
     public IList<PetEntity> Pets { get; set; } = [];
 
     public void ChangePasswordHash(PasswordHash passwordHash)

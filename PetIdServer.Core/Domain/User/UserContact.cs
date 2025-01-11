@@ -2,7 +2,7 @@ using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Domain.User;
 
-public class UserContactVo : ValueObject
+public class UserContact : ValueObject
 {
     public required string ContactType { get; init; }
     public required string Contact { get; init; }

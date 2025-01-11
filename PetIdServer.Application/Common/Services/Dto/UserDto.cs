@@ -9,7 +9,7 @@ public class UserDto
     public string Name { get; init; }
     public string? Address { get; init; }
     public string? Description { get; init; }
-    public IList<UserContactVo> Contacts { get; init; }
+    public IList<UserContact> Contacts { get; init; }
     public IList<PetDto> Pets { get; init; }
 
     public static implicit operator UserDto(UserEntity user)

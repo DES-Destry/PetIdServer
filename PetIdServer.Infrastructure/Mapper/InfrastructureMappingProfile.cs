@@ -19,7 +19,7 @@ public class InfrastructureMappingProfile : Profile
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id));
 
-        CreateMap<UserContactModel, UserContactVo>().ReverseMap();
+        CreateMap<UserContactModel, UserContact>().ReverseMap();
         CreateMap<PetModel, PetEntity>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (PetId)model.Id))
             .ReverseMap()
