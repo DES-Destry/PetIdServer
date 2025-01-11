@@ -3,19 +3,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetIdServer.Infrastructure.Database.Entities;
 
-public class PetEntityTypeConfiguration : IEntityTypeConfiguration<PetModel>
+public class PetEntityTypeConfiguration : IEntityTypeConfiguration<PetEntity>
 {
-    public void Configure(EntityTypeBuilder<PetModel> builder)
+    public void Configure(EntityTypeBuilder<PetEntity> builder)
     {
         builder.ToTable("pets").HasKey(pet => pet.Id);
 
-        builder.HasMany<TagModel>(pet => pet.Tags)
+        builder.HasMany<TagEntity>(pet => pet.Tags)
             .WithOne(tag => tag.Pet)
             .HasForeignKey(tag => tag.PetId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<UserModel>()
+        builder.HasOne<UserEntity>()
             .WithMany(user => user.Pets)
             .HasForeignKey(user => user.UserId)
             .IsRequired()

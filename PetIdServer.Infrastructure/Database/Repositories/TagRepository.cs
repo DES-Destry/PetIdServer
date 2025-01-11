@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using PetIdServer.Application.Tag;
-using PetIdServer.Core.Domain.Pet;
-using PetIdServer.Core.Domain.Tag;
+using PetIdServer.Application.Tags;
+using PetIdServer.Core.Pets;
+using PetIdServer.Core.Tags;
 using PetIdServer.Infrastructure.Database.Entities;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
@@ -17,60 +17,60 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         await database.Tags.AnyAsync(tag => hashCodes.Contains(tag.HashCode));
 
 
-    public async Task<IEnumerable<TagEntity>> GetAllTags()
+    public async Task<IEnumerable<Tag>> GetAllTags()
     {
-        List<TagModel> models = await database.Tags.OrderBy(tag => tag.Id).AsNoTracking().ToListAsync();
-        return models.Select(mapper.Map<TagModel, TagEntity>);
+        List<TagEntity> models = await database.Tags.OrderBy(tag => tag.Id).AsNoTracking().ToListAsync();
+        return models.Select(mapper.Map<TagEntity, Tag>);
     }
 
-    public async Task<TagEntity?> GetTagById(TagId id)
+    public async Task<Tag?> GetTagById(TagId id)
     {
-        TagModel? model = await database.Tags.AsNoTracking()
+        TagEntity? model = await database.Tags.AsNoTracking()
             .FirstOrDefaultAsync(tag => tag.Id == id);
-        return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
+        return model is null ? null : mapper.Map<TagEntity, Tag>(model);
     }
 
-    public async Task<TagEntity?> CreateTag(TagEntity tag)
+    public async Task<Tag?> CreateTag(Tag tag)
     {
-        TagModel? model = mapper.Map<TagEntity, TagModel>(tag);
-        EntityEntry<TagModel> saved = await database.Tags.AddAsync(model);
+        TagEntity? model = mapper.Map<Tag, TagEntity>(tag);
+        EntityEntry<TagEntity> saved = await database.Tags.AddAsync(model);
 
-        return mapper.Map<TagModel, TagEntity>(saved.Entity);
+        return mapper.Map<TagEntity, Tag>(saved.Entity);
     }
 
-    public async Task<TagEntity?> GetTagByHashCode(string hashCode)
+    public async Task<Tag?> GetTagByHashCode(string hashCode)
     {
-        TagModel? model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.HashCode == hashCode);
-        return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
+        TagEntity? model = await database.Tags.AsNoTracking().FirstOrDefaultAsync(tag => tag.HashCode == hashCode);
+        return model is null ? null : mapper.Map<TagEntity, Tag>(model);
     }
 
-    public async Task<TagEntity?> GetTagByControlCode(long controlCode)
+    public async Task<Tag?> GetTagByControlCode(long controlCode)
     {
-        TagModel? model = await database.Tags
+        TagEntity? model = await database.Tags
             .Include(tag => tag.Pet)
             .ThenInclude(pet => pet!.User)
             .FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
 
-        return model is null ? null : mapper.Map<TagModel, TagEntity>(model);
+        return model is null ? null : mapper.Map<TagEntity, Tag>(model);
     }
 
-    public async Task CreateTagsBatch(IEnumerable<TagEntity> tags)
+    public async Task CreateTagsBatch(IEnumerable<Tag> tags)
     {
-        IEnumerable<TagModel> models = tags.Select(mapper.Map<TagEntity, TagModel>);
+        IEnumerable<TagEntity> models = tags.Select(mapper.Map<Tag, TagEntity>);
         await database.Tags.AddRangeAsync(models);
         await database.SaveChangesAsync();
     }
 
-    public async Task AttachPet(TagId id, PetEntity pet)
+    public async Task AttachPet(TagId id, Pet pet)
     {
-        TagModel? model = await database.Tags.FirstOrDefaultAsync(tag => tag.Id == id);
+        TagEntity? model = await database.Tags.FirstOrDefaultAsync(tag => tag.Id == id);
 
         if (model is null)
         {
             return;
         }
 
-        PetModel? petModel =
+        PetEntity? petModel =
             await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == pet.Id);
 
         if (petModel is null)
@@ -83,10 +83,10 @@ public class TagRepository(IMapper mapper, PetIdContext database) : ITagReposito
         await database.SaveChangesAsync();
     }
 
-    public async Task UpdateTag(TagId id, TagEntity pet)
+    public async Task UpdateTag(TagId id, Tag pet)
     {
-        TagModel? incomingData = mapper.Map<TagEntity, TagModel>(pet);
-        TagModel? model = await database.Tags.FirstOrDefaultAsync(tagModel => tagModel.Id == id);
+        TagEntity? incomingData = mapper.Map<Tag, TagEntity>(pet);
+        TagEntity? model = await database.Tags.FirstOrDefaultAsync(tagModel => tagModel.Id == id);
 
         if (model is null)
         {

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using PetIdServer.Application.Common.Services;
-using PetIdServer.Core.Domain.User;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Infrastructure.Services;
 

@@ -3,8 +3,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using PetIdServer.Core.Domain.User;
-using PetIdServer.Core.Domain.User.Exceptions;
+using PetIdServer.Core.Users;
+using PetIdServer.Core.Users.Exceptions;
 using PetIdServer.Infrastructure.Configuration;
 using PetIdServer.RestApi.Auth;
 

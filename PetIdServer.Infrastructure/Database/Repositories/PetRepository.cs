@@ -1,31 +1,24 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Application.Pet;
-using PetIdServer.Core.Domain.Pet;
+using PetIdServer.Application.Pets;
+using PetIdServer.Core.Pets;
 using PetIdServer.Infrastructure.Database.Entities;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 
 public class PetRepository(IMapper mapper, PetIdContext database) : IPetRepository
 {
-    public async Task<PetEntity?> GetPetById(PetId id)
+    public async Task CreatePet(Pet pet)
     {
-        PetModel? model = await database.Pets.AsNoTracking()
-            .FirstOrDefaultAsync(petModel => petModel.Id == id);
-        return model is null ? null : mapper.Map<PetModel, PetEntity>(model);
-    }
-
-    public async Task CreatePet(PetEntity pet)
-    {
-        PetModel? model = mapper.Map<PetEntity, PetModel>(pet);
+        PetEntity? model = mapper.Map<Pet, PetEntity>(pet);
         database.Entry(model).State = EntityState.Added;
         await database.SaveChangesAsync();
     }
 
-    public async Task UpdatePet(PetId id, PetEntity pet)
+    public async Task UpdatePet(PetId id, Pet pet)
     {
-        PetModel? incomingData = mapper.Map<PetEntity, PetModel>(pet);
-        PetModel? model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id);
+        PetEntity? incomingData = mapper.Map<Pet, PetEntity>(pet);
+        PetEntity? model = await database.Pets.FirstOrDefaultAsync(petModel => petModel.Id == id);
 
         if (model is null)
         {
@@ -34,5 +27,12 @@ public class PetRepository(IMapper mapper, PetIdContext database) : IPetReposito
 
         database.Entry(model).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();
+    }
+
+    public async Task<Pet?> GetPetById(PetId id)
+    {
+        PetEntity? model = await database.Pets.AsNoTracking()
+            .FirstOrDefaultAsync(petModel => petModel.Id == id);
+        return model is null ? null : mapper.Map<PetEntity, Pet>(model);
     }
 }

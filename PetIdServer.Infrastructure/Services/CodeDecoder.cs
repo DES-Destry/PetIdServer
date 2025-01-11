@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using PetIdServer.Application.Tag.Services;
+using PetIdServer.Application.Tags.Services;
 
 namespace PetIdServer.Infrastructure.Services;
 

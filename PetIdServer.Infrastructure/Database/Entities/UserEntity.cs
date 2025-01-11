@@ -1,0 +1,18 @@
+namespace PetIdServer.Infrastructure.Database.Entities;
+
+public class UserEntity
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required string Email { get; init; }
+    public required string Role { get; init; }
+    public string? Password { get; init; }
+    public string? Address { get; init; }
+    public string? Description { get; init; }
+
+    public ICollection<UserContactEntity> Contacts { get; } = [];
+    public ICollection<PetEntity> Pets { get; } = [];
+
+    public ICollection<TagReportEntity> TagReportsCreated { get; } = [];
+    public ICollection<TagReportEntity> TagReportsResolved { get; } = [];
+}

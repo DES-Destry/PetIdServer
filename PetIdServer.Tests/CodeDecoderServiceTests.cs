@@ -1,4 +1,4 @@
-﻿using PetIdServer.Application.Tag.Services;
+﻿using PetIdServer.Application.Tags.Services;
 using PetIdServer.Tests.Extensions;
 
 namespace PetIdServer.Tests;

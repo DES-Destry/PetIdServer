@@ -1,9 +1,9 @@
 using AutoMapper;
 using Carter;
 using MediatR;
-using PetIdServer.Application.User.Commands.Login;
-using PetIdServer.Application.User.Commands.Registration;
-using PetIdServer.Application.User.Dto.Tokens;
+using PetIdServer.Application.Users.Commands.Login;
+using PetIdServer.Application.Users.Commands.Registration;
+using PetIdServer.Application.Users.Dto.Tokens;
 using PetIdServer.RestApi.Endpoints.Dto.User;
 
 namespace PetIdServer.RestApi.Endpoints;

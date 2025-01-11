@@ -5,24 +5,24 @@ namespace PetIdServer.Infrastructure.Database;
 
 public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(options)
 {
-    public DbSet<UserModel> Users { get; init; }
-    public DbSet<UserContactModel> UserContacts { get; init; }
-    public DbSet<PetModel> Pets { get; init; }
-    public DbSet<TagModel> Tags { get; init; }
-    public DbSet<TagReportModel> TagReports { get; init; }
+    public DbSet<UserEntity> Users { get; init; }
+    public DbSet<UserContactEntity> UserContacts { get; init; }
+    public DbSet<PetEntity> Pets { get; init; }
+    public DbSet<TagEntity> Tags { get; init; }
+    public DbSet<TagReportEntity> TagReports { get; init; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("pet");
 
-        new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserModel>());
-        new UserContactEntityTypeConfiguration().Configure(modelBuilder.Entity<UserContactModel>());
+        new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserEntity>());
+        new UserContactEntityTypeConfiguration().Configure(modelBuilder.Entity<UserContactEntity>());
 
-        new PetEntityTypeConfiguration().Configure(modelBuilder.Entity<PetModel>());
+        new PetEntityTypeConfiguration().Configure(modelBuilder.Entity<PetEntity>());
 
-        new TagEntityTypeConfiguration().Configure(modelBuilder.Entity<TagModel>());
-        new TagReportEntityTypeConfiguration().Configure(modelBuilder.Entity<TagReportModel>());
+        new TagEntityTypeConfiguration().Configure(modelBuilder.Entity<TagEntity>());
+        new TagReportEntityTypeConfiguration().Configure(modelBuilder.Entity<TagReportEntity>());
 
         base.OnModelCreating(modelBuilder);
     }

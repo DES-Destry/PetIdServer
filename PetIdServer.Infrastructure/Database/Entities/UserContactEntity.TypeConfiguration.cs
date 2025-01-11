@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetIdServer.Infrastructure.Database.Entities;
 
-public class UserContactEntityTypeConfiguration : IEntityTypeConfiguration<UserContactModel>
+public class UserContactEntityTypeConfiguration : IEntityTypeConfiguration<UserContactEntity>
 {
-    public void Configure(EntityTypeBuilder<UserContactModel> builder)
+    public void Configure(EntityTypeBuilder<UserContactEntity> builder)
     {
         builder.ToTable("user_contacts");
         builder.HasKey(contact => new
@@ -13,7 +13,7 @@ public class UserContactEntityTypeConfiguration : IEntityTypeConfiguration<UserC
             contact.UserId, contact.ContactType
         });
 
-        builder.HasOne<UserModel>(contact => contact.User)
+        builder.HasOne<UserEntity>(contact => contact.User)
             .WithMany(user => user.Contacts)
             .HasForeignKey(contact => contact.UserId)
             .IsRequired()

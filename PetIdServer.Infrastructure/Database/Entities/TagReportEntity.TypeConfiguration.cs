@@ -3,23 +3,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetIdServer.Infrastructure.Database.Entities;
 
-public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagReportModel>
+public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagReportEntity>
 {
-    public void Configure(EntityTypeBuilder<TagReportModel> builder)
+    public void Configure(EntityTypeBuilder<TagReportEntity> builder)
     {
         builder.ToTable("tag_reports").HasKey(report => report.Id);
 
-        builder.HasOne<TagModel>()
+        builder.HasOne<TagEntity>()
             .WithMany(tag => tag.Reports)
             .HasForeignKey(report => report.CorruptedTagId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<UserModel>()
+        builder.HasOne<UserEntity>()
             .WithMany(admin => admin.TagReportsCreated)
             .HasForeignKey(report => report.ReporterId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne<UserModel>()
+        builder.HasOne<UserEntity>()
             .WithMany(admin => admin.TagReportsResolved)
             .HasForeignKey(report => report.ResolverId)
             .OnDelete(DeleteBehavior.NoAction);
@@ -28,7 +28,7 @@ public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagRepo
         builder.Navigation(report => report.Reporter).AutoInclude();
         builder.Navigation(report => report.Resolver).AutoInclude();
 
-        builder.HasOne<UserModel>();
+        builder.HasOne<UserEntity>();
 
         builder.Property(report => report.Id)
             .HasColumnName("id")

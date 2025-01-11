@@ -1,4 +1,4 @@
-using PetIdServer.Core.Domain.User;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Application.Common.Services;
 

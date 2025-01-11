@@ -1,8 +1,8 @@
 using AutoMapper;
-using PetIdServer.Core.Domain.Pet;
-using PetIdServer.Core.Domain.Tag;
-using PetIdServer.Core.Domain.TagReport;
-using PetIdServer.Core.Domain.User;
+using PetIdServer.Core.Pets;
+using PetIdServer.Core.TagReports;
+using PetIdServer.Core.Tags;
+using PetIdServer.Core.Users;
 using PetIdServer.Infrastructure.Database.Entities;
 
 namespace PetIdServer.Infrastructure.Mapper;
@@ -11,20 +11,20 @@ public class InfrastructureMappingProfile : Profile
 {
     public InfrastructureMappingProfile()
     {
-        CreateMap<UserModel, UserEntity>()
+        CreateMap<UserEntity, User>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (UserId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id));
 
-        CreateMap<UserContactModel, UserContact>().ReverseMap();
-        CreateMap<PetModel, PetEntity>()
+        CreateMap<UserContactEntity, UserContact>().ReverseMap();
+        CreateMap<PetEntity, Pet>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (PetId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id));
 
-        CreateMap<TagModel, TagEntity>()
+        CreateMap<TagEntity, Tag>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (TagId)model.Id))
             .ForMember(entity => entity.PrivateCode, expression => expression.MapFrom(model => model.Code))
             .ReverseMap()
@@ -32,7 +32,7 @@ public class InfrastructureMappingProfile : Profile
                        expression => expression.MapFrom(domain => domain.Id))
             .ForMember(model => model.Code, expression => expression.MapFrom(entity => entity.PrivateCode));
 
-        CreateMap<TagReportModel, TagReportEntity>()
+        CreateMap<TagReportEntity, TagReport>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (TagReportId)model.Id))
             .ReverseMap()
             .ForMember(model => model.Id,

@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetIdServer.Infrastructure.Database.Entities;
 
-public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagModel>
+public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagEntity>
 {
-    public void Configure(EntityTypeBuilder<TagModel> builder)
+    public void Configure(EntityTypeBuilder<TagEntity> builder)
     {
         builder.ToTable("tags").HasKey(tag => tag.Id);
 
-        builder.HasOne<PetModel>()
+        builder.HasOne<PetEntity>()
             .WithMany(pet => pet.Tags)
             .HasForeignKey(tag => tag.PetId)
             .OnDelete(DeleteBehavior.Cascade);

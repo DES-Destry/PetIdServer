@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PetIdServer.Infrastructure.Database.Entities;
 
-public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserModel>
+public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 {
-    public void Configure(EntityTypeBuilder<UserModel> builder)
+    public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.ToTable("users").HasKey(user => user.Id);
 
@@ -15,13 +15,13 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserModel>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany<PetModel>(user => user.Pets)
+        builder.HasMany<PetEntity>(user => user.Pets)
             .WithOne(pet => pet.User)
             .HasForeignKey(pet => pet.UserId)
             .IsRequired()
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.OwnsMany<PetModel>(user => user.Pets);
+        builder.OwnsMany<PetEntity>(user => user.Pets);
 
         builder.Navigation(user => user.Contacts).AutoInclude();
         builder.Navigation(user => user.Pets).AutoInclude();
