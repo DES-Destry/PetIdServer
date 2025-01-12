@@ -1,4 +1,4 @@
-namespace PetIdServer.Infrastructure.Database.Entities;
+namespace PetIdServer.Persistence.Entities;
 
 public class TagEntity
 {

@@ -1,4 +1,4 @@
-namespace PetIdServer.Infrastructure.Database.Entities;
+namespace PetIdServer.Persistence.Entities;
 
 public class PetEntity
 {
@@ -9,7 +9,7 @@ public class PetEntity
     public required bool Sex { get; init; }
     public required bool IsCastrated { get; init; }
     public required Guid PhotoId { get; init; }
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
 
     public UserEntity User { get; } = null!;

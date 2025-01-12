@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace PetIdServer.Infrastructure.Database.Entities;
+namespace PetIdServer.Persistence.Entities;
 
 public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 {

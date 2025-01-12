@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PetIdServer.Infrastructure.Database.Entities;
+using PetIdServer.Persistence.Entities;
 
 namespace PetIdServer.Infrastructure.Database;
 

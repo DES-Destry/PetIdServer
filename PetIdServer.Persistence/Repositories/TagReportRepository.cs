@@ -4,7 +4,7 @@ using PetIdServer.Application.TagReports;
 using PetIdServer.Application.TagReports.Dto.Input;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
-using PetIdServer.Infrastructure.Database.Entities;
+using PetIdServer.Persistence.Entities;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 

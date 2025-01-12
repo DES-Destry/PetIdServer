@@ -2,7 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.Users;
 using PetIdServer.Core.Users;
-using PetIdServer.Infrastructure.Database.Entities;
+using PetIdServer.Persistence.Entities;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 

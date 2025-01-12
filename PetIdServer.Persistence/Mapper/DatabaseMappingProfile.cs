@@ -3,13 +3,13 @@ using PetIdServer.Core.Pets;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
 using PetIdServer.Core.Users;
-using PetIdServer.Infrastructure.Database.Entities;
+using PetIdServer.Persistence.Entities;
 
-namespace PetIdServer.Infrastructure.Mapper;
+namespace PetIdServer.Persistence.Mapper;
 
-public class InfrastructureMappingProfile : Profile
+public class DatabaseMappingProfile : Profile
 {
-    public InfrastructureMappingProfile()
+    public DatabaseMappingProfile()
     {
         CreateMap<UserEntity, User>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (UserId)model.Id))

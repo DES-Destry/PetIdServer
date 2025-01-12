@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PetIdServer.Application.Tags;
 using PetIdServer.Core.Pets;
 using PetIdServer.Core.Tags;
-using PetIdServer.Infrastructure.Database.Entities;
+using PetIdServer.Persistence.Entities;
 
 namespace PetIdServer.Infrastructure.Database.Repositories;
 
