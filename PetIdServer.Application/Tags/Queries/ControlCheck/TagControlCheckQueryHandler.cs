@@ -13,14 +13,16 @@ public class TagControlCheckQueryHandler(ITagRepository tagRepository)
         TagControlCheckQuery request,
         CancellationToken cancellationToken)
     {
-        Tag? tag = await tagRepository.GetTagByControlCode(request.ControlCode) ??
-                   throw new TagNotFoundException($"Invalid control code: {request.ControlCode}", new
-                   {
-                       UseCase = nameof(TagControlCheckQuery), controlCode = request.ControlCode
-                   });
+        Tag tag = await tagRepository.GetTagByControlCode(request.ControlCode) ??
+                  throw new TagNotFoundException($"Invalid control code: {request.ControlCode}", new
+                  {
+                      UseCase = nameof(TagControlCheckQuery), controlCode = request.ControlCode
+                  });
 
         bool isFree = !tag.IsAlreadyInUse;
-        CheckPetDto? pet = tag.IsAlreadyInUse ? new CheckPetDto(tag.Pet!.User.Email, tag.Pet.Name) : null;
+        CheckPetDto? pet = tag.IsAlreadyInUse
+            ? new CheckPetDto(tag.Pet?.User?.Email ?? "Unclear", tag.Pet?.Name ?? "Unclear")
+            : null;
 
         return new CheckTagDto(tag.Id, pet, isFree);
     }

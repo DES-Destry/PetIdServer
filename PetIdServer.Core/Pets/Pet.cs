@@ -3,26 +3,27 @@ using PetIdServer.Core.Users;
 
 namespace PetIdServer.Core.Pets;
 
-public class Pet : Entity<PetId>
+public class Pet(Pet.CreationAttributes creationAttributes) : Entity<PetId>((PetId)Guid.NewGuid())
 {
-    public Pet(CreationAttributes creationAttributes) : base((PetId)Guid.NewGuid())
+    public User? User { get; private set; }
+
+    public string Type { get; private set; } = creationAttributes.Type;
+
+    public string Name { get; private set; } = creationAttributes.Name;
+    public bool Sex { get; private set; } = creationAttributes.Sex;
+    public bool IsCastrated { get; private set; } = creationAttributes.IsCastrated;
+    public string? Photo { get; private set; }
+    public string? Description { get; private set; }
+
+    public void Update(UpdateAttributes updateAttributes)
     {
-        Type = creationAttributes.Type;
-        Name = creationAttributes.Name;
-        Sex = creationAttributes.Sex;
-        IsCastrated = creationAttributes.IsCastrated;
+        Type = updateAttributes.Type ?? Type;
+        Name = updateAttributes.Name ?? Name;
+        Sex = updateAttributes.Sex ?? Sex;
+        IsCastrated = updateAttributes.IsCastrated ?? IsCastrated;
+        Photo = updateAttributes.Photo ?? Photo;
+        Description = updateAttributes.Description ?? Description;
     }
-
-    // Mapper require this constructor
-    public Pet(PetId id) : base(id) { }
-
-    public User User { get; set; }
-    public string Type { get; set; }
-    public string Name { get; set; }
-    public bool Sex { get; set; }
-    public bool IsCastrated { get; set; }
-    public string? Photo { get; set; }
-    public string? Description { get; set; }
 
     public record CreationAttributes(
         string Type,
@@ -30,4 +31,14 @@ public class Pet : Entity<PetId>
         bool Sex,
         bool IsCastrated
     );
+
+    public record UpdateAttributes
+    {
+        public string? Type { get; init; }
+        public string? Name { get; init; }
+        public bool? Sex { get; init; }
+        public bool? IsCastrated { get; init; }
+        public string? Photo { get; init; }
+        public string? Description { get; init; }
+    }
 }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using PetIdServer.Application.Common.Services;
 using PetIdServer.Application.Tags.Dto;
@@ -7,7 +6,7 @@ using PetIdServer.Core.Tags.Exceptions;
 
 namespace PetIdServer.Application.Tags.Queries.GetByPublicCode;
 
-public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IHashService hashService, IMapper mapper)
+public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IHashService hashService)
     : IRequestHandler<GetTagByPublicCodeQuery, TagDto>
 {
     public async Task<TagDto> Handle(GetTagByPublicCodeQuery request, CancellationToken cancellationToken)
@@ -19,6 +18,6 @@ public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IHashS
                       request.Code, UseCase = nameof(GetTagByPublicCodeQuery)
                   });
 
-        return mapper.Map<TagDto>(tag);
+        return tag;
     }
 }

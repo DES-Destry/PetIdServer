@@ -5,6 +5,6 @@ namespace PetIdServer.Application.TagReports.Queries.GetAll;
 
 public class GetAllTagReportsQuery : IRequest<TagReportsDto>
 {
-    public int? TagId { get; set; }
-    public bool? IsResolved { get; set; }
+    public int? TagId { get; init; }
+    public bool? IsResolved { get; init; }
 }

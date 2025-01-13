@@ -4,33 +4,22 @@ using PetIdServer.Core.Tags.Exceptions;
 
 namespace PetIdServer.Core.Tags;
 
-public class Tag : Entity<TagId>
+public class Tag(Tag.CreationAttributes creationAttributes) : Entity<TagId>(creationAttributes.Id)
 {
-    public Tag(CreationAttributes creationAttributes) : base(creationAttributes.Id)
-    {
-        PrivateCode = creationAttributes.PrivateCode;
-        HashCode = creationAttributes.HashCode;
+    public string PrivateCode { get; init; } = creationAttributes.PrivateCode;
 
-        ControlCode = Random.Shared.NextInt64();
-        CreatedAt = DateTime.UtcNow;
-    }
+    public string HashCode { get; init; } = creationAttributes.HashCode;
 
-    public Tag(TagId id) : base(id) { }
-
-    public string PrivateCode { get; init; } = string.Empty;
-
-    public string HashCode { get; init; } = string.Empty;
-
-    public long ControlCode { get; init; }
+    public long ControlCode { get; init; } = Random.Shared.NextInt64();
     public Pet? Pet { get; private set; }
 
     public bool IsAlreadyInUse => Pet is not null;
 
-    public DateTime CreatedAt { get; init; }
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public DateTime? PetAddedAt { get; set; }
+    public DateTime? PetAddedAt { get; private set; }
 
-    public DateTime? LastScannedAt { get; set; }
+    public DateTime? LastScannedAt { get; private set; }
 
     public void SetupPet(Pet pet)
     {

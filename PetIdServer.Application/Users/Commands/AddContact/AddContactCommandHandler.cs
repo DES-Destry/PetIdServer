@@ -26,7 +26,6 @@ public class AddContactCommandHandler(IUserRepository userRepository)
         };
 
         user.Contacts.Add(contact);
-
         await userRepository.UpdateUser(user);
 
         return VoidResponseDto.Executed;
