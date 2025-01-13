@@ -1,12 +1,8 @@
 using AutoMapper;
 using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using PetIdServer.Application.Common.Dto;
-using PetIdServer.Application.TagReports.Commands.Create;
 using PetIdServer.Application.TagReports.Commands.Resolve;
-using PetIdServer.Application.TagReports.Dto;
-using PetIdServer.Application.TagReports.Queries.GetAll;
 using PetIdServer.Application.Tags.Commands.Clear;
 using PetIdServer.Application.Tags.Commands.CreateBatch;
 using PetIdServer.Application.Tags.Dto;
@@ -26,12 +22,6 @@ public class AdminEndpoints : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         RouteGroupBuilder group = app.MapGroup(EndpointBase).RequireSecurityKey().WithOpenApi();
-        // var authorizedGroup = group.RequireAuthorization(AuthSchemas.Admin);
-
-        // group.MapPut("password", ChangePassword)
-        //     .RequireAuthorization(AuthSchemas.Admin)
-        //     .WithSummary("Change password as authenticated admin.")
-        //     .Produces<SingleTokenDto>();
 
         group.MapGet("tags", GetAllTags)
             .RequireAuthorization(AuthSchemas.Admin)
@@ -58,18 +48,6 @@ public class AdminEndpoints : ICarterModule
             .WithDescription("Remove the pet from tag force with admin permissions.")
             .Produces<VoidResponseDto>();
 
-        group.MapGet("tags/reports", GetAllTagReports)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithSummary("Get all reports (admin).")
-            .WithDescription("Get all reports with abused tags with filters(isResolved, tagId).")
-            .Produces<TagReportsDto>();
-
-        group.MapPost("tags/{id:int}/reports", CreateTagReport)
-            .RequireAuthorization(AuthSchemas.Admin)
-            .WithSummary("Create report for tag (admin).")
-            .WithDescription("Create report that by opinion of admin was abused.")
-            .Produces<VoidResponseDto>();
-
         group.MapPost("reports/{id:guid}/resolve", ResolveTagReport)
             .RequireAuthorization(AuthSchemas.Admin)
             .WithSummary("Mark report as resolved (admin).")
@@ -77,21 +55,6 @@ public class AdminEndpoints : ICarterModule
                 "To not pay attention for already resolved reports it must be marked as resolved.")
             .Produces<VoidResponseDto>();
     }
-
-    // TODO: Move to user controller
-    // private static async Task<IResult> ChangePassword(
-    //     RequestUser admin,
-    //     ChangePasswordDto dto,
-    //     ISender sender)
-    // {
-    //     ChangePasswordCommand command = new()
-    //     {
-    //         Id = admin.Email, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
-    //     };
-    //     SingleTokenDto response = await sender.Send(command);
-    //
-    //     return Results.Ok(response);
-    // }
 
     private static async Task<IResult> GetAllTags(ISender sender)
     {
@@ -123,31 +86,6 @@ public class AdminEndpoints : ICarterModule
     private static async Task<IResult> ClearTag(int id, RequestUser admin, ISender sender)
     {
         ClearTagCommand command = new()
-        {
-            AdminId = admin.Id, TagId = id
-        };
-        VoidResponseDto response = await sender.Send(command);
-
-        return Results.Ok(response);
-    }
-
-    private static async Task<IResult> GetAllTagReports(
-        [FromQuery] int? tagId,
-        [FromQuery] bool? isResolved,
-        ISender sender)
-    {
-        GetAllTagReportsQuery query = new()
-        {
-            TagId = tagId, IsResolved = isResolved
-        };
-        TagReportsDto response = await sender.Send(query);
-
-        return Results.Ok(response);
-    }
-
-    private static async Task<IResult> CreateTagReport(int id, RequestUser admin, ISender sender)
-    {
-        CreateTagReportCommand command = new()
         {
             AdminId = admin.Id, TagId = id
         };
