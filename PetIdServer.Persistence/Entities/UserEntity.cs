@@ -10,9 +10,9 @@ public class UserEntity
     public string? Address { get; init; }
     public string? Description { get; init; }
 
-    public ICollection<UserContactEntity> Contacts { get; } = [];
-    public ICollection<PetEntity> Pets { get; } = [];
+    public ICollection<UserContactEntity> Contacts { get; init; } = [];
+    public ICollection<PetEntity> Pets { get; init; } = [];
 
-    public ICollection<TagReportEntity> TagReportsCreated { get; } = [];
-    public ICollection<TagReportEntity> TagReportsResolved { get; } = [];
+    public ICollection<TagReportEntity> TagReportsCreated { get; init; } = [];
+    public ICollection<TagReportEntity> TagReportsResolved { get; init; } = [];
 }

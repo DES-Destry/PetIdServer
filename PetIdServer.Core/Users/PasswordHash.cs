@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Users;
@@ -21,7 +22,8 @@ public class PasswordHash : ValueObject
 
     private string Value { get; }
 
-    public static implicit operator string(PasswordHash hash) => hash.Value;
+    [return: NotNullIfNotNull("hash")]
+    public static implicit operator string?(PasswordHash? hash) => hash?.Value;
 
     public static PasswordHash FromHash(string value) => new(value);
 
