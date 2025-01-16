@@ -3,17 +3,55 @@ using PetIdServer.Core.Users;
 
 namespace PetIdServer.Core.Pets;
 
-public class Pet(Pet.CreationAttributes creationAttributes) : Entity<PetId>((PetId)Guid.NewGuid())
+public class Pet : Entity<PetId>
 {
+    private Pet() : base((PetId)Guid.NewGuid()) { }
+
+    // TODO Delete
     public User? User { get; private set; }
 
-    public string Type { get; private set; } = creationAttributes.Type;
-
-    public string Name { get; private set; } = creationAttributes.Name;
-    public bool Sex { get; private set; } = creationAttributes.Sex;
-    public bool IsCastrated { get; private set; } = creationAttributes.IsCastrated;
-    public string? Photo { get; private set; }
+    public UserId OwnerId { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
+    public string Type { get; private set; } = null!;
+    public bool Sex { get; private set; }
+    public bool IsCastrated { get; private set; }
+    public Guid? PhotoId { get; private set; }
     public string? Description { get; private set; }
+
+    public static Pet CreateNew(CreationAttributes creationAttributes)
+    {
+        return new Pet
+        {
+            OwnerId = creationAttributes.OwnerId,
+            Type = creationAttributes.Type,
+            Name = creationAttributes.Name,
+            Sex = creationAttributes.Sex,
+            IsCastrated = creationAttributes.IsCastrated,
+            PhotoId = creationAttributes.PhotoId
+        };
+    }
+
+    public static Pet CreateFromPersistence(PetId id,
+        UserId ownerId,
+        string name,
+        string type,
+        bool sex,
+        bool isCastrated,
+        Guid? photoId,
+        string? description)
+    {
+        return new Pet
+        {
+            Id = id,
+            OwnerId = ownerId,
+            Name = name,
+            Type = type,
+            Sex = sex,
+            IsCastrated = isCastrated,
+            PhotoId = photoId,
+            Description = description
+        };
+    }
 
     public void Update(UpdateAttributes updateAttributes)
     {
@@ -21,15 +59,17 @@ public class Pet(Pet.CreationAttributes creationAttributes) : Entity<PetId>((Pet
         Name = updateAttributes.Name ?? Name;
         Sex = updateAttributes.Sex ?? Sex;
         IsCastrated = updateAttributes.IsCastrated ?? IsCastrated;
-        Photo = updateAttributes.Photo ?? Photo;
+        PhotoId = updateAttributes.PhotoId ?? PhotoId;
         Description = updateAttributes.Description ?? Description;
     }
 
     public record CreationAttributes(
-        string Type,
+        UserId OwnerId,
         string Name,
+        string Type,
         bool Sex,
-        bool IsCastrated
+        bool IsCastrated,
+        Guid? PhotoId = null
     );
 
     public record UpdateAttributes
@@ -38,7 +78,7 @@ public class Pet(Pet.CreationAttributes creationAttributes) : Entity<PetId>((Pet
         public string? Name { get; init; }
         public bool? Sex { get; init; }
         public bool? IsCastrated { get; init; }
-        public string? Photo { get; init; }
+        public Guid? PhotoId { get; init; }
         public string? Description { get; init; }
     }
 }

@@ -6,7 +6,7 @@ using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
 using PetIdServer.Persistence.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Repositories;
+namespace PetIdServer.Persistence.Repositories;
 
 public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagReportRepository
 {

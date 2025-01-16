@@ -1,8 +1,6 @@
 using AutoMapper;
-using PetIdServer.Core.Pets;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
-using PetIdServer.Core.Users;
 using PetIdServer.Persistence.Entities;
 
 namespace PetIdServer.Persistence.Mapper;
@@ -11,19 +9,6 @@ public class DatabaseMappingProfile : Profile
 {
     public DatabaseMappingProfile()
     {
-        CreateMap<UserEntity, User>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (UserId)model.Id))
-            .ReverseMap()
-            .ForMember(model => model.Id,
-                       expression => expression.MapFrom(domain => domain.Id));
-
-        CreateMap<UserContactEntity, UserContact>().ReverseMap();
-        CreateMap<PetEntity, Pet>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (PetId)model.Id))
-            .ReverseMap()
-            .ForMember(model => model.Id,
-                       expression => expression.MapFrom(domain => domain.Id));
-
         CreateMap<TagEntity, Tag>()
             .ForCtorParam("id", expression => expression.MapFrom(model => (TagId)model.Id))
             .ForMember(entity => entity.PrivateCode, expression => expression.MapFrom(model => model.Code))

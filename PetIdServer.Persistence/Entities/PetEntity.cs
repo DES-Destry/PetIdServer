@@ -8,7 +8,7 @@ public class PetEntity
     public required string Name { get; init; }
     public required bool Sex { get; init; }
     public required bool IsCastrated { get; init; }
-    public required Guid PhotoId { get; init; }
+    public required Guid? PhotoId { get; init; }
     public string? Description { get; init; }
 
 

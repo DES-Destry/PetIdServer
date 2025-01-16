@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Persistence.Entities;
 
-namespace PetIdServer.Infrastructure.Database;
+namespace PetIdServer.Persistence;
 
 public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(options)
 {

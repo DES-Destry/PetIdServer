@@ -3,21 +3,54 @@ using PetIdServer.Core.Pets;
 
 namespace PetIdServer.Core.Users;
 
-public class User(User.CreationAttributes creationAttributes) : Entity<UserId>((UserId)Guid.NewGuid())
+public class User : Entity<UserId>
 {
-    public string Email { get; init; } = creationAttributes.Email;
+    private User() : base((UserId)Guid.NewGuid()) { }
+    public required string Email { get; init; }
 
-    /// <summary>
-    ///     Storing only as a hash
-    /// </summary>
-    public PasswordHash? Password { get; private set; } = creationAttributes.Password;
+    public PasswordHash? Password { get; private set; }
 
-    public string Name { get; set; } = creationAttributes.Name;
+    public required string Name { get; set; }
     public string? Address { get; set; }
     public string? Description { get; set; }
-    public UserRole Role { get; init; } = creationAttributes.Role ?? UserRole.LeastPrivileged;
+    public required UserRole Role { get; init; }
     public IList<UserContact> Contacts { get; set; } = [];
     public IList<Pet> Pets { get; private set; } = [];
+
+    public static User CreateNew(CreationAttributes creationAttributes)
+    {
+        return new User
+        {
+            Email = creationAttributes.Email,
+            Password = creationAttributes.Password,
+            Name = creationAttributes.Name,
+            Role = creationAttributes.Role ?? UserRole.LeastPrivileged
+        };
+    }
+
+    public static User CreateFromPersistence(UserId id,
+        string email,
+        PasswordHash? password,
+        string name,
+        string? address,
+        string? description,
+        UserRole role,
+        IList<UserContact> contacts,
+        IList<Pet> pets)
+    {
+        return new User
+        {
+            Id = id,
+            Email = email,
+            Password = password,
+            Name = name,
+            Address = address,
+            Description = description,
+            Role = role,
+            Contacts = contacts,
+            Pets = pets
+        };
+    }
 
     public void Update(UpdateAttributes updateAttributes)
     {

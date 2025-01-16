@@ -6,7 +6,7 @@ using PetIdServer.Core.Pets;
 using PetIdServer.Core.Tags;
 using PetIdServer.Persistence.Entities;
 
-namespace PetIdServer.Infrastructure.Database.Repositories;
+namespace PetIdServer.Persistence.Repositories;
 
 public class TagRepository(IMapper mapper, PetIdContext database) : ITagRepository
 {

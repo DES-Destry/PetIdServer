@@ -25,7 +25,8 @@ public class PasswordHash : ValueObject
     [return: NotNullIfNotNull("hash")]
     public static implicit operator string?(PasswordHash? hash) => hash?.Value;
 
-    public static PasswordHash FromHash(string value) => new(value);
+    [return: NotNullIfNotNull("value")]
+    public static PasswordHash? FromHash(string? value) => value is null ? null : new PasswordHash(value);
 
     public static bool IsValidHash(string value)
     {

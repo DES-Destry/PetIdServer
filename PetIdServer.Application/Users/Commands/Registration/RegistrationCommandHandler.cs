@@ -33,7 +33,7 @@ public class RegistrationCommandHandler(
 
         // Registration creates user with the least privileged role
         User.CreationAttributes creationAttributes = new(request.Email, passwordHash, request.Name);
-        User user = new(creationAttributes);
+        User user = User.CreateNew(creationAttributes);
 
         await userRepository.CreateUser(user);
         return await userTokenService.GenerateTokens(user);

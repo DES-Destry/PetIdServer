@@ -8,9 +8,9 @@ using PetIdServer.Application.Tags;
 using PetIdServer.Application.Tags.Services;
 using PetIdServer.Application.Users;
 using PetIdServer.Application.Users.Services;
-using PetIdServer.Infrastructure.Database;
-using PetIdServer.Infrastructure.Database.Repositories;
 using PetIdServer.Infrastructure.Services;
+using PetIdServer.Persistence;
+using PetIdServer.Persistence.Repositories;
 
 namespace PetIdServer.Infrastructure.Extensions;
 

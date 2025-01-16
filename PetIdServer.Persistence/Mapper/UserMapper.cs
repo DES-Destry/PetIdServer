@@ -1,3 +1,4 @@
+using PetIdServer.Core.Pets;
 using PetIdServer.Core.Users;
 using PetIdServer.Persistence.Entities;
 
@@ -9,9 +10,18 @@ public static class UserMapper
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        // Involve how to create a User from a UserEntity (user creation as rule is a limited for just creating a new user)
-        return null;
-        // return new User; // ???
+        IList<UserContact> contacts = entity.Contacts.Select(contact => contact.ToCore()).ToList();
+        IList<Pet> pets = entity.Pets.Select(pet => pet.ToCore()).ToList();
+
+        return User.CreateFromPersistence((UserId)entity.Id,
+                                          entity.Email,
+                                          PasswordHash.FromHash(entity.Password),
+                                          entity.Name,
+                                          entity.Address,
+                                          entity.Description,
+                                          UserRole.Parse(entity.Role),
+                                          contacts,
+                                          pets);
     }
 
     public static UserEntity ToEntity(this User user)

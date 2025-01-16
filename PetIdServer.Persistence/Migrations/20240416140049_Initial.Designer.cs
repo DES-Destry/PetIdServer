@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetIdServer.Infrastructure.Database;
+using PetIdServer.Persistence;
 
 #nullable disable
 
-namespace PetIdServer.Infrastructure.Database.Migrations
+namespace PetIdServer.Persistence
 {
     [DbContext(typeof(PetIdContext))]
     [Migration("20240416140049_Initial")]
