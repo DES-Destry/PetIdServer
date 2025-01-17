@@ -32,10 +32,10 @@ public class CreateTagReportCommandHandler(
                               command = nameof(CreateTagReportCommand), tagId = request.TagId
                           });
 
-        TagReport.CreationAttributes creationAttributes = new(reportedTag, admin);
-        TagReport report = new(creationAttributes);
+        TagReport.CreationAttributes creationAttributes = new(admin.Id);
+        TagReport report = TagReport.CreateNew(creationAttributes);
 
-        await reportRepository.CreateReport(report);
+        await reportRepository.CreateReport(report, reportedTag);
 
         return VoidResponseDto.Executed;
     }

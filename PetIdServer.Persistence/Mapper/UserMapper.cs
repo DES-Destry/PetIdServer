@@ -30,7 +30,7 @@ public static class UserMapper
 
         return new UserEntity
         {
-            Id = user.Id,
+            Id = (Guid)user.Id,
             Name = user.Name,
             Email = user.Email,
             Role = user.Role.ToString(),

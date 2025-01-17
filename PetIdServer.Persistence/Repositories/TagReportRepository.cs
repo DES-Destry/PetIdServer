@@ -1,26 +1,24 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PetIdServer.Application.TagReports;
 using PetIdServer.Application.TagReports.Dto.Input;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
 using PetIdServer.Persistence.Entities;
+using PetIdServer.Persistence.Mapper;
 
 namespace PetIdServer.Persistence.Repositories;
 
-public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagReportRepository
+public class TagReportRepository(PetIdContext database) : ITagReportRepository
 {
     public async Task<TagReport?> GetTagReportById(TagReportId id)
     {
-        TagReportEntity? reportModel = await database.TagReports.FirstOrDefaultAsync(report => report.Id == id);
-        return reportModel is not null
-            ? mapper.Map<TagReportEntity, TagReport>(reportModel)
-            : null;
+        TagReportEntity? reportEntity = await database.TagReports.FirstOrDefaultAsync(report => report.Id == id);
+        return reportEntity?.ToCore();
     }
 
     public async Task<IEnumerable<TagReport>> GetAllReports(GetReportsFilters filters)
     {
-        List<TagReportEntity> reportModels = await database.TagReports
+        List<TagReportEntity> reportEnteties = await database.TagReports
             .Where(report => (filters.TagId == null || report.CorruptedTagId == filters.TagId) &&
                              (filters.IsResolved == null ||
                               (report.ResolverId != null || !filters.IsResolved.Value) &&
@@ -28,37 +26,37 @@ public class TagReportRepository(IMapper mapper, PetIdContext database) : ITagRe
             .OrderBy(report => report.ResolverId != null)
             .ToListAsync();
 
-        return reportModels.Select(mapper.Map<TagReportEntity, TagReport>);
+        return reportEnteties.Select(TagReportMapper.ToCore);
     }
 
     public async Task<IEnumerable<TagReport>> GetReportsByTagId(TagId tagId)
     {
-        List<TagReportEntity> reportModels = await database.TagReports
+        List<TagReportEntity> reportEntities = await database.TagReports
             .Where(report => report.CorruptedTagId == tagId)
             .ToListAsync();
 
-        return reportModels.Select(mapper.Map<TagReportEntity, TagReport>);
+        return reportEntities.Select(TagReportMapper.ToCore);
     }
 
-    public async Task CreateReport(TagReport report)
+    public async Task CreateReport(TagReport report, Tag tag)
     {
-        TagReportEntity? model = mapper.Map<TagReport, TagReportEntity>(report);
-        database.Entry(model).State = EntityState.Added;
+        TagReportEntity entity = report.ToEntity(tag);
+        database.Entry(entity).State = EntityState.Added;
 
         await database.SaveChangesAsync();
     }
 
-    public async Task UpdateReport(TagReportId id, TagReport updated)
+    public async Task UpdateReport(TagReport updated, Tag tag)
     {
-        TagReportEntity? incomingData = mapper.Map<TagReport, TagReportEntity>(updated);
-        TagReportEntity? model = await database.TagReports.FirstOrDefaultAsync(report => report.Id == id);
+        TagReportEntity incomingData = updated.ToEntity(tag);
+        TagReportEntity? reportEntity = await database.TagReports.FirstOrDefaultAsync(report => report.Id == updated.Id);
 
-        if (model is null)
+        if (reportEntity is null)
         {
             return;
         }
 
-        database.Entry(model).CurrentValues.SetValues(incomingData);
+        database.Entry(reportEntity).CurrentValues.SetValues(incomingData);
         await database.SaveChangesAsync();
     }
 }

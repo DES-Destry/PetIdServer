@@ -10,6 +10,6 @@ public interface ITagReportRepository
     Task<IEnumerable<TagReport>> GetAllReports(GetReportsFilters filters);
     Task<IEnumerable<TagReport>> GetReportsByTagId(TagId tagId);
 
-    Task CreateReport(TagReport report);
-    Task UpdateReport(TagReportId id, TagReport updated);
+    Task CreateReport(TagReport report, Tag tag);
+    Task UpdateReport(TagReport updated, Tag tag);
 }

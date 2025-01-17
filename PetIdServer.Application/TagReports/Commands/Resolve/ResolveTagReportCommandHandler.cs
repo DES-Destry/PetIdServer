@@ -31,7 +31,8 @@ public class ResolveTagReportCommandHandler(
 
         report.ResolvedBy(admin);
 
-        await tagReportRepository.UpdateReport(report.Id, report);
+        // TODO null will be removed with correct logic of AggregateRoot / Entity segregation
+        await tagReportRepository.UpdateReport(report, null!);
         return VoidResponseDto.Executed;
     }
 }

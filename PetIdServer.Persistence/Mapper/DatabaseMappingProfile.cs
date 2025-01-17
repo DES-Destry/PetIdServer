@@ -1,5 +1,4 @@
 using AutoMapper;
-using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
 using PetIdServer.Persistence.Entities;
 
@@ -16,15 +15,5 @@ public class DatabaseMappingProfile : Profile
             .ForMember(model => model.Id,
                        expression => expression.MapFrom(domain => domain.Id))
             .ForMember(model => model.Code, expression => expression.MapFrom(entity => entity.PrivateCode));
-
-        CreateMap<TagReportEntity, TagReport>()
-            .ForCtorParam("id", expression => expression.MapFrom(model => (TagReportId)model.Id))
-            .ReverseMap()
-            .ForMember(model => model.Id,
-                       expression => expression.MapFrom(domain => domain.Id))
-            .ForMember(model => model.ReporterId,
-                       expression => expression.MapFrom(domain => (Guid)domain.Reporter.Id))
-            .ForMember(model => model.ResolverId,
-                       expression => expression.MapFrom(domain => (Guid)domain!.Resolver!.Id));
     }
 }
