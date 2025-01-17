@@ -18,11 +18,11 @@ public class ChangePasswordCommandHandler(
         ChangePasswordCommand request,
         CancellationToken cancellationToken)
     {
-        User user = await userRepository.GetUserById((UserId)request.Id) ??
-                    throw new UserNotFoundException($"User {request.Id} not found!",
+        User user = await userRepository.GetUserById((UserId)request.RequesterId) ??
+                    throw new UserNotFoundException($"User {request.RequesterId} not found!",
                                                     new
                                                     {
-                                                        UserId = request.Id, UseCase = nameof(ChangePasswordCommand)
+                                                        UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
                                                     });
 
         if (user.Password != null && !string.IsNullOrWhiteSpace(user.Password))
@@ -31,7 +31,7 @@ public class ChangePasswordCommandHandler(
             {
                 throw new IncorrectCredentialsException("You must provide an old password!", new
                 {
-                    UserId = request.Id, UseCase = nameof(ChangePasswordCommand)
+                    UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
                 });
             }
 
@@ -39,9 +39,9 @@ public class ChangePasswordCommandHandler(
 
             if (!passwordIsValid)
             {
-                throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Id}", new
+                throw new IncorrectCredentialsException($"Incorrect credentials for: {request.RequesterId}", new
                 {
-                    UserId = request.Id, UseCase = nameof(ChangePasswordCommand)
+                    UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
                 });
             }
         }

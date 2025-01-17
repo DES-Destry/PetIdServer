@@ -1,7 +1,11 @@
+using PetIdServer.Application.Users.Commands.Login;
+
 namespace PetIdServer.RestApi.Endpoints.Dto.User;
 
-public class LoginUserDto
+public record LoginUserDto(string Email, string Password, string? WithPermissionsOf)
 {
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    public LoginCommand ToCommand() => new()
+    {
+        Email = Email, Password = Password, WithPermissionsOf = WithPermissionsOf
+    };
 }

@@ -1,7 +1,6 @@
 using Carter;
 using PetIdServer.Infrastructure.Extensions;
 using PetIdServer.RestApi.Extensions;
-using PetIdServer.RestApi.Mapper;
 using PetIdServer.RestApi.Response.Error.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -18,7 +17,6 @@ builder.Services
     .AddServerErrorHandling()
     .AddSwagger()
     .AddInfrastructure(builder)
-    .AddAutoMapper(typeof(RestApiMappingProfile))
     .AddCarter()
     .AddPetIdAuthPolicies();
 

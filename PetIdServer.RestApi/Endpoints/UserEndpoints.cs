@@ -1,4 +1,3 @@
-using AutoMapper;
 using Carter;
 using MediatR;
 using PetIdServer.Application.Users.Commands.ChangePassword;
@@ -36,20 +35,17 @@ public class UserEndpoints : ICarterModule
             .Produces<TokenPairDto>();
     }
 
-    private static async Task<IResult> Registration(
-        CreateUserDto dto,
-        ISender sender,
-        IMapper mapper)
+    private static async Task<IResult> Registration(NewUserRegistrationDto dto, ISender sender)
     {
-        RegistrationCommand? command = mapper.Map<CreateUserDto, RegistrationCommand>(dto);
+        RegistrationCommand command = dto.ToCommand();
         TokenPairDto response = await sender.Send(command);
 
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> LoginUser(LoginUserDto dto, ISender sender, IMapper mapper)
+    private static async Task<IResult> LoginUser(LoginUserDto dto, ISender sender)
     {
-        LoginCommand? command = mapper.Map<LoginUserDto, LoginCommand>(dto);
+        LoginCommand command = dto.ToCommand();
         LoginResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
@@ -60,10 +56,7 @@ public class UserEndpoints : ICarterModule
         ChangePasswordDto dto,
         ISender sender)
     {
-        ChangePasswordCommand command = new()
-        {
-            Id = user.Id, OldPassword = dto.OldPassword, NewPassword = dto.NewPassword
-        };
+        ChangePasswordCommand command = dto.ToCommand(user);
         TokenPairDto response = await sender.Send(command);
 
         return Results.Ok(response);

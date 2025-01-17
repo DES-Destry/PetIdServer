@@ -18,6 +18,10 @@ public class LoginCommandHandler(
         LoginCommand request,
         CancellationToken cancellationToken)
     {
+        UserRole requestedRole = request.WithPermissionsOf is null
+            ? UserRole.LeastPrivileged
+            : UserRole.Parse(request.WithPermissionsOf);
+
         User userCandidate =
             await userRepository.GetUserByEmail(request.Email) ??
             throw new UserNotFoundException($"User with email {request.Email} not found",
@@ -35,7 +39,7 @@ public class LoginCommandHandler(
                                                     });
         }
 
-        if (!userCandidate.Role.HasPermissionsOf(request.WithPermissionsOf ?? UserRole.LeastPrivileged))
+        if (!userCandidate.Role.HasPermissionsOf(requestedRole))
         {
             throw new UserUnauthorizedException("User requests more permissions than allowed",
                                                 new
@@ -43,13 +47,10 @@ public class LoginCommandHandler(
                                                     UserId = userCandidate.Id,
                                                     UserHasRole = userCandidate.Role.Name,
                                                     UserRoleHasLevel = userCandidate.Role.Level,
-                                                    RequestedRole = request.WithPermissionsOf?.Name ??
-                                                                    UserRole.LeastPrivileged.Name,
-                                                    RequestedRoleLevel = request.WithPermissionsOf?.Level ??
-                                                                         UserRole.LeastPrivileged.Level
+                                                    RequestedRole = requestedRole.Name,
+                                                    RequestedRoleLevel = requestedRole.Level
                                                 });
         }
-
 
         // TODO: generate token with permissions of request.WithPermissionsOf
         TokenPairDto tokenPair = await userTokenService.GenerateTokens(userCandidate);

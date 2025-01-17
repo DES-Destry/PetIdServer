@@ -1,8 +1,11 @@
+using PetIdServer.Application.Tags.Commands.CreateBatch;
+
 namespace PetIdServer.RestApi.Endpoints.Dto.Admin;
 
-public class CreateTagsDto
+public record CreateTagsDto(int IdFrom, int IdTo, IEnumerable<string> Codes)
 {
-    public int IdFrom { get; set; }
-    public int IdTo { get; set; }
-    public IEnumerable<string> Codes { get; set; }
+    public CreateTagsBatchCommand ToCommand() => new()
+    {
+        IdFrom = IdFrom, IdTo = IdTo, Codes = Codes
+    };
 }
