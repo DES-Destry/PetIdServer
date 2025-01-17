@@ -27,7 +27,8 @@ public class Pet : Entity<PetId>
             Name = creationAttributes.Name,
             Sex = creationAttributes.Sex,
             IsCastrated = creationAttributes.IsCastrated,
-            PhotoId = creationAttributes.PhotoId
+            PhotoId = creationAttributes.PhotoId,
+            Description = creationAttributes.Description
         };
     }
 
@@ -37,8 +38,8 @@ public class Pet : Entity<PetId>
         string type,
         bool sex,
         bool isCastrated,
-        Guid? photoId,
-        string? description)
+        Guid? photoId = null,
+        string? description = null)
     {
         return new Pet
         {
@@ -69,7 +70,8 @@ public class Pet : Entity<PetId>
         string Type,
         bool Sex,
         bool IsCastrated,
-        Guid? PhotoId = null
+        Guid? PhotoId = null,
+        string? Description = ""
     );
 
     public record UpdateAttributes

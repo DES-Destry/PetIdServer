@@ -1,6 +1,7 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
 using PetIdServer.Core.Pets;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Application.Pets.Commands.Create;
 
@@ -12,11 +13,15 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
         CancellationToken cancellationToken)
     {
         Pet.CreationAttributes creationAttributes = new(
-            request.Type,
+            (UserId)request.OwnerId,
             request.Name,
+            request.Type,
             request.Sex,
-            request.IsCastrated);
-        Pet pet = new(creationAttributes);
+            request.IsCastrated,
+            request.PhotoId,
+            request.Description);
+
+        Pet pet = Pet.CreateNew(creationAttributes);
 
         await petRepository.CreatePet(pet);
 
