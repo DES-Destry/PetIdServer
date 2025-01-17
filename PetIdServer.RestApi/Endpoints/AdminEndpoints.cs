@@ -1,4 +1,3 @@
-using AutoMapper;
 using Carter;
 using MediatR;
 using PetIdServer.Application.Common.Dto;
@@ -75,9 +74,9 @@ public class AdminEndpoints : ICarterModule
         return Results.Ok(response);
     }
 
-    private static async Task<IResult> CreateTags(CreateTagsDto dto, ISender sender, IMapper mapper)
+    private static async Task<IResult> CreateTags(CreateTagsDto dto, ISender sender)
     {
-        CreateTagsBatchCommand? command = mapper.Map<CreateTagsDto, CreateTagsBatchCommand>(dto);
+        CreateTagsBatchCommand command = dto.ToCommand();
         VoidResponseDto response = await sender.Send(command);
 
         return Results.Ok(response);
