@@ -25,12 +25,10 @@ public static class ServiceCollectionExtension
             .AddInfrastructureServices();
 
         // Add application
-        services
-            .AddAutoMapper(Application.AssemblyReference.Assembly)
-            .AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly);
-            });
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly);
+        });
 
         builder.AddDbConnection();
 
