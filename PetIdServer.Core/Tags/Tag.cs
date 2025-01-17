@@ -4,16 +4,20 @@ using PetIdServer.Core.Tags.Exceptions;
 
 namespace PetIdServer.Core.Tags;
 
-public class Tag(Tag.CreationAttributes creationAttributes) : Entity<TagId>(creationAttributes.Id)
+public class Tag : Entity<TagId>
 {
-    public string PrivateCode { get; init; } = creationAttributes.PrivateCode;
+    private Tag(int id) : base((TagId)id) { }
+    public required string PrivateCode { get; init; }
 
-    public string HashCode { get; init; } = creationAttributes.HashCode;
+    public required string HashCode { get; init; }
 
     public long ControlCode { get; init; } = Random.Shared.NextInt64();
-    public Pet? Pet { get; private set; }
 
-    public bool IsAlreadyInUse => Pet is not null;
+    // TODO Delete
+    public Pet? Pet { get; private set; }
+    public PetId? PetId { get; private set; }
+
+    public bool IsAlreadyInUse => PetId is not null;
 
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
@@ -21,22 +25,51 @@ public class Tag(Tag.CreationAttributes creationAttributes) : Entity<TagId>(crea
 
     public DateTime? LastScannedAt { get; private set; }
 
-    public void SetupPet(Pet pet)
+    public static Tag CreateNew(CreationAttributes creationAttributes)
+    {
+        return new Tag(creationAttributes.Id)
+        {
+            PrivateCode = creationAttributes.PrivateCode, HashCode = creationAttributes.HashCode
+        };
+    }
+
+    public static Tag CreateFromPersistence(TagId id,
+        string privateCode,
+        string hashCode,
+        long controlCode,
+        PetId? petId,
+        DateTime createdAt,
+        DateTime? petAddedAt,
+        DateTime? lastScannedAt)
+    {
+        return new Tag(id)
+        {
+            PrivateCode = privateCode,
+            HashCode = hashCode,
+            ControlCode = controlCode,
+            PetId = petId,
+            CreatedAt = createdAt,
+            PetAddedAt = petAddedAt,
+            LastScannedAt = lastScannedAt
+        };
+    }
+
+    public void SetupPet(PetId petId)
     {
         if (IsAlreadyInUse)
         {
-            throw new TagAlreadyInUseException($"Tag {Id} is already in use", new
+            throw new TagAlreadyInUseException($"Tag {Id} is already in use with {PetId}", new
             {
-                Id, Pet
+                Id, PetId
             });
         }
 
-        Pet = pet;
+        PetId = petId;
     }
 
     public void RemovePet()
     {
-        Pet = null;
+        PetId = null;
         PetAddedAt = null;
     }
 

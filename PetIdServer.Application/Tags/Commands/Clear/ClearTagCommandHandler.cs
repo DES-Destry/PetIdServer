@@ -37,7 +37,7 @@ public class ClearTagCommandHandler(
 
         tag.RemovePet();
 
-        await tagRepository.UpdateTag(tag.Id, tag);
+        await tagRepository.UpdateTag(tag);
         return VoidResponseDto.Executed;
     }
 }

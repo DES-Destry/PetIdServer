@@ -27,7 +27,7 @@ public static class PetMapper
         return new PetEntity
         {
             Id = pet.Id,
-            UserId = (Guid)pet.OwnerId,
+            UserId = pet.OwnerId,
             Type = pet.Type,
             Name = pet.Name,
             Sex = pet.Sex,

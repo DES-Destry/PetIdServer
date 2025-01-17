@@ -46,7 +46,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
             string hashCode = await hashService.Hash(code);
 
             Tag.CreationAttributes creationAttributes = new((TagId)index, privateCode, hashCode);
-            tags[index] = new Tag(creationAttributes);
+            tags[index] = Tag.CreateNew(creationAttributes);
         }
 
         await tagRepository.CreateTagsBatch(tags);

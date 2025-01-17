@@ -20,7 +20,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         string privateCode = await codeDecoder.EncodePublicCode(request.Code);
 
         Tag.CreationAttributes creationAttributes = new((TagId)request.Id, privateCode, hashCode);
-        Tag tag = new(creationAttributes);
+        Tag tag = Tag.CreateNew(creationAttributes);
 
         await tagRepository.CreateTag(tag);
 

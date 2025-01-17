@@ -21,8 +21,7 @@ public static class ServiceCollectionExtension
         WebApplicationBuilder builder)
     {
         // Add infrastructure
-        services.AddAutoMapper(AssemblyReference.Assembly)
-            .AddRepositories()
+        services.AddRepositories()
             .AddInfrastructureServices();
 
         // Add application
