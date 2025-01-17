@@ -5,7 +5,7 @@ namespace PetIdServer.Application.Tags;
 
 public interface ITagRepository
 {
-    Task<bool> AreIdsAvailable(IEnumerable<int> ids);
+    Task<bool> AreIdsAvailable(IEnumerable<TagId> ids);
     Task<bool> AreHashCodesAvailable(IEnumerable<string> codes);
     Task<IEnumerable<Tag>> GetAllTags();
     Task<Tag?> GetTagById(TagId id);

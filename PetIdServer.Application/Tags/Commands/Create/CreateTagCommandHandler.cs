@@ -15,7 +15,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         CancellationToken cancellationToken)
     {
         string hashCode = await hashService.Hash(request.Code);
-        await CheckDuplicates(request, hashCode);
+        await EnsureNoDuplicatesAsync((TagId)request.Id, hashCode);
 
         string privateCode = await codeDecoder.EncodePublicCode(request.Code);
 
@@ -27,25 +27,24 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         return VoidResponseDto.Executed;
     }
 
-    private async Task CheckDuplicates(CreateTagCommand request, string hashCode)
+    private async Task EnsureNoDuplicatesAsync(TagId id, string hashCode)
     {
-        Tag? tagIdCandidate = await tagRepository.GetTagById((TagId)request.Id);
+        Task<Tag?>[] checks = [tagRepository.GetTagById(id), tagRepository.GetTagByHashCode(hashCode)];
+        Tag?[] results = await Task.WhenAll(checks);
 
-        if (tagIdCandidate is not null)
+        if (results[0] is not null)
         {
-            throw new TagAlreadyInUseException(new
+            throw new TagAlreadyInUseException("Tag with such Id is already exists", new
             {
-                command = nameof(CreateTagCommand), tagId = request.Id
+                Command = nameof(CreateTagCommand), TagId = id
             });
         }
 
-        Tag? tagCodeCandidate = await tagRepository.GetTagByHashCode(hashCode);
-
-        if (tagCodeCandidate is not null)
+        if (results[1] is not null)
         {
-            throw new TagAlreadyInUseException(new
+            throw new TagAlreadyInUseException("Tag with such hash code is already exists", new
             {
-                command = nameof(CreateTagCommand), code = request.Code
+                Command = nameof(CreateTagCommand), TagId = id
             });
         }
     }

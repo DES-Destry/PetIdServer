@@ -5,6 +5,6 @@ namespace PetIdServer.Application.TagReports.Commands.Resolve;
 
 public class ResolveTagReportCommand : IRequest<VoidResponseDto>
 {
-    public Guid AdminId { get; set; }
-    public Guid ReportId { get; set; }
+    public required Guid AdminId { get; init; }
+    public required Guid ReportId { get; init; }
 }

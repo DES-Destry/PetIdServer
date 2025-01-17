@@ -5,6 +5,6 @@ namespace PetIdServer.Application.TagReports.Commands.Create;
 
 public class CreateTagReportCommand : IRequest<VoidResponseDto>
 {
-    public Guid AdminId { get; set; }
-    public int TagId { get; set; }
+    public required Guid AdminId { get; init; }
+    public required int TagId { get; init; }
 }

@@ -5,10 +5,10 @@ namespace PetIdServer.Application.Tags.Commands.Create;
 
 public class CreateTagCommand : IRequest<VoidResponseDto>
 {
-    public int Id { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
     ///     A private code
     /// </summary>
-    public string Code { get; set; }
+    public required string Code { get; init; }
 }

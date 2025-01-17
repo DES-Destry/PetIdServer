@@ -21,7 +21,7 @@ public static class UserContactMapper
 
         return new UserContactEntity
         {
-            UserId = (Guid)contactOwnerId, ContactType = contact.ContactType, Contact = contact.Contact
+            UserId = contactOwnerId, ContactType = contact.ContactType, Contact = contact.Contact
         };
     }
 }

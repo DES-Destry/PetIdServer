@@ -1,11 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
-using PetIdServer.Core.Tags;
+using PetIdServer.Core.Pets;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Application.Pets.Dto;
 
 public record CheckPetDto(string OwnerEmail, string Name)
 {
-    [return: NotNullIfNotNull("tag")]
-    public static implicit operator CheckPetDto?(Tag? tag) =>
-        tag is null ? null : new CheckPetDto(tag.Pet?.User?.Email ?? "Unclear", tag.Pet?.Name ?? "Unclear");
+    public static CheckPetDto FromPetAndHisOwner(Pet? pet, User? owner) => new(owner?.Email ?? "Unclear", pet?.Name ?? "Unclear");
 }

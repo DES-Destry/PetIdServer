@@ -22,7 +22,6 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
             request.Description);
 
         Pet pet = Pet.CreateNew(creationAttributes);
-
         await petRepository.CreatePet(pet);
 
         return VoidResponseDto.Executed;

@@ -1,29 +1,34 @@
 using PetIdServer.Core.Common;
 using PetIdServer.Core.Pets;
+using PetIdServer.Core.TagReports;
+using PetIdServer.Core.TagReports.Exceptions;
 using PetIdServer.Core.Tags.Exceptions;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Core.Tags;
 
-public class Tag : Entity<TagId>
+public class Tag : AggregateRoot<TagId>
 {
+    private readonly List<TagReport> _reports = [];
+
     private Tag(int id) : base((TagId)id) { }
     public required string PrivateCode { get; init; }
 
     public required string HashCode { get; init; }
 
-    public long ControlCode { get; init; } = Random.Shared.NextInt64();
+    public long ControlCode { get; private init; } = Random.Shared.NextInt64();
 
-    // TODO Delete
-    public Pet? Pet { get; private set; }
     public PetId? PetId { get; private set; }
 
     public bool IsAlreadyInUse => PetId is not null;
 
-    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; private init; } = DateTime.UtcNow;
 
     public DateTime? PetAddedAt { get; private set; }
 
     public DateTime? LastScannedAt { get; private set; }
+
+    public IReadOnlyList<TagReport> Reports => _reports;
 
     public static Tag CreateNew(CreationAttributes creationAttributes)
     {
@@ -54,7 +59,7 @@ public class Tag : Entity<TagId>
         };
     }
 
-    public void SetupPet(PetId petId)
+    public void PairWithPet(PetId petId)
     {
         if (IsAlreadyInUse)
         {
@@ -71,6 +76,22 @@ public class Tag : Entity<TagId>
     {
         PetId = null;
         PetAddedAt = null;
+    }
+
+    public void ReportBy(UserId reporterId)
+    {
+        _reports.Add(TagReport.CreateNew(new TagReport.CreationAttributes(reporterId)));
+    }
+
+    public void ResolveReportBy(TagReportId reportId, UserId resolverId)
+    {
+        TagReport report = _reports.FirstOrDefault(report => report.Id == reportId) ??
+                           throw new TagReportNotFoundException(new
+                           {
+                               tagId = Id, reportId
+                           });
+
+        report.ResolvedBy(resolverId);
     }
 
     public record CreationAttributes(TagId Id, string PrivateCode, string HashCode);

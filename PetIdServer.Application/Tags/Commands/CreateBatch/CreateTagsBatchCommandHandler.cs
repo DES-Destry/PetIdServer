@@ -18,48 +18,45 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
     {
         int tagsCount = request.IdTo - request.IdFrom + 1;
 
-        ImmutableArray<string> hashCodes =
-            [..await Task.WhenAll(request.Codes.Select(async code => await hashService.Hash(code)))];
-
-        await CheckDuplicates(request, hashCodes);
-
-        ImmutableArray<int> ids = [..Enumerable.Range(request.IdFrom, tagsCount)];
-
-        if (ids.Length != request.Codes.Count())
+        if (tagsCount != request.Codes.Count())
         {
             throw new ValidationException("Id range must be same with codes count", new
             {
                 UseCase = nameof(CreateTagsBatchCommand),
                 request.IdFrom,
                 request.IdTo,
-                IdsCount = ids.Length,
-                CodesCount = request.Codes.Count()
+                ExpectedCount = tagsCount,
+                ActualCodesCount = request.Codes.Count()
             });
         }
 
-        ImmutableArray<string> codes = [..request.Codes];
-        Tag[] tags = new Tag[ids.Length];
+        ImmutableArray<int> ids = [..Enumerable.Range(request.IdFrom, tagsCount)];
+        ImmutableArray<string> hashCodes =
+            [..await Task.WhenAll(request.Codes.Select(async code => await hashService.Hash(code)))];
 
-        foreach ((int index, string code) in codes.Index())
+        await EnsureNoDuplicatesAsync(ids, hashCodes);
+
+        Tag[] tags = await Task.WhenAll(request.Codes.Select(async (code, index) =>
         {
             string privateCode = await codeDecoder.EncodePublicCode(code);
-            string hashCode = await hashService.Hash(code);
+            string hashCode = hashCodes[index];
 
-            Tag.CreationAttributes creationAttributes = new((TagId)index, privateCode, hashCode);
-            tags[index] = Tag.CreateNew(creationAttributes);
-        }
+            Tag.CreationAttributes creationAttributes = new((TagId)ids[index], privateCode, hashCode);
+            return Tag.CreateNew(creationAttributes);
+        }));
 
         await tagRepository.CreateTagsBatch(tags);
 
         return VoidResponseDto.Executed;
     }
 
-    private async Task CheckDuplicates(CreateTagsBatchCommand request, ImmutableArray<string> hashCodes)
+    private async Task EnsureNoDuplicatesAsync(ImmutableArray<int> ids, ImmutableArray<string> hashCodes)
     {
-        IEnumerable<int> ids = Enumerable.Range(request.IdFrom, request.IdTo);
-        bool areIdsAvailable = await tagRepository.AreIdsAvailable(ids);
+        TagId[] tagIds = ids.Select(id => (TagId)id).ToArray();
+        Task<bool>[] checks = [tagRepository.AreIdsAvailable(tagIds), tagRepository.AreHashCodesAvailable(hashCodes)];
+        bool[] results = await Task.WhenAll(checks);
 
-        if (!areIdsAvailable)
+        if (!results[0])
         {
             throw new TagAlreadyCreatedException(new
             {
@@ -67,9 +64,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
             });
         }
 
-        bool areCodesAvailable = await tagRepository.AreHashCodesAvailable(hashCodes);
-
-        if (!areCodesAvailable)
+        if (!results[1])
         {
             throw new TagAlreadyCreatedException(new
             {

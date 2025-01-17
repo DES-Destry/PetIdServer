@@ -1,12 +1,19 @@
 using MediatR;
+using PetIdServer.Application.Pets;
 using PetIdServer.Application.Pets.Dto;
 using PetIdServer.Application.Tags.Dto;
+using PetIdServer.Application.Users;
+using PetIdServer.Core.Pets;
 using PetIdServer.Core.Tags;
 using PetIdServer.Core.Tags.Exceptions;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Application.Tags.Queries.ControlCheck;
 
-public class TagControlCheckQueryHandler(ITagRepository tagRepository)
+public class TagControlCheckQueryHandler(
+    ITagRepository tagRepository,
+    IPetRepository petRepository,
+    IUserRepository userRepository)
     : IRequestHandler<TagControlCheckQuery, CheckTagDto>
 {
     public async Task<CheckTagDto> Handle(
@@ -20,10 +27,12 @@ public class TagControlCheckQueryHandler(ITagRepository tagRepository)
                   });
 
         bool isFree = !tag.IsAlreadyInUse;
-        CheckPetDto? pet = tag.IsAlreadyInUse
-            ? new CheckPetDto(tag.Pet?.User?.Email ?? "Unclear", tag.Pet?.Name ?? "Unclear")
-            : null;
 
-        return new CheckTagDto(tag.Id, pet, isFree);
+        Pet? pet = tag.IsAlreadyInUse ? await petRepository.GetPetById(tag.PetId!) : null;
+        User? owner = pet is not null ? await userRepository.GetUserById(pet.OwnerId) : null;
+
+        CheckPetDto petInfo = CheckPetDto.FromPetAndHisOwner(pet, owner);
+
+        return new CheckTagDto(tag.Id, petInfo, isFree);
     }
 }

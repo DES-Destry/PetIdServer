@@ -4,5 +4,5 @@ namespace PetIdServer.Application.Users.Commands.Login;
 
 public class LoginResponseDto : TokenPairDto
 {
-    public Guid UserId { get; set; }
+    public required Guid UserId { get; init; }
 }

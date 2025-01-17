@@ -25,7 +25,8 @@ public class ChangePasswordCommandHandler(
                                                         UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
                                                     });
 
-        if (user.Password != null && !string.IsNullOrWhiteSpace(user.Password))
+        // Validate old password if it exists
+        if (!string.IsNullOrWhiteSpace(user.Password))
         {
             if (request.OldPassword is null)
             {

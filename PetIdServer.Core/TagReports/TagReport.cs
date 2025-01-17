@@ -1,5 +1,4 @@
 using PetIdServer.Core.Common;
-using PetIdServer.Core.Tags;
 using PetIdServer.Core.Users;
 
 namespace PetIdServer.Core.TagReports;
@@ -8,21 +7,12 @@ public class TagReport : Entity<TagReportId>
 {
     private TagReport() : base((TagReportId)Guid.NewGuid()) { }
 
-    // TODO remove (DDD)
-    public Tag CorruptedTag { get; set; } = null!;
-
-    // TODO remove (DDD)
-    public User Reporter { get; set; } = null!;
-
-    // TODO remove (DDD)
-    public User? Resolver { get; set; }
-
     public required UserId ReporterId { get; init; }
     public UserId? ResolverId { get; private set; }
 
-    public bool IsResolved => Resolver is not null;
+    public bool IsResolved => ResolverId is not null;
 
-    public DateTime CreatedAt { get; init; }
+    public DateTime CreatedAt { get; private init; }
 
     public DateTime? ResolvedAt { get; private set; }
 
@@ -50,10 +40,9 @@ public class TagReport : Entity<TagReportId>
         };
     }
 
-    public void ResolvedBy(User admin)
+    public void ResolvedBy(UserId adminId)
     {
-        Resolver = admin;
-        ResolverId = admin.Id;
+        ResolverId = adminId;
         ResolvedAt = DateTime.UtcNow;
     }
 

@@ -3,12 +3,9 @@ using PetIdServer.Core.Users;
 
 namespace PetIdServer.Core.Pets;
 
-public class Pet : Entity<PetId>
+public class Pet : AggregateRoot<PetId>
 {
     private Pet() : base((PetId)Guid.NewGuid()) { }
-
-    // TODO Delete
-    public User? User { get; private set; }
 
     public UserId OwnerId { get; private set; } = null!;
     public string Name { get; private set; } = null!;

@@ -32,7 +32,7 @@ public class RegistrationCommandHandler(
         PasswordHash passwordHash = await hashService.Hash(request.Password);
 
         // Registration creates user with the least privileged role
-        User.CreationAttributes creationAttributes = new(request.Email, passwordHash, request.Name);
+        User.CreationAttributes creationAttributes = new(request.Email, request.Name, passwordHash);
         User user = User.CreateNew(creationAttributes);
 
         await userRepository.CreateUser(user);

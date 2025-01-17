@@ -1,3 +1,3 @@
 namespace PetIdServer.Application.TagReports.Dto;
 
-public record TagReportsDto(IEnumerable<TagReportShortDto> Reports);
+public record TagReportsDto(IEnumerable<TagReportDetailedDto> Reports);

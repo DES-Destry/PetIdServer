@@ -5,5 +5,5 @@ namespace PetIdServer.Application.Tags.Queries.GetDecoded;
 
 public class GetDecodedTagQuery : IRequest<TagForAdminDto>
 {
-    public int Id { get; set; }
+    public required int Id { get; init; }
 }

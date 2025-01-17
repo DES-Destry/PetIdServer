@@ -1,29 +1,36 @@
 using PetIdServer.Core.Common;
-using PetIdServer.Core.Pets;
 
 namespace PetIdServer.Core.Users;
 
-public class User : Entity<UserId>
+public class User : AggregateRoot<UserId>
 {
-    private User() : base((UserId)Guid.NewGuid()) { }
+    private Dictionary<string, string> _contacts = [];
+
+    private User(string name) : base((UserId)Guid.NewGuid())
+    {
+        Name = name;
+    }
+
     public required string Email { get; init; }
 
     public PasswordHash? Password { get; private set; }
 
-    public required string Name { get; set; }
-    public string? Address { get; set; }
-    public string? Description { get; set; }
+    public string Name { get; private set; }
+    public string? Address { get; private set; }
+    public string? Description { get; private set; }
     public required UserRole Role { get; init; }
-    public IList<UserContact> Contacts { get; set; } = [];
-    public IList<Pet> Pets { get; private set; } = [];
+
+    public IReadOnlyList<UserContact> Contacts => _contacts.Select(contact => new UserContact
+    {
+        ContactType = contact.Key, Contact = contact.Value
+    }).ToArray();
 
     public static User CreateNew(CreationAttributes creationAttributes)
     {
-        return new User
+        return new User(creationAttributes.Name)
         {
             Email = creationAttributes.Email,
             Password = creationAttributes.Password,
-            Name = creationAttributes.Name,
             Role = creationAttributes.Role ?? UserRole.LeastPrivileged
         };
     }
@@ -35,20 +42,17 @@ public class User : Entity<UserId>
         string? address,
         string? description,
         UserRole role,
-        IList<UserContact> contacts,
-        IList<Pet> pets)
+        IList<UserContact> contacts)
     {
-        return new User
+        return new User(name)
         {
             Id = id,
             Email = email,
             Password = password,
-            Name = name,
             Address = address,
             Description = description,
             Role = role,
-            Contacts = contacts,
-            Pets = pets
+            _contacts = contacts.ToDictionary(contact => contact.ContactType, contact => contact.Contact)
         };
     }
 
@@ -79,17 +83,22 @@ public class User : Entity<UserId>
         Description = description;
     }
 
+    public void AddContact(string contactType, string contact)
+    {
+        _contacts.Add(contactType, contact);
+    }
+
     public void RemoveContactWithType(string type)
     {
-        Contacts = Contacts
-            .Where(contact => contact.ContactType != type)
-            .ToList();
+        _contacts.Remove(type);
     }
+
+    public bool HasPermissionsOf(UserRole role) => role.HasPermissionsOf(Role);
 
     public record CreationAttributes(
         string Email,
-        PasswordHash Password,
         string Name,
+        PasswordHash? Password = null,
         UserRole? Role = null
     );
 

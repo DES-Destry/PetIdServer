@@ -20,12 +20,7 @@ public class AddContactCommandHandler(IUserRepository userRepository)
                             Id = request.UserId, UseCase = nameof(AddContactCommand)
                         });
 
-        UserContact contact = new()
-        {
-            Contact = request.Contact, ContactType = request.ContactType
-        };
-
-        user.Contacts.Add(contact);
+        user.AddContact(request.ContactType, request.Contact);
         await userRepository.UpdateUser(user);
 
         return VoidResponseDto.Executed;

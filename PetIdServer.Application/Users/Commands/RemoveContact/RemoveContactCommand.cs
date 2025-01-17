@@ -5,6 +5,6 @@ namespace PetIdServer.Application.Users.Commands.RemoveContact;
 
 public class RemoveContactCommand : IRequest<VoidResponseDto>
 {
-    public required Guid UserId { get; set; }
-    public required string ContactType { get; set; }
+    public required Guid UserId { get; init; }
+    public required string ContactType { get; init; }
 }

@@ -1,3 +1,4 @@
+using PetIdServer.Application.TagReports.Dto;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.Tags;
 using PetIdServer.Core.Users;
@@ -20,6 +21,20 @@ public static class TagReportMapper
         );
     }
 
+    public static TagReportDto ToDto(this TagReportEntity entity, TagEntity reportedTag)
+    {
+        ArgumentNullException.ThrowIfNull(entity);
+
+        return new TagReportDto(
+            (TagReportId)entity.Id,
+            (TagId)reportedTag.Id,
+            (UserId)entity.ReporterId,
+            (UserId?)entity.ResolverId,
+            entity.CreatedAt,
+            entity.ResolvedAt
+        );
+    }
+
     public static TagReportEntity ToEntity(this TagReport report, Tag reportedTag)
     {
         ArgumentNullException.ThrowIfNull(report);
@@ -28,7 +43,7 @@ public static class TagReportMapper
         {
             Id = report.Id,
             CorruptedTagId = reportedTag.Id,
-            ReporterId = (Guid)report.ReporterId,
+            ReporterId = report.ReporterId,
             ResolverId = report.ResolverId,
             CreatedAt = report.CreatedAt,
             ResolvedAt = report.ResolvedAt

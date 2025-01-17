@@ -1,15 +1,17 @@
 using MediatR;
 using PetIdServer.Application.Common.Dto;
-using PetIdServer.Application.Users;
+using PetIdServer.Application.TagReports.Dto;
+using PetIdServer.Application.Tags;
 using PetIdServer.Core.TagReports;
 using PetIdServer.Core.TagReports.Exceptions;
+using PetIdServer.Core.Tags;
+using PetIdServer.Core.Tags.Exceptions;
 using PetIdServer.Core.Users;
-using PetIdServer.Core.Users.Exceptions;
 
 namespace PetIdServer.Application.TagReports.Commands.Resolve;
 
 public class ResolveTagReportCommandHandler(
-    IUserRepository userRepository,
+    ITagRepository tagRepository,
     ITagReportRepository tagReportRepository)
     : IRequestHandler<ResolveTagReportCommand, VoidResponseDto>
 {
@@ -17,22 +19,20 @@ public class ResolveTagReportCommandHandler(
         ResolveTagReportCommand request,
         CancellationToken cancellationToken)
     {
-        User admin = await userRepository.GetUserById((UserId)request.AdminId) ??
-                     throw new UserNotFoundException("Authorized admin not found", new
-                     {
-                         command = nameof(ResolveTagReportCommand), adminId = request.AdminId
-                     });
+        TagReportDto report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
+                              throw new TagReportNotFoundException(new
+                              {
+                                  command = nameof(ResolveTagReportCommand), reportId = request.ReportId
+                              });
 
-        TagReport report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
-                           throw new TagReportNotFoundException(new
-                           {
-                               command = nameof(ResolveTagReportCommand), reportId = request.ReportId
-                           });
+        Tag tag = await tagRepository.GetTagById(report.CorruptedTagId) ??
+                  throw new TagNotFoundException("Report's paired tag wasn't found", new
+                  {
+                      Command = nameof(ResolveTagReportCommand), TagId = report.CorruptedTagId, ReportId = report.Id
+                  });
 
-        report.ResolvedBy(admin);
+        tag.ResolveReportBy(report.Id, (UserId)request.AdminId);
 
-        // TODO null will be removed with correct logic of AggregateRoot / Entity segregation
-        await tagReportRepository.UpdateReport(report, null!);
         return VoidResponseDto.Executed;
     }
 }

@@ -10,7 +10,8 @@ namespace PetIdServer.Persistence.Repositories;
 
 public class TagRepository(PetIdContext database) : ITagRepository
 {
-    public async Task<bool> AreIdsAvailable(IEnumerable<int> ids) => await database.Tags.AnyAsync(tag => ids.Contains(tag.Id));
+    public async Task<bool> AreIdsAvailable(IEnumerable<TagId> ids) =>
+        await database.Tags.AnyAsync(tag => ids.Contains((TagId)tag.Id));
 
 
     public async Task<bool> AreHashCodesAvailable(IEnumerable<string> hashCodes) =>
@@ -23,7 +24,7 @@ public class TagRepository(PetIdContext database) : ITagRepository
         return models.Select(TagMapper.ToCore);
     }
 
-    public async Task<Tag?> GetTagById(TagId id)
+    public async Task<Tag> GetTagById(TagId id)
     {
         TagEntity? tagEntity = await database.Tags.AsNoTracking()
             .FirstOrDefaultAsync(tag => tag.Id == id);
