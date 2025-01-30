@@ -1,8 +1,9 @@
+using System.Reflection;
 using PetIdServer.Core.Common.Exceptions;
 
-namespace PetIdServer.Application.Common.Exceptions.Common;
+namespace PetIdServer.Application.Common.Exceptions;
 
-public abstract class ApplicationException<TConcreteExceptionType> : ScopedException
+public abstract class ApplicationException : ScopedException
 {
     protected ApplicationException() { }
 
@@ -15,28 +16,30 @@ public abstract class ApplicationException<TConcreteExceptionType> : ScopedExcep
         Metadata = metadata;
     }
 
-    private string ApplicationMessage { get; set; }
-
     protected override string DefaultScope => ApplicationExceptionCode.Scope;
 
-    public abstract CoreExceptionKind? Kind { get; }
+    public abstract ExceptionKind? Kind { get; }
 
-    public override string Message => ApplicationMessage;
-    public object Metadata { get; set; }
-
-    protected ApplicationException<TConcreteExceptionType> WithMessageBase(string message)
+    public object Metadata { get; set; } = new
     {
-        ApplicationMessage = message;
-        return this;
+    };
+
+    public ApplicationException WithMessage(string message)
+    {
+        ApplicationException exception = (ApplicationException)MemberwiseClone();
+        Type badThingButNecessary = typeof(Exception);
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+        FieldInfo? fieldInfo = badThingButNecessary.GetField("_message", flags);
+        fieldInfo?.SetValue(exception, message);
+
+        return exception;
     }
 
-    protected ApplicationException<TConcreteExceptionType> WithMetaBase(object metadata)
+    public ApplicationException WithMeta(object metadata)
     {
-        Metadata = metadata;
-        return this;
+        ApplicationException exception = (ApplicationException)MemberwiseClone();
+        exception.Metadata = metadata;
+        return exception;
     }
-
-    public abstract TConcreteExceptionType WithMessage(string message);
-
-    public abstract TConcreteExceptionType WithMeta(object metadata);
 }

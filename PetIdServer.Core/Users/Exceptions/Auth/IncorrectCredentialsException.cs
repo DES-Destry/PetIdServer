@@ -16,5 +16,5 @@ public class IncorrectCredentialsException : CoreException
     }
 
     public override string Code { get; protected set; } = CoreExceptionCode.IncorrectCredentials;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.UserAuthenticationRequired;
+    public override ExceptionKind? Kind => ExceptionKind.UserAuthenticationRequired;
 }

@@ -13,7 +13,7 @@ public abstract class ScopedException : Exception
     {
         if (Code.StartsWith(DefaultScope))
         {
-            Code = Code?.Replace(DefaultScope, $"{scope}.")!;
+            Code = Code.Replace(DefaultScope, $"{scope}.")!;
             return;
         }
 

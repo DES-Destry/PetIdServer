@@ -17,5 +17,5 @@ public class UserAlreadyRegisteredException : CoreException
     }
 
     public override string Code { get; protected set; } = CoreExceptionCode.UserAlreadyRegistered;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.EntitiesConflicting;
+    public override ExceptionKind? Kind => ExceptionKind.EntitiesConflicting;
 }

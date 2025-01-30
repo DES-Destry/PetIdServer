@@ -17,16 +17,15 @@ public class ServerProblemDetailsDefaults
     public const string DefaultHiddenErrorMessage =
         "Unknown error occurred in PetID API. Contact with developers to resolve this problem (better don't contact)";
 
-    public static readonly Dictionary<CoreExceptionKind, int> HttpErrorCodesByErrorKind = new()
+    public static readonly Dictionary<ExceptionKind, int> HttpErrorCodesByErrorKind = new()
     {
-        [CoreExceptionKind.Default] = 500,
-        [CoreExceptionKind.MethodNotImplemented] = 501,
-
-        [CoreExceptionKind.UserInputIsNotValid] = 400,
-        [CoreExceptionKind.UserAuthenticationRequired] = 401,
-        [CoreExceptionKind.NotEnoughResources] = 402,
-        [CoreExceptionKind.UserAuthorizationRequired] = 403,
-        [CoreExceptionKind.EntityNotFound] = 404,
-        [CoreExceptionKind.EntitiesConflicting] = 409
+        [ExceptionKind.Default] = 500,
+        [ExceptionKind.MethodNotImplemented] = 501,
+        [ExceptionKind.UserInputIsNotValid] = 400,
+        [ExceptionKind.UserAuthenticationRequired] = 401,
+        [ExceptionKind.NotEnoughResources] = 402,
+        [ExceptionKind.UserAuthorizationRequired] = 403,
+        [ExceptionKind.EntityNotFound] = 404,
+        [ExceptionKind.EntitiesConflicting] = 409
     };
 }

@@ -11,5 +11,5 @@ public class UserNotFoundException : CoreException
     public UserNotFoundException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = CoreExceptionCode.UserNotFound;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.EntityNotFound;
+    public override ExceptionKind? Kind => ExceptionKind.EntityNotFound;
 }

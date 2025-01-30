@@ -2,17 +2,14 @@ using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.Core.Tags.Exceptions;
 
-public class TagAlreadyInUseException : CoreException
+public sealed class TagAlreadyInUseException : CoreException
 {
-    public TagAlreadyInUseException(
-        string message = "Tag already in use, cannot perform virgin scan") : base(message)
-    {
-    }
+    private const string DefaultMessage = "Tag already in use, cannot perform virgin scan";
 
+    public TagAlreadyInUseException(string message = DefaultMessage) : base(message) { }
     public TagAlreadyInUseException(object metadata) : base(metadata) { }
-
     public TagAlreadyInUseException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = CoreExceptionCode.TagAlreadyInUse;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.EntitiesConflicting;
+    public override ExceptionKind? Kind => ExceptionKind.EntitiesConflicting;
 }

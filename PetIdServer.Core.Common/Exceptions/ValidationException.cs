@@ -9,5 +9,5 @@ public class ValidationException : CoreException
     public ValidationException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = CoreExceptionCode.ValidationException;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.UserInputIsNotValid;
+    public override ExceptionKind? Kind => ExceptionKind.UserInputIsNotValid;
 }

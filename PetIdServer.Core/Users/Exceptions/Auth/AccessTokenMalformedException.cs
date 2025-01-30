@@ -16,5 +16,5 @@ public class AccessTokenMalformedException : CoreException
     }
 
     public override string Code { get; protected set; } = CoreExceptionCode.AccessTokenMalformed;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.UserAuthenticationRequired;
+    public override ExceptionKind? Kind => ExceptionKind.UserAuthenticationRequired;
 }

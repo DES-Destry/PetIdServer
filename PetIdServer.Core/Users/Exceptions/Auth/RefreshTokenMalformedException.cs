@@ -16,5 +16,5 @@ public class RefreshTokenMalformedException : CoreException
     }
 
     public override string Code { get; protected set; } = CoreExceptionCode.RefreshTokenMalformed;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.UserAuthenticationRequired;
+    public override ExceptionKind? Kind => ExceptionKind.UserAuthenticationRequired;
 }

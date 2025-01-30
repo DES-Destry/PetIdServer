@@ -13,5 +13,5 @@ public class UserUnauthenticatedException : CoreException
     }
 
     public override string Code { get; protected set; } = CoreExceptionCode.Unauthenticated;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.UserAuthenticationRequired;
+    public override ExceptionKind? Kind => ExceptionKind.UserAuthenticationRequired;
 }

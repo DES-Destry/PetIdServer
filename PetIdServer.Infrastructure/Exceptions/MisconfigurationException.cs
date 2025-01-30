@@ -1,32 +1,16 @@
-using PetIdServer.Application.Common.Exceptions.Common;
 using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.Infrastructure.Exceptions;
 
-// TODO: it's not an application exception, it's a infrastructure exception
-public class MisconfigurationException : ApplicationException<MisconfigurationException>
+public sealed class MisconfigurationException : InfrastructureException
 {
-    public const string DefaultMessage =
+    private const string DefaultMessage =
         "Misconfiguration occured. appsettings.json file doesn't filled completely!";
 
     public MisconfigurationException(string message = DefaultMessage) : base(message) { }
-
     public MisconfigurationException(object metadata) : base(metadata) { }
-
     public MisconfigurationException(string message, object metadata) : base(message, metadata) { }
 
-    public override string Code { get; protected set; } = ApplicationExceptionCode.Misconfiguration;
-    public override CoreExceptionKind? Kind => CoreExceptionKind.Default;
-
-    public override MisconfigurationException WithMessage(string message)
-    {
-        WithMessageBase(message);
-        return this;
-    }
-
-    public override MisconfigurationException WithMeta(object metadata)
-    {
-        WithMetaBase(metadata);
-        return this;
-    }
+    public override string Code { get; protected set; } = InfrastructureExceptionCode.Misconfiguration;
+    public override ExceptionKind? Kind => ExceptionKind.Default;
 }

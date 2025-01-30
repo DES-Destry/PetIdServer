@@ -1,6 +1,6 @@
 namespace PetIdServer.Core.Common.Exceptions;
 
-public enum CoreExceptionKind
+public enum ExceptionKind
 {
     Default,
     UserInputIsNotValid,

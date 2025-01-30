@@ -26,19 +26,19 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
     {
         _exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
 
-        var code = GetCodeFromException();
+        string code = GetCodeFromException();
         statusCode = GetStatusCodeFromException();
         detail ??= GetDetailsFromException();
         title ??= ServerProblemDetailsDefaults.DefaultTitle;
         instance ??= _exception?.GetType().ToString();
 
 #if DEBUG
-        var stackTrace = _exception?.StackTrace;
+        string? stackTrace = _exception?.StackTrace;
 #else
         const string stackTrace = "Hidden";
 #endif
 
-        var problemDetails = new ServerProblemDetails
+        ServerProblemDetails problemDetails = new()
         {
             Status = statusCode,
             Title = title,
@@ -67,17 +67,16 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
         ArgumentNullException.ThrowIfNull(modelStateDictionary);
         statusCode ??= ServerProblemDetailsDefaults.DefaultValidationErrorStatusCode;
 
-        var problemDetails = new ValidationProblemDetails(modelStateDictionary)
+        ValidationProblemDetails problemDetails = new(modelStateDictionary)
         {
-            Status = statusCode,
-            Type = type,
-            Detail = detail,
-            Instance = instance
+            Status = statusCode, Type = type, Detail = detail, Instance = instance
         };
 
         if (title != null)
             // For validation problem details, don't overwrite the default title with null.
+        {
             problemDetails.Title = title;
+        }
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
 
@@ -91,15 +90,18 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
     {
         problemDetails.Status ??= statusCode;
 
-        if (_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
+        if (_options.ClientErrorMapping.TryGetValue(statusCode, out ClientErrorData? clientErrorData))
         {
             problemDetails.Title ??= clientErrorData.Title;
             problemDetails.Type ??= clientErrorData.Link;
         }
 
-        var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+        string? traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+
         if (traceId != null)
+        {
             problemDetails.Extensions["traceId"] = traceId;
+        }
     }
 
     private string GetCodeFromException()
@@ -112,8 +114,10 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
     private int GetStatusCodeFromException()
     {
         if (_exception is CoreException coreException)
+        {
             return ServerProblemDetailsDefaults.HttpErrorCodesByErrorKind[
-                coreException.Kind ?? CoreExceptionKind.Default];
+                coreException.Kind ?? ExceptionKind.Default];
+        }
 
         return ServerProblemDetailsDefaults.DefaultServerErrorStatusCode;
     }
