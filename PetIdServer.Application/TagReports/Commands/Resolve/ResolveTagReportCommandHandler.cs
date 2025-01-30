@@ -22,13 +22,16 @@ public class ResolveTagReportCommandHandler(
         TagReportDto report = await tagReportRepository.GetTagReportById((TagReportId)request.ReportId) ??
                               throw new TagReportNotFoundException(new
                               {
-                                  command = nameof(ResolveTagReportCommand), reportId = request.ReportId
+                                  command = nameof(ResolveTagReportCommand),
+                                  reportId = request.ReportId
                               });
 
         Tag tag = await tagRepository.GetTagById(report.CorruptedTagId) ??
                   throw new TagNotFoundException("Report's paired tag wasn't found", new
                   {
-                      Command = nameof(ResolveTagReportCommand), TagId = report.CorruptedTagId, ReportId = report.Id
+                      Command = nameof(ResolveTagReportCommand),
+                      TagId = report.CorruptedTagId,
+                      ReportId = report.Id
                   });
 
         tag.ResolveReportBy(report.Id, (UserId)request.AdminId);

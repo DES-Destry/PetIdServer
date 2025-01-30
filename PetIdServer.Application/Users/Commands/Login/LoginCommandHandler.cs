@@ -27,7 +27,8 @@ public class LoginCommandHandler(
             throw new UserNotFoundException($"User with email {request.Email} not found",
                                             new
                                             {
-                                                UserEmail = request.Email, useCase = nameof(LoginCommand)
+                                                UserEmail = request.Email,
+                                                useCase = nameof(LoginCommand)
                                             });
 
         if (userCandidate.Password is not null && !await hashService.Validate(request.Password, userCandidate.Password))
@@ -35,7 +36,8 @@ public class LoginCommandHandler(
             throw new IncorrectCredentialsException($"Incorrect credentials for: {request.Email}",
                                                     new
                                                     {
-                                                        UserEmail = request.Email, useCase = nameof(LoginCommand)
+                                                        UserEmail = request.Email,
+                                                        useCase = nameof(LoginCommand)
                                                     });
         }
 
@@ -56,7 +58,9 @@ public class LoginCommandHandler(
         TokenPairDto tokenPair = await userTokenService.GenerateTokens(userCandidate);
         return new LoginResponseDto
         {
-            AccessToken = tokenPair.AccessToken, RefreshToken = tokenPair.RefreshToken, UserId = userCandidate.Id
+            AccessToken = tokenPair.AccessToken,
+            RefreshToken = tokenPair.RefreshToken,
+            UserId = userCandidate.Id
         };
     }
 }

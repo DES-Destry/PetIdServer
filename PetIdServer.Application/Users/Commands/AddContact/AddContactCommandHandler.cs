@@ -17,7 +17,8 @@ public class AddContactCommandHandler(IUserRepository userRepository)
                         $"User with id {request.UserId} not found",
                         new
                         {
-                            Id = request.UserId, UseCase = nameof(AddContactCommand)
+                            Id = request.UserId,
+                            UseCase = nameof(AddContactCommand)
                         });
 
         user.AddContact(request.ContactType, request.Contact);

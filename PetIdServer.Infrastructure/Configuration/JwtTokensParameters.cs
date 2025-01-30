@@ -48,12 +48,16 @@ public class JwtTokensParameters(IConfiguration configuration)
     public string Issuer { get; private set; } = configuration["Jwt:Issuer"] ??
                                                  throw new MisconfigurationException().WithMeta(new
                                                  {
-                                                     configuration, value = "Jwt:Issuer", @class = nameof(JwtTokensParameters)
+                                                     configuration,
+                                                     value = "Jwt:Issuer",
+                                                     @class = nameof(JwtTokensParameters)
                                                  });
 
     public string Audience { get; private set; } = configuration["Jwt:Audience"] ??
                                                    throw new MisconfigurationException().WithMeta(new
                                                    {
-                                                       configuration, value = "Jwt:Audience", @class = nameof(JwtTokensParameters)
+                                                       configuration,
+                                                       value = "Jwt:Audience",
+                                                       @class = nameof(JwtTokensParameters)
                                                    });
 }

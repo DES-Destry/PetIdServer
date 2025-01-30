@@ -22,7 +22,8 @@ public class ChangePasswordCommandHandler(
                     throw new UserNotFoundException($"User {request.RequesterId} not found!",
                                                     new
                                                     {
-                                                        UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
+                                                        UserId = request.RequesterId,
+                                                        UseCase = nameof(ChangePasswordCommand)
                                                     });
 
         // Validate old password if it exists
@@ -32,7 +33,8 @@ public class ChangePasswordCommandHandler(
             {
                 throw new IncorrectCredentialsException("You must provide an old password!", new
                 {
-                    UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
+                    UserId = request.RequesterId,
+                    UseCase = nameof(ChangePasswordCommand)
                 });
             }
 
@@ -42,7 +44,8 @@ public class ChangePasswordCommandHandler(
             {
                 throw new IncorrectCredentialsException($"Incorrect credentials for: {request.RequesterId}", new
                 {
-                    UserId = request.RequesterId, UseCase = nameof(ChangePasswordCommand)
+                    UserId = request.RequesterId,
+                    UseCase = nameof(ChangePasswordCommand)
                 });
             }
         }

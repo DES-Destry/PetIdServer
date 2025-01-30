@@ -57,7 +57,8 @@ public class TagCheckerEndpoints : ICarterModule
     {
         GetAllTagReportsQuery query = new()
         {
-            TagId = tagId, IsResolved = isResolved
+            TagId = tagId,
+            IsResolved = isResolved
         };
         TagReportsDto response = await sender.Send(query);
 
@@ -68,7 +69,8 @@ public class TagCheckerEndpoints : ICarterModule
     {
         CreateTagReportCommand command = new()
         {
-            AdminId = admin.Id, TagId = id
+            AdminId = admin.Id,
+            TagId = id
         };
         VoidResponseDto response = await sender.Send(command);
 

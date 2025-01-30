@@ -30,9 +30,9 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
             });
         }
 
-        ImmutableArray<int> ids = [..Enumerable.Range(request.IdFrom, tagsCount)];
+        ImmutableArray<int> ids = [.. Enumerable.Range(request.IdFrom, tagsCount)];
         ImmutableArray<string> hashCodes =
-            [..await Task.WhenAll(request.Codes.Select(async code => await hashService.Hash(code)))];
+            [.. await Task.WhenAll(request.Codes.Select(async code => await hashService.Hash(code)))];
 
         await EnsureNoDuplicatesAsync(ids, hashCodes);
 
@@ -60,7 +60,8 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the ids are already in use"
+                UseCase = nameof(CreateTagsBatchCommand),
+                ConflictReason = "Some of the ids are already in use"
             });
         }
 
@@ -68,7 +69,8 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the codes are already in use"
+                UseCase = nameof(CreateTagsBatchCommand),
+                ConflictReason = "Some of the codes are already in use"
             });
         }
     }

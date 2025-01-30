@@ -6,6 +6,8 @@ public record LoginUserDto(string Email, string Password, string? WithPermission
 {
     public LoginCommand ToCommand() => new()
     {
-        Email = Email, Password = Password, WithPermissionsOf = WithPermissionsOf
+        Email = Email,
+        Password = Password,
+        WithPermissionsOf = WithPermissionsOf
     };
 }

@@ -86,7 +86,8 @@ public class AdminEndpoints : ICarterModule
     {
         ClearTagCommand command = new()
         {
-            AdminId = admin.Id, TagId = id
+            AdminId = admin.Id,
+            TagId = id
         };
         VoidResponseDto response = await sender.Send(command);
 
@@ -97,7 +98,8 @@ public class AdminEndpoints : ICarterModule
     {
         ResolveTagReportCommand command = new()
         {
-            AdminId = admin.Id, ReportId = id
+            AdminId = admin.Id,
+            ReportId = id
         };
         VoidResponseDto response = await sender.Send(command);
 

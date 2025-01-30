@@ -38,7 +38,8 @@ public class UserTokenService : IUserTokenService
         string refreshToken = GenerateRefreshToken(accessToken);
         return Task.FromResult(new TokenPairDto
         {
-            AccessToken = accessToken, RefreshToken = refreshToken
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         });
     }
 

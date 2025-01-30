@@ -17,7 +17,8 @@ public class RemoveContactCommandHandler(IUserRepository userRepository)
                         $"User with id {request.UserId} not found",
                         new
                         {
-                            request.UserId, UseCase = nameof(RemoveContactCommand)
+                            request.UserId,
+                            UseCase = nameof(RemoveContactCommand)
                         });
 
         user.RemoveContactWithType(request.ContactType);

@@ -69,11 +69,14 @@ public class ServerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
 
         ValidationProblemDetails problemDetails = new(modelStateDictionary)
         {
-            Status = statusCode, Type = type, Detail = detail, Instance = instance
+            Status = statusCode,
+            Type = type,
+            Detail = detail,
+            Instance = instance
         };
 
         if (title != null)
-            // For validation problem details, don't overwrite the default title with null.
+        // For validation problem details, don't overwrite the default title with null.
         {
             problemDetails.Title = title;
         }

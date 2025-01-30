@@ -18,7 +18,8 @@ public class CreateTagReportCommandHandler(
         Tag reportedTag = await tagRepository.GetTagById((TagId)request.TagId) ??
                           throw new TagNotFoundException(new
                           {
-                              Command = nameof(CreateTagReportCommand), TagId = request.TagId
+                              Command = nameof(CreateTagReportCommand),
+                              TagId = request.TagId
                           });
 
         reportedTag.ReportBy((UserId)request.AdminId);

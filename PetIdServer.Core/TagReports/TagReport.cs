@@ -20,7 +20,8 @@ public class TagReport : Entity<TagReportId>
     {
         return new TagReport
         {
-            ReporterId = creationAttributes.ReporterId, CreatedAt = DateTime.UtcNow
+            ReporterId = creationAttributes.ReporterId,
+            CreatedAt = DateTime.UtcNow
         };
     }
 

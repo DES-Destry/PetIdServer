@@ -9,7 +9,9 @@ public static class UserMapper
     {
         user.Update(new User.UpdateAttributes
         {
-            Name = dto.Name, Address = dto.Address, Description = dto.Description
+            Name = dto.Name,
+            Address = dto.Address,
+            Description = dto.Description
         });
 
         return user;

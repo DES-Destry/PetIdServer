@@ -23,7 +23,8 @@ public class TagControlCheckQueryHandler(
         Tag tag = await tagRepository.GetTagByControlCode(request.ControlCode) ??
                   throw new TagNotFoundException($"Invalid control code: {request.ControlCode}", new
                   {
-                      UseCase = nameof(TagControlCheckQuery), controlCode = request.ControlCode
+                      UseCase = nameof(TagControlCheckQuery),
+                      controlCode = request.ControlCode
                   });
 
         bool isFree = !tag.IsAlreadyInUse;

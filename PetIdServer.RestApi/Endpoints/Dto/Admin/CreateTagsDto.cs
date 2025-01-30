@@ -6,6 +6,8 @@ public record CreateTagsDto(int IdFrom, int IdTo, IEnumerable<string> Codes)
 {
     public CreateTagsBatchCommand ToCommand() => new()
     {
-        IdFrom = IdFrom, IdTo = IdTo, Codes = Codes
+        IdFrom = IdFrom,
+        IdTo = IdTo,
+        Codes = Codes
     };
 }

@@ -34,7 +34,8 @@ public class Tag : AggregateRoot<TagId>
     {
         return new Tag(creationAttributes.Id)
         {
-            PrivateCode = creationAttributes.PrivateCode, HashCode = creationAttributes.HashCode
+            PrivateCode = creationAttributes.PrivateCode,
+            HashCode = creationAttributes.HashCode
         };
     }
 
@@ -65,7 +66,8 @@ public class Tag : AggregateRoot<TagId>
         {
             throw new TagAlreadyInUseException($"Tag {Id} is already in use with {PetId}", new
             {
-                Id, PetId
+                Id,
+                PetId
             });
         }
 
@@ -88,7 +90,8 @@ public class Tag : AggregateRoot<TagId>
         TagReport report = _reports.FirstOrDefault(report => report.Id == reportId) ??
                            throw new TagReportNotFoundException(new
                            {
-                               tagId = Id, reportId
+                               tagId = Id,
+                               reportId
                            });
 
         report.ResolvedBy(resolverId);

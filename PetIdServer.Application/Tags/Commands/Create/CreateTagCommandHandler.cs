@@ -36,7 +36,8 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         {
             throw new TagAlreadyInUseException("Tag with such Id is already exists", new
             {
-                Command = nameof(CreateTagCommand), TagId = id
+                Command = nameof(CreateTagCommand),
+                TagId = id
             });
         }
 
@@ -44,7 +45,8 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         {
             throw new TagAlreadyInUseException("Tag with such hash code is already exists", new
             {
-                Command = nameof(CreateTagCommand), TagId = id
+                Command = nameof(CreateTagCommand),
+                TagId = id
             });
         }
     }

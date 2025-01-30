@@ -17,7 +17,8 @@ public class UpdateUserCommandHandler(IUserRepository userRepository)
                     throw new UserNotFoundException("User not found",
                                                     new
                                                     {
-                                                        UseCase = nameof(UpdateUserCommand), UserId = request.Id
+                                                        UseCase = nameof(UpdateUserCommand),
+                                                        UserId = request.Id
                                                     });
         user = user.MapUpdate(request);
         await userRepository.UpdateUser(user);

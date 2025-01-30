@@ -6,6 +6,8 @@ public record NewUserRegistrationDto(string Email, string Password, string Name)
 {
     public RegistrationCommand ToCommand() => new()
     {
-        Email = Email, Password = Password, Name = Name
+        Email = Email,
+        Password = Password,
+        Name = Name
     };
 }

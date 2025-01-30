@@ -43,10 +43,9 @@ public static class ServiceCollectionExtension
                             Type = ReferenceType.SecurityScheme, Id = "securityKeyAuth"
                         }
                     },
-                    new[]
-                    {
+                    [
                         "SwaggerAuthScheme"
-                    }
+                    ]
                 },
                 {
                     new OpenApiSecurityScheme
@@ -56,10 +55,9 @@ public static class ServiceCollectionExtension
                             Type = ReferenceType.SecurityScheme, Id = "bearerAuth"
                         }
                     },
-                    new[]
-                    {
+                    [
                         "SwaggerAuthScheme"
-                    }
+                    ]
                 }
             });
         });

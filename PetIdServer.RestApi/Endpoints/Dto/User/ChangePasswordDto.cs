@@ -7,6 +7,8 @@ public record ChangePasswordDto(string? OldPassword, string NewPassword)
 {
     public ChangePasswordCommand ToCommand(RequestUser user) => new()
     {
-        RequesterId = user.Id, OldPassword = OldPassword, NewPassword = NewPassword
+        RequesterId = user.Id,
+        OldPassword = OldPassword,
+        NewPassword = NewPassword
     };
 }

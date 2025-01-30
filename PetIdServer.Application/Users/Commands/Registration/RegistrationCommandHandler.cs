@@ -25,7 +25,8 @@ public class RegistrationCommandHandler(
                 $"User with email {request.Email} already registered",
                 new
                 {
-                    UserEmail = request.Email, UseCase = nameof(RegistrationCommand)
+                    UserEmail = request.Email,
+                    UseCase = nameof(RegistrationCommand)
                 });
         }
 

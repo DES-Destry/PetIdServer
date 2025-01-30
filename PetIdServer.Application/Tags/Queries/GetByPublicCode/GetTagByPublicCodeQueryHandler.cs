@@ -18,7 +18,8 @@ public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IPetRe
         Tag tag = await tagRepository.GetTagByHashCode(hashCode) ??
                   throw new TagNotFoundException($"Tag with code {request.Code} not found", new
                   {
-                      request.Code, UseCase = nameof(GetTagByPublicCodeQuery)
+                      request.Code,
+                      UseCase = nameof(GetTagByPublicCodeQuery)
                   });
 
         if (tag.IsAlreadyInUse)
@@ -26,7 +27,9 @@ public class GetTagByPublicCodeQueryHandler(ITagRepository tagRepository, IPetRe
             Pet pet = await petRepository.GetPetById(tag.PetId!) ??
                       throw new PetNotFoundException("Tag is used, but pet within it is not found", new
                       {
-                          TagId = tag.Id, tag.PetId, UseCase = nameof(GetTagByPublicCodeQuery)
+                          TagId = tag.Id,
+                          tag.PetId,
+                          UseCase = nameof(GetTagByPublicCodeQuery)
                       });
 
             return TagDto.FromTagWithPet(tag, pet);

@@ -17,7 +17,8 @@ public class GetDecodedTagQueryHandler(ITagRepository tagRepository, ICodeDecode
                   throw new TagNotFoundException(
                       $"Tag with Id {request.Id} not found", new
                       {
-                          UseCase = nameof(GetDecodedTagQuery), TagId = request.Id
+                          UseCase = nameof(GetDecodedTagQuery),
+                          TagId = request.Id
                       });
 
         string publicCode = await codeDecoder.GetPublicCodeOriginal(tag.PrivateCode);

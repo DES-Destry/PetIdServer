@@ -14,7 +14,8 @@ public class ClearTagCommandHandler(ITagRepository tagRepository) : IRequestHand
         Tag tag = await tagRepository.GetTagById((TagId)request.TagId) ??
                   throw new TagNotFoundException(new
                   {
-                      Command = nameof(ClearTagCommand), request.TagId
+                      Command = nameof(ClearTagCommand),
+                      request.TagId
                   });
 
         if (tag.IsAlreadyInUse && tag.Reports.All(report => report.IsResolved))

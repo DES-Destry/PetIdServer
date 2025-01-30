@@ -10,7 +10,8 @@ public class UserContactEntityTypeConfiguration : IEntityTypeConfiguration<UserC
         builder.ToTable("user_contacts");
         builder.HasKey(contact => new
         {
-            contact.UserId, contact.ContactType
+            contact.UserId,
+            contact.ContactType
         });
 
         builder.HasOne<UserEntity>(contact => contact.User)

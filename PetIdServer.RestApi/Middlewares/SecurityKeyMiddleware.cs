@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Primitives;
-using PetIdServer.Application.Common.Exceptions;
 using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.RestApi.Attributes;
 
@@ -33,7 +32,7 @@ public class SecurityKeyMiddleware(
             throw new YourMomIsBitchException();
         }
 
-        string? expectedKey = GetExpectedKey();
+        string expectedKey = GetExpectedKey();
 
         if (!securityKey.Equals(expectedKey))
         {
@@ -45,18 +44,18 @@ public class SecurityKeyMiddleware(
 
     private string GetExpectedKey()
     {
-        string? date = DateTime.UtcNow.ToString("O")[..15];
+        string date = DateTime.UtcNow.ToString("O")[..15];
 
-        string? privatePart = configuration["Security:SecurityKeySecret"] ??
-                              throw new MisconfigurationException().WithMeta(new
-                              {
-                                  _configuration = configuration, value = "Security:SecurityKeySecret"
-                              });
-        string? dateSecret = string.Concat(privatePart, "_", date);
-        byte[]? srcBytes = Encoding.UTF8.GetBytes(dateSecret);
-        byte[]? hashBytes = MD5.HashData(srcBytes);
+        string privatePart = configuration["Security:SecurityKeySecret"] ??
+                             throw new MisconfigurationException().WithMeta(new
+                             {
+                                 _configuration = configuration, value = "Security:SecurityKeySecret"
+                             });
+        string dateSecret = string.Concat(privatePart, "_", date);
+        byte[] srcBytes = Encoding.UTF8.GetBytes(dateSecret);
+        byte[] hashBytes = MD5.HashData(srcBytes);
 
-        string? hexString = BitConverter.ToString(hashBytes);
+        string hexString = BitConverter.ToString(hashBytes);
         return hexString.Replace("-", "");
     }
 }

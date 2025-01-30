@@ -11,7 +11,8 @@ public static class UserContactMapper
         ? null
         : new UserContact
         {
-            ContactType = entity.ContactType, Contact = entity.Contact
+            ContactType = entity.ContactType,
+            Contact = entity.Contact
         };
 
     public static UserContactEntity ToEntity(this UserContact? contact, UserId? contactOwnerId)
@@ -21,7 +22,9 @@ public static class UserContactMapper
 
         return new UserContactEntity
         {
-            UserId = contactOwnerId, ContactType = contact.ContactType, Contact = contact.Contact
+            UserId = contactOwnerId,
+            ContactType = contact.ContactType,
+            Contact = contact.Contact
         };
     }
 }

@@ -16,7 +16,7 @@ public class RequestUser : UserDto
         return ValueTask.FromResult(user);
     }
 
-    public static RequestUser ExtractUser(ClaimsPrincipal claimsPrincipal)
+    private static RequestUser ExtractUser(ClaimsPrincipal claimsPrincipal)
     {
         RequestUser? result = null;
 
