@@ -2,12 +2,12 @@ using PetIdServer.Core.Common.Exceptions;
 
 namespace PetIdServer.Core.Users.Exceptions;
 
-public class UserNotFoundException : CoreException
+public sealed class UserNotFoundException : CoreException
 {
-    public UserNotFoundException(string message = "User not found") : base(message) { }
+    private const string DefaultMessage = "User not found";
 
+    public UserNotFoundException(string message = DefaultMessage) : base(message) { }
     public UserNotFoundException(object metadata) : base(metadata) { }
-
     public UserNotFoundException(string message, object metadata) : base(message, metadata) { }
 
     public override string Code { get; protected set; } = CoreExceptionCode.UserNotFound;
