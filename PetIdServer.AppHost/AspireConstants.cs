@@ -1,6 +1,6 @@
 namespace PetIdServer.AppHost;
 
-public static class Constants
+public static class AspireConstants
 {
     public const string PostgresServer = "PetIdPostgresServer";
     public const string PostgresDatabase = "PetIdPostgresDb";

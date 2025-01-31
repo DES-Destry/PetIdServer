@@ -7,20 +7,20 @@ IResourceBuilder<ParameterResource> pgUsername = builder.AddParameter("pgUsernam
 IResourceBuilder<ParameterResource> pgPassword = builder.AddParameter("pgPassword", true);
 
 IResourceBuilder<PostgresServerResource> pgServer = builder
-    .AddPostgres(Constants.PostgresServer, port: Constants.PostgresPort, userName: pgUsername, password: pgPassword)
-    .WithDataVolume(Constants.PostgresVolumeName)
+    .AddPostgres(AspireConstants.PostgresServer, port: AspireConstants.PostgresPort, userName: pgUsername, password: pgPassword)
+    .WithDataVolume(AspireConstants.PostgresVolumeName)
     .WithLifetime(ContainerLifetime.Persistent);
 
 IResourceBuilder<PostgresDatabaseResource> pgDatabase =
-    pgServer.AddDatabase(Constants.PostgresDatabase, Constants.PostgresDatabaseName);
+    pgServer.AddDatabase(AspireConstants.PostgresDatabase, AspireConstants.PostgresDatabaseName);
 
 IResourceBuilder<ProjectResource> migrationRunner = builder
-    .AddProject<PetIdServer_Persistence_MigrationRunner>(Constants.MigrationRunnerName)
+    .AddProject<PetIdServer_Persistence_MigrationRunner>(AspireConstants.MigrationRunnerName)
     .WithReference(pgDatabase)
     .WaitFor(pgDatabase);
 
 builder
-    .AddProject<PetIdServer_RestApi>(Constants.AppName)
+    .AddProject<PetIdServer_RestApi>(AspireConstants.AppName)
     .WithReference(pgDatabase)
     .WaitFor(pgDatabase)
     .WaitFor(migrationRunner);
