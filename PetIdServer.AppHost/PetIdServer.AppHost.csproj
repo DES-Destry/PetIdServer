@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0"/>
+
   <PropertyGroup>
-    <RuntimeIdentifiers>win-x64;osx-arm64;linux-x64</RuntimeIdentifiers>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PetIdServer.Persistence.MigrationRunner\PetIdServer.Persistence.MigrationRunner.csproj"/>
     <ProjectReference Include="..\PetIdServer.RestApi\PetIdServer.RestApi.csproj"/>
   </ItemGroup>
 </Project>

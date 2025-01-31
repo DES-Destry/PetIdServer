@@ -15,6 +15,7 @@ public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("pet");
+        modelBuilder.HasPostgresExtension("uuid-ossp");
 
         new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserEntity>());
         new UserContactEntityTypeConfiguration().Configure(modelBuilder.Entity<UserContactEntity>());

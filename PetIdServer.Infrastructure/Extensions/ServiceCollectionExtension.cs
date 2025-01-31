@@ -57,8 +57,8 @@ public static class ServiceCollectionExtension
     private static IHostApplicationBuilder AddDbConnection(
         this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDataSource("pet-id");
-        builder.AddNpgsqlDbContext<PetIdContext>("pet-id");
+        builder.AddNpgsqlDataSource("PetIdPostgresDb");
+        builder.AddNpgsqlDbContext<PetIdContext>("PetIdPostgresDb");
 
         return builder;
     }

@@ -13,5 +13,5 @@ public class PetEntity
 
 
     public UserEntity User { get; } = null!;
-    public ICollection<TagEntity> Tags { get; } = [];
+    public TagEntity PairedTag { get; } = null!;
 }

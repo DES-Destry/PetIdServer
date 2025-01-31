@@ -15,13 +15,11 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany<PetEntity>(user => user.Pets)
+        builder.HasMany(user => user.Pets)
             .WithOne(pet => pet.User)
             .HasForeignKey(pet => pet.UserId)
             .IsRequired()
             .OnDelete(DeleteBehavior.SetNull);
-
-        builder.OwnsMany<PetEntity>(user => user.Pets);
 
         builder.Navigation(user => user.Contacts).AutoInclude();
         builder.Navigation(user => user.Pets).AutoInclude();

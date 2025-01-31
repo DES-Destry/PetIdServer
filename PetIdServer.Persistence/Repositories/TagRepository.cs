@@ -40,7 +40,7 @@ public class TagRepository(PetIdContext database) : ITagRepository
     public async Task<Tag?> GetTagByControlCode(long controlCode)
     {
         TagEntity? tagEntity = await database.Tags
-            .Include(tag => tag.Pet)
+            .Include(tag => tag.PairedPet)
             .ThenInclude(pet => pet!.User)
             .FirstOrDefaultAsync(tag => tag.ControlCode == controlCode);
 
@@ -85,7 +85,7 @@ public class TagRepository(PetIdContext database) : ITagRepository
             return;
         }
 
-        model.Pet = petModel;
+        model.PairedPet = petModel;
 
         await database.SaveChangesAsync();
     }
