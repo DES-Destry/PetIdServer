@@ -1,7 +1,7 @@
 namespace PetIdServer.Application.Common.Services;
 
-public interface ISecretManager
+public interface ISecretManager<in TSecret>
 {
-    Task<string> GetSecretAsync(string name);
-    Task<string?> GetSecretOrDefaultAsync(string name);
+    Task<string> GetSecretAsync(TSecret name);
+    Task<string?> GetSecretOrDefaultAsync(TSecret name);
 }
