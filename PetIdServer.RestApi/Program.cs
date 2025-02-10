@@ -16,7 +16,7 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddServerErrorHandling()
     .AddSwagger()
-    .AddInfrastructure(builder)
+    .AddInfrastructure(builder, configuration)
     .AddCarter()
     .AddPetIdAuthPolicies();
 

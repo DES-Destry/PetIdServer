@@ -2,20 +2,26 @@ using PetIdServer.Application.Common.Services;
 
 namespace PetIdServer.Infrastructure.Services.Secrets;
 
-public sealed class EnvironmentSecretManager : ISecretManager<SecretKey>
+public sealed class EnvironmentSecretManager(SecretKeyFetcher secretKeyFetcher) : ISecretManager<ConfigKeyForSecret>
 {
-    public async Task<string> GetSecretAsync(SecretKey name) => await Task.Factory.StartNew(() => GetSecret(name));
+    public async Task<string> GetSecretAsync(ConfigKeyForSecret configKeyForSecret) =>
+        await Task.Factory.StartNew(() => GetSecret(configKeyForSecret));
 
-    public async Task<string?> GetSecretOrDefaultAsync(SecretKey name) =>
-        await Task.Factory.StartNew(() => GetSecretOrDefault(name));
+    public async Task<string?> GetSecretOrDefaultAsync(ConfigKeyForSecret configKeyForSecret) =>
+        await Task.Factory.StartNew(() => GetSecretOrDefault(configKeyForSecret));
 
-    private static string GetSecret(SecretKey name)
+    private string GetSecret(ConfigKeyForSecret configKeyFor)
     {
-        string? envValue = Environment.GetEnvironmentVariable(name.Key);
+        string envKey = secretKeyFetcher.GetKeyValue(configKeyFor);
+        string? envValue = Environment.GetEnvironmentVariable(envKey);
         ArgumentException.ThrowIfNullOrEmpty(envValue);
 
         return envValue;
     }
 
-    private static string? GetSecretOrDefault(SecretKey name) => Environment.GetEnvironmentVariable(name.Key);
+    private string? GetSecretOrDefault(ConfigKeyForSecret configKeyFor)
+    {
+        string envKey = secretKeyFetcher.GetKeyValue(configKeyFor);
+        return Environment.GetEnvironmentVariable(envKey);
+    }
 }
