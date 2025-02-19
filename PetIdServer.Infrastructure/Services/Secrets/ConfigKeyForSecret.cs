@@ -2,11 +2,11 @@ namespace PetIdServer.Infrastructure.Services.Secrets;
 
 public sealed record ConfigKeyForSecret(string Key)
 {
-    public static readonly ConfigKeyForSecret JwtAccessTokenConfigKeyForSecret = new("JwtAccessTokenSecret");
+    public static readonly ConfigKeyForSecret JwtAccessTokenSecret = new("JwtAccessTokenSecret");
     public static readonly ConfigKeyForSecret JwtAccessTokenTtl = new("JwtAccessTokenTtl");
     public static readonly ConfigKeyForSecret JwtAccessTokenTtlForManagers = new("JwtAccessTokenTtlForManagers");
 
-    public static readonly ConfigKeyForSecret JwtRefreshTokenConfigKeyForSecret = new("JwtRefreshTokenSecret");
+    public static readonly ConfigKeyForSecret JwtRefreshTokenSecret = new("JwtRefreshTokenSecret");
     public static readonly ConfigKeyForSecret JwtRefreshTokenTtl = new("JwtRefreshTokenTtl");
     public static readonly ConfigKeyForSecret JwtRefreshTokenTtlForManagers = new("JwtRefreshTokenTtlForManagers");
 

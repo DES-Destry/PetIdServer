@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Core.Users;
 using PetIdServer.Core.Users.Exceptions;
 using PetIdServer.Infrastructure.Configuration;
+using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.RestApi.Auth;
 
 namespace PetIdServer.RestApi.Extensions;
@@ -14,24 +15,29 @@ public static class AuthExtensions
 {
     public static AuthenticationBuilder AddPetIdAuthSchemas(
         this AuthenticationBuilder authBuilder,
-        IConfiguration configuration)
+        IConfiguration secrets)
     {
-        JwtTokensParameters jwtTokenParameters = new(configuration);
+        JwtTokensParameters jwtTokenParameters = secrets.Get<JwtTokensParameters>() ??
+                                                 throw new MisconfigurationException().WithMeta(new
+                                                 {
+                                                     secrets, value = "<root>", @class = nameof(AuthExtensions)
+                                                 });
+        TokenValidationParameters validationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidIssuer = jwtTokenParameters.JwtIssuer,
+            ValidAudience = jwtTokenParameters.JwtAudience,
+            IssuerSigningKey =
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtTokenParameters.JwtAccessTokenSecret))
+        };
 
         return authBuilder.AddJwtBearer(AuthSchemas.PetOwner, options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = jwtTokenParameters.Issuer,
-                    ValidAudience = jwtTokenParameters.Audience,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
-                };
+                options.TokenValidationParameters = validationParameters;
 
                 options.Events = new JwtBearerEvents
                 {
@@ -40,18 +46,7 @@ public static class AuthExtensions
             })
             .AddJwtBearer(AuthSchemas.TagChecker, options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = jwtTokenParameters.Issuer,
-                    ValidAudience = jwtTokenParameters.Audience,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
-                };
+                options.TokenValidationParameters = validationParameters;
 
                 options.Events = new JwtBearerEvents
                 {
@@ -61,18 +56,7 @@ public static class AuthExtensions
             })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = jwtTokenParameters.Issuer,
-                    ValidAudience = jwtTokenParameters.Audience,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtTokenParameters.AtSecret))
-                };
+                options.TokenValidationParameters = validationParameters;
 
                 options.Events = new JwtBearerEvents
                 {

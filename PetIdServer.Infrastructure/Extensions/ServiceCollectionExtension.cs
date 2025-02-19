@@ -1,4 +1,3 @@
-using dotenv.net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,9 @@ using PetIdServer.Application.Tags;
 using PetIdServer.Application.Tags.Services;
 using PetIdServer.Application.Users;
 using PetIdServer.Application.Users.Services;
+using PetIdServer.Infrastructure.Configuration;
+using PetIdServer.Infrastructure.Configuration.Providers;
+using PetIdServer.Infrastructure.Configuration.Providers.Amazon;
 using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.Infrastructure.Services;
 using PetIdServer.Infrastructure.Services.Secrets;
@@ -37,25 +39,31 @@ public static class ServiceCollectionExtension
 
         builder.AddDbConnection();
 
-        string secretsProvider = configuration.GetValue<string>(ConfigKey.SecretsProvider) ??
+        string secretsProvider = configuration.GetValue<string>(SecretsConfig.SecretsProvider) ??
                                  throw new MisconfigurationException().WithMeta(new
                                  {
-                                     configuration, value = ConfigKey.SecretsProvider, @class = nameof(ServiceCollectionExtension)
+                                     configuration,
+                                     value = SecretsConfig.SecretsProvider,
+                                     @class = nameof(ServiceCollectionExtension)
                                  });
 
 
-        if (secretsProvider == SecretsProvider.Environment)
+        if (secretsProvider == SecretsProvider.AWS)
         {
-            DotEnv.Load();
-            services.AddTransient<ISecretManager<ConfigKeyForSecret>, EnvironmentSecretManager>();
-        }
-        else if (secretsProvider == SecretsProvider.AWS)
-        {
-            services.AddTransient<ISecretManager<ConfigKeyForSecret>, AwsSecretManager>();
-        }
-        else
-        {
-            throw new MisconfigurationException("Secrets provider wasn't chosen");
+            string region = configuration.GetValue<string>(AmazonSecretsConfig.AwsRegion) ??
+                            throw new MisconfigurationException().WithMeta(new
+                            {
+                                configuration, value = AmazonSecretsConfig.AwsRegion, @class = nameof(ServiceCollectionExtension)
+                            });
+            string secretName = configuration.GetValue<string>("Secrets:AwsSecretsManagerSecretName") ??
+                                throw new MisconfigurationException().WithMeta(new
+                                {
+                                    configuration,
+                                    value = AmazonSecretsConfig.AwsRegion,
+                                    @class = nameof(ServiceCollectionExtension)
+                                });
+
+            builder.Configuration.AddAmazonSecretsManager(new AmazonSecretsManagerOptions(region, secretName));
         }
 
         return services;
@@ -87,5 +95,10 @@ public static class ServiceCollectionExtension
         builder.AddNpgsqlDbContext<PetIdContext>("PetIdPostgresDb");
 
         return builder;
+    }
+
+    private static void MapConfigurations(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<JwtTokensParameters>(builder.Configuration);
     }
 }

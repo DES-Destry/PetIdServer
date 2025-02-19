@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Users.Dto;
 using PetIdServer.Application.Users.Dto.Tokens;
@@ -14,33 +14,28 @@ namespace PetIdServer.Infrastructure.Services;
 
 public enum TokenType { Access, Refresh }
 
-public class UserTokenService : IUserTokenService
+public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserTokenService
 {
-    private readonly TokenValidationParameters _accessTokenSoftValidationParameters;
-    private readonly TokenValidationParameters _accessTokenValidationParameters;
-    private readonly JwtTokensParameters _parameters;
-    private readonly TokenValidationParameters _refreshTokenValidationParameters;
-    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly JwtTokensParameters _parameters = options.Value;
+    private readonly JwtSecurityTokenHandler _tokenHandler = new();
 
-    public UserTokenService(IConfiguration configuration)
+    private Lazy<Task<TokenValidationParameters>> AccessTokenSoftValidationParametersLoader =>
+        new(() => CreateTokenValidationParameters(TokenType.Access, false));
+
+    private Lazy<Task<TokenValidationParameters>> AccessTokenValidationParametersLoader =>
+        new(() => CreateTokenValidationParameters(TokenType.Access, true));
+
+    private Lazy<Task<TokenValidationParameters>> RefreshTokenSoftValidationParametersLoader =>
+        new(() => CreateTokenValidationParameters(TokenType.Access, true));
+
+    public async Task<TokenPairDto> GenerateTokens(UserDto user)
     {
-        _tokenHandler = new JwtSecurityTokenHandler();
-        _parameters = new JwtTokensParameters(configuration);
-
-        _accessTokenValidationParameters = CreateTokenValidationParameters(TokenType.Access, true);
-        _accessTokenSoftValidationParameters = CreateTokenValidationParameters(TokenType.Access, false);
-        _refreshTokenValidationParameters = CreateTokenValidationParameters(TokenType.Refresh, true);
-    }
-
-    public Task<TokenPairDto> GenerateTokens(UserDto user)
-    {
-        string accessToken = GenerateAccessToken(user);
-        string refreshToken = GenerateRefreshToken(accessToken);
-        return Task.FromResult(new TokenPairDto
+        string accessToken = await GenerateAccessToken(user);
+        string refreshToken = await GenerateRefreshToken(accessToken);
+        return new TokenPairDto
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken
-        });
+            AccessToken = accessToken, RefreshToken = refreshToken
+        };
     }
 
     public async Task<TokenPairDto> RefreshTokens(string refreshToken)
@@ -60,19 +55,19 @@ public class UserTokenService : IUserTokenService
     // Generate tokens
     // -------------------------------------------------
 
-    private SecurityTokenDescriptor GetTokenParametersForGenerating(List<Claim> claims, TokenType tokenType)
+    private async Task<SecurityTokenDescriptor> GetTokenParametersForGenerating(List<Claim> claims, TokenType tokenType)
     {
         string secret = tokenType switch
         {
-            TokenType.Access => _parameters.AtSecret,
-            TokenType.Refresh => _parameters.RtSecret,
+            TokenType.Access => _parameters.JwtAccessTokenSecret,
+            TokenType.Refresh => _parameters.JwtRefreshTokenSecret,
             _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
         };
 
         string ttl = tokenType switch
         {
-            TokenType.Access => _parameters.PetOwnerAtTtl,
-            TokenType.Refresh => _parameters.PetOwnerRtTtl,
+            TokenType.Access => _parameters.JwtAccessTokenTtl,
+            TokenType.Refresh => _parameters.JwtRefreshTokenTtl,
             _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
         };
 
@@ -82,30 +77,30 @@ public class UserTokenService : IUserTokenService
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TimeSpan.Parse(ttl)),
-            Audience = _parameters.Audience,
-            Issuer = _parameters.Issuer,
+            Audience = _parameters.JwtAudience,
+            Issuer = _parameters.JwtIssuer,
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512)
         };
 
-        return tokenDescriptor;
+        return await Task.FromResult(tokenDescriptor);
     }
 
-    private string GenerateAccessToken(UserDto user)
+    private async Task<string> GenerateAccessToken(UserDto user)
     {
         string userJson = JsonSerializer.Serialize(user) ??
                           throw new ArgumentException("Cannot make JSON from object", nameof(user));
 
         List<Claim> claims = [new(ClaimTypes.Email, user.Email), new(ClaimTypes.UserData, userJson)];
-        SecurityTokenDescriptor tokenDescriptor = GetTokenParametersForGenerating(claims, TokenType.Access);
+        SecurityTokenDescriptor tokenDescriptor = await GetTokenParametersForGenerating(claims, TokenType.Access);
 
         SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
     }
 
-    private string GenerateRefreshToken(string accessToken)
+    private async Task<string> GenerateRefreshToken(string accessToken)
     {
         List<Claim> claims = [new(ClaimTypes.Hash, accessToken)];
-        SecurityTokenDescriptor tokenDescriptor = GetTokenParametersForGenerating(claims, TokenType.Refresh);
+        SecurityTokenDescriptor tokenDescriptor = await GetTokenParametersForGenerating(claims, TokenType.Refresh);
 
         SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
@@ -150,31 +145,32 @@ public class UserTokenService : IUserTokenService
     // Token validations
     // -------------------------------------------------
 
-    private TokenValidationParameters CreateTokenValidationParameters(TokenType tokenType,
+    private async Task<TokenValidationParameters> CreateTokenValidationParameters(
+        TokenType tokenType,
         bool validateLifetime)
     {
         string secret = tokenType switch
         {
-            TokenType.Access => _parameters.AtSecret,
-            TokenType.Refresh => _parameters.RtSecret,
+            TokenType.Access => _parameters.JwtAccessTokenSecret,
+            TokenType.Refresh => _parameters.JwtRefreshTokenSecret,
             _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
         };
 
-        return new TokenValidationParameters
+        return await Task.FromResult(new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-            ValidAudience = _parameters.Audience,
-            ValidIssuer = _parameters.Issuer,
+            ValidAudience = _parameters.JwtAudience,
+            ValidIssuer = _parameters.JwtIssuer,
             ValidateAudience = true,
             ValidateIssuer = true,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = validateLifetime
-        };
+        });
     }
 
     private async Task ValidateAccessToken(string accessToken)
     {
-        bool validated = await ValidateTokens(accessToken, _accessTokenValidationParameters);
+        bool validated = await ValidateTokens(accessToken, await AccessTokenValidationParametersLoader.Value);
 
         if (!validated)
         {
@@ -188,7 +184,7 @@ public class UserTokenService : IUserTokenService
 
     private async Task ValidateAccessTokenEvenIfExpired(string accessToken)
     {
-        bool validated = await ValidateTokens(accessToken, _accessTokenSoftValidationParameters);
+        bool validated = await ValidateTokens(accessToken, await AccessTokenSoftValidationParametersLoader.Value);
 
         if (!validated)
         {
@@ -202,7 +198,7 @@ public class UserTokenService : IUserTokenService
 
     private async Task ValidateRefreshToken(string refreshToken)
     {
-        bool validated = await ValidateTokens(refreshToken, _refreshTokenValidationParameters);
+        bool validated = await ValidateTokens(refreshToken, await RefreshTokenSoftValidationParametersLoader.Value);
 
         if (!validated)
         {
