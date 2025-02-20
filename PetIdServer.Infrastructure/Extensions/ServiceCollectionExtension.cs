@@ -66,6 +66,8 @@ public static class ServiceCollectionExtension
             builder.Configuration.AddAmazonSecretsManager(new AmazonSecretsManagerOptions(region, secretName));
         }
 
+        builder.MapConfigurations();
+
         return services;
     }
 
