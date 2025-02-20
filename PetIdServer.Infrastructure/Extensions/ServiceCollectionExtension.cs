@@ -14,7 +14,6 @@ using PetIdServer.Infrastructure.Configuration.Providers;
 using PetIdServer.Infrastructure.Configuration.Providers.Amazon;
 using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.Infrastructure.Services;
-using PetIdServer.Infrastructure.Services.Secrets;
 using PetIdServer.Persistence;
 using PetIdServer.Persistence.Repositories;
 
@@ -48,18 +47,22 @@ public static class ServiceCollectionExtension
                                  });
 
 
-        if (secretsProvider == SecretsProvider.AWS)
+        if (secretsProvider == SecretsProvider.Local)
+        {
+            builder.Configuration.AddUserSecrets(AssemblyReference.Assembly);
+        }
+        else if (secretsProvider == SecretsProvider.AWS)
         {
             string region = configuration.GetValue<string>(AmazonSecretsConfig.AwsRegion) ??
                             throw new MisconfigurationException().WithMeta(new
                             {
                                 configuration, value = AmazonSecretsConfig.AwsRegion, @class = nameof(ServiceCollectionExtension)
                             });
-            string secretName = configuration.GetValue<string>("Secrets:AwsSecretsManagerSecretName") ??
+            string secretName = configuration.GetValue<string>(AmazonSecretsConfig.AwsSecretsManagerSecretName) ??
                                 throw new MisconfigurationException().WithMeta(new
                                 {
                                     configuration,
-                                    value = AmazonSecretsConfig.AwsRegion,
+                                    value = AmazonSecretsConfig.AwsSecretsManagerSecretName,
                                     @class = nameof(ServiceCollectionExtension)
                                 });
 

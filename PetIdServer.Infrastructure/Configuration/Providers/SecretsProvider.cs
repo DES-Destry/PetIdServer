@@ -1,4 +1,4 @@
-namespace PetIdServer.Infrastructure.Services.Secrets;
+namespace PetIdServer.Infrastructure.Configuration.Providers;
 
 public sealed record SecretsProvider(string Value)
 {
