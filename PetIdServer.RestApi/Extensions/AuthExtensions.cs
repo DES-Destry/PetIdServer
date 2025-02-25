@@ -54,6 +54,16 @@ public static class AuthExtensions
                     OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
                 };
             })
+            .AddJwtBearer(AuthSchemas.TagMaster, options =>
+            {
+                options.TokenValidationParameters = validationParameters;
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = ValidateRole(UserRole.TagMaster),
+                    OnAuthenticationFailed = _ => throw new UserUnauthenticatedException()
+                };
+            })
             .AddJwtBearer(AuthSchemas.Admin, options =>
             {
                 options.TokenValidationParameters = validationParameters;
