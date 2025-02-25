@@ -37,6 +37,8 @@ public sealed class Tag : AggregateRoot<TagId>
     public static Tag CreateNew(CreationAttributes creationAttributes)
     {
         ArgumentNullException.ThrowIfNull(creationAttributes);
+        ArgumentNullException.ThrowIfNull(creationAttributes.Id);
+
         ArgumentException.ThrowIfNullOrWhiteSpace(creationAttributes.HashCode);
         ArgumentException.ThrowIfNullOrWhiteSpace(creationAttributes.PrivateCode);
 
