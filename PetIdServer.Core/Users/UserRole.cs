@@ -7,12 +7,14 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
 {
     private const string PetOwnerName = nameof(PetOwner);
     private const string TagCheckerName = nameof(TagChecker);
+    private const string TagMasterName = nameof(TagMaster);
     private const string AdminName = nameof(Admin);
 
     private static readonly ImmutableDictionary<string, UserRole> s_rolesByName;
 
     public static readonly UserRole PetOwner = new(PetOwnerName, 0);
     public static readonly UserRole TagChecker = new(TagCheckerName, 1000);
+    public static readonly UserRole TagMaster = new(TagMasterName, 2000);
     public static readonly UserRole Admin = new(AdminName, ushort.MaxValue);
 
     public static readonly UserRole LeastPrivileged = PetOwner;
@@ -66,12 +68,11 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
         return returnValue;
     }
 
-    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out UserRole result)
-    {
-        return TryParse(s, null, out result);
-    }
+    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out UserRole result) =>
+        TryParse(s, null, out result);
 
-    public bool HasPermissionsOf(UserRole role) => Level >= role.Level;
+
+    public bool HasPermissionsOf(UserRole role) => Level == role.Level || Level == MostPrivileged.Level;
 
     public override string ToString() => Name;
 }
