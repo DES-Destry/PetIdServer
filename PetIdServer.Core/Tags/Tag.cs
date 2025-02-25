@@ -19,9 +19,11 @@ public sealed class Tag : AggregateRoot<TagId>
 
     public long ControlCode { get; private init; } = Random.Shared.NextInt64();
 
+    public TagStatus Status { get; private set; } = TagStatus.Initial;
+
     public PetId? PetId { get; private set; }
 
-    public bool IsAlreadyInUse => PetId is not null;
+    public bool IsAlreadyInUse => Status == TagStatus.InUse;
 
     public DateTime CreatedAt { get; private init; } = DateTime.UtcNow;
 
@@ -67,23 +69,140 @@ public sealed class Tag : AggregateRoot<TagId>
         };
     }
 
+    public void Produce()
+    {
+        if (Status != TagStatus.Registered)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not ready to produce", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.Registered
+            });
+        }
+
+        Status = TagStatus.Produced;
+    }
+
+    public void SendToExternalRetailer()
+    {
+        if (Status != TagStatus.Produced)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not even produced", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.Produced
+            });
+        }
+
+        Status = TagStatus.SentToExternalRetailer;
+    }
+
+    public void SendToStore()
+    {
+        if (Status != TagStatus.Produced)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not even produced", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.Produced
+            });
+        }
+
+        Status = TagStatus.GoingToStore;
+    }
+
+    public void ArriveToStore()
+    {
+        if (Status != TagStatus.GoingToStore)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not going to store", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.GoingToStore
+            });
+        }
+
+        Status = TagStatus.InStore;
+    }
+
+    public void Sell()
+    {
+        if (Status != TagStatus.InStore)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not in store", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.InStore
+            });
+        }
+
+        Status = TagStatus.Sold;
+    }
+
+    public void RestoreAfterPetRemoval(TagStatus status)
+    {
+        if (status != TagStatus.ClearedByAdmin)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not cleared by admin", new
+            {
+                Id, CurrentStatus = status, RequiredStatus = TagStatus.ClearedByAdmin
+            });
+        }
+
+        Status = status;
+    }
+
+    public void RestoreAfterSomethingWentWrong(TagStatus status)
+    {
+        if (status != TagStatus.Unknown || status != TagStatus.Destroyed)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not unknown or destroyed", new
+            {
+                Id, CurrentStatus = status, RequiredStatus = (ImmutableArray<TagStatus>) [TagStatus.Unknown, TagStatus.Destroyed]
+            });
+        }
+
+        Status = status;
+    }
+
     public void PairWithPet(PetId petId)
     {
         if (IsAlreadyInUse)
         {
             throw new TagAlreadyInUseException($"Tag {Id} is already in use with {PetId}", new
             {
-                Id, PetId
+                Id, PetId, Status
             });
         }
 
+        if (!TagStatus.ReadyToUse.Contains(Status))
+        {
+            throw new TagIsNotReadyToPairException($"Tag {Id} is not ready to use", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.ReadyToUse
+            });
+        }
+
+        Status = TagStatus.InUse;
+
         PetId = petId;
+        PetAddedAt = DateTime.UtcNow;
     }
 
-    public void RemovePet()
+    public void RemovePet(TagStatus? status = null)
     {
+        if (Status != TagStatus.InUse)
+        {
+            throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not in use", new
+            {
+                Id, CurrentStatus = Status, RequiredStatus = TagStatus.InUse
+            });
+        }
+
+        Status = status ?? TagStatus.ClearedByAdmin;
+
         PetId = null;
         PetAddedAt = null;
+    }
+
+    public void Destroy()
+    {
+        Status = TagStatus.Destroyed;
     }
 
     public void ReportBy(UserId reporterId)
