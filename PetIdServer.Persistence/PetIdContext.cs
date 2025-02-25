@@ -24,6 +24,7 @@ public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(op
 
         new TagEntityTypeConfiguration().Configure(modelBuilder.Entity<TagEntity>());
         new TagReportEntityTypeConfiguration().Configure(modelBuilder.Entity<TagReportEntity>());
+        new TagFeatureEntityTypeConfiguration().Configure(modelBuilder.Entity<TagFeatureEntity>());
 
         base.OnModelCreating(modelBuilder);
     }

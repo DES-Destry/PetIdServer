@@ -49,6 +49,7 @@ public sealed class Tag : AggregateRoot<TagId>
         string hashCode,
         long controlCode,
         PetId? petId,
+        IEnumerable<TagFeature> features,
         DateTime createdAt,
         DateTime? petAddedAt,
         DateTime? lastScannedAt)
@@ -59,6 +60,7 @@ public sealed class Tag : AggregateRoot<TagId>
             HashCode = hashCode,
             ControlCode = controlCode,
             PetId = petId,
+            Features = ImmutableList.CreateRange(features),
             CreatedAt = createdAt,
             PetAddedAt = petAddedAt,
             LastScannedAt = lastScannedAt

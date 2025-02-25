@@ -10,12 +10,15 @@ public static class TagMapper
     {
         ArgumentNullException.ThrowIfNull(entity);
 
+        IEnumerable<TagFeature> features = entity.Features.Select(f => new TagFeature(f.Feature));
+
         return Tag.CreateFromPersistence(
             (TagId)entity.Id,
             entity.Code,
             entity.HashCode,
             entity.ControlCode,
             (PetId?)entity.PetId,
+            features,
             entity.CreatedAt,
             entity.PetAddedAt,
             entity.LastScannedAt
@@ -33,6 +36,11 @@ public static class TagMapper
             HashCode = tag.HashCode,
             ControlCode = tag.ControlCode,
             PetId = tag.PetId,
+            Features =
+                tag.Features.Select(f => new TagFeatureEntity
+                {
+                    TagId = tag.Id, Feature = f.Value
+                }).ToList(),
             CreatedAt = tag.CreatedAt,
             LastScannedAt = tag.LastScannedAt
         };

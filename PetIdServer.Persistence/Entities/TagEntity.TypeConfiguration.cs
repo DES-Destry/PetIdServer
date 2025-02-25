@@ -16,6 +16,7 @@ public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagEntity>
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.Navigation(tag => tag.PairedPet).AutoInclude();
+        builder.Navigation(tag => tag.Features).AutoInclude();
 
         builder.Property(tag => tag.Id)
             .HasColumnName("id")
