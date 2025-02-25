@@ -5,12 +5,8 @@ namespace PetIdServer.Core.Tags;
 
 public sealed record TagFeature(string Value) : IParsable<TagFeature>
 {
-    private static readonly ImmutableDictionary<string, TagFeature> s_tagFeaturesByName;
-
-    static TagFeature()
-    {
-        s_tagFeaturesByName = All.ToImmutableDictionary(f => f.Value, StringComparer.OrdinalIgnoreCase);
-    }
+    private static readonly ImmutableDictionary<string, TagFeature> s_tagFeaturesByName =
+        All.ToImmutableDictionary(f => f.Value, StringComparer.OrdinalIgnoreCase);
 
     public static TagFeature Qr => new("Qr");
     public static TagFeature Nfc => new("Nfc");
@@ -38,9 +34,16 @@ public sealed record TagFeature(string Value) : IParsable<TagFeature>
         IFormatProvider? provider,
         [MaybeNullWhen(false)] out TagFeature result)
     {
-        result = null;
+        if (!string.IsNullOrWhiteSpace(s))
+        {
+            return s_tagFeaturesByName.TryGetValue(s.Trim(), out result);
+        }
 
-        return !string.IsNullOrWhiteSpace(s) &&
-               s_tagFeaturesByName.TryGetValue(s.Trim(), out result);
+        result = null;
+        return false;
     }
+
+    public static bool TryParse(
+        [NotNullWhen(true)] string? s,
+        [MaybeNullWhen(false)] out TagFeature result) => TryParse(s, null, out result);
 }
