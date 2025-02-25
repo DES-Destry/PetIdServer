@@ -36,12 +36,14 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
 
         await EnsureNoDuplicatesAsync(ids, hashCodes);
 
+        IEnumerable<TagFeature>? features = request.Features?.Select(feature => TagFeature.Parse(feature));
+
         Tag[] tags = await Task.WhenAll(request.Codes.Select(async (code, index) =>
         {
             string privateCode = await codeDecoder.EncodePublicCode(code);
             string hashCode = hashCodes[index];
 
-            Tag.CreationAttributes creationAttributes = new((TagId)ids[index], privateCode, hashCode);
+            Tag.CreationAttributes creationAttributes = new((TagId)ids[index], privateCode, hashCode, features);
             return Tag.CreateNew(creationAttributes);
         }));
 
@@ -60,8 +62,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                UseCase = nameof(CreateTagsBatchCommand),
-                ConflictReason = "Some of the ids are already in use"
+                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the ids are already in use"
             });
         }
 
@@ -69,8 +70,7 @@ public class CreateTagsBatchCommandHandler(ITagRepository tagRepository, ICodeDe
         {
             throw new TagAlreadyCreatedException(new
             {
-                UseCase = nameof(CreateTagsBatchCommand),
-                ConflictReason = "Some of the codes are already in use"
+                UseCase = nameof(CreateTagsBatchCommand), ConflictReason = "Some of the codes are already in use"
             });
         }
     }

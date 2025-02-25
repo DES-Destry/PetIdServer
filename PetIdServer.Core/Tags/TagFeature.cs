@@ -22,7 +22,7 @@ public sealed record TagFeature(string Value) : IParsable<TagFeature>
     public static IEnumerable<TagFeature> All => [Qr, Nfc, Rfid, Bluetooth, Gps];
 
 
-    public static TagFeature Parse(string s, IFormatProvider? provider)
+    public static TagFeature Parse(string s, IFormatProvider? provider = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(s);
 

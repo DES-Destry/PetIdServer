@@ -11,4 +11,6 @@ public class CreateTagCommand : IRequest<VoidResponseDto>
     ///     A private code
     /// </summary>
     public required string Code { get; init; }
+
+    public IEnumerable<string>? Features { get; init; }
 }
