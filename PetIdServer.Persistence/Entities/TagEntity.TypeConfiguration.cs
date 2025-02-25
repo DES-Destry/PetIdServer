@@ -9,12 +9,13 @@ public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagEntity>
     {
         builder.ToTable("tags").HasKey(tag => tag.Id);
 
-        builder.HasOne<PetEntity>()
-            .WithMany(pet => pet.Tags)
-            .HasForeignKey(tag => tag.PetId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(tag => tag.PairedPet)
+            .WithOne(pet => pet.PairedTag)
+            .HasForeignKey<TagEntity>(tag => tag.PetId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Navigation(tag => tag.Pet).AutoInclude();
+        builder.Navigation(tag => tag.PairedPet).AutoInclude();
 
         builder.Property(tag => tag.Id)
             .HasColumnName("id")

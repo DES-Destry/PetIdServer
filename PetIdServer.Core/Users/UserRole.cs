@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PetIdServer.Core.Users;
 
-public abstract record UserRole(string Name, ushort Level) : IComparable<UserRole>, IParsable<UserRole>
+public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>, IParsable<UserRole>
 {
     private const string PetOwnerName = nameof(PetOwner);
     private const string TagCheckerName = nameof(TagChecker);
@@ -11,9 +11,9 @@ public abstract record UserRole(string Name, ushort Level) : IComparable<UserRol
 
     private static readonly ImmutableDictionary<string, UserRole> s_rolesByName;
 
-    public static readonly UserRole PetOwner = new PetOwnerRole();
-    public static readonly UserRole TagChecker = new TagCheckerRole();
-    public static readonly UserRole Admin = new AdminRole();
+    public static readonly UserRole PetOwner = new(PetOwnerName, 0);
+    public static readonly UserRole TagChecker = new(TagCheckerName, 1000);
+    public static readonly UserRole Admin = new(AdminName, ushort.MaxValue);
 
     public static readonly UserRole LeastPrivileged = PetOwner;
     public static readonly UserRole MostPrivileged = Admin;
@@ -74,10 +74,4 @@ public abstract record UserRole(string Name, ushort Level) : IComparable<UserRol
     public bool HasPermissionsOf(UserRole role) => Level >= role.Level;
 
     public override string ToString() => Name;
-
-    private sealed record PetOwnerRole() : UserRole(PetOwnerName, 0);
-
-    private sealed record TagCheckerRole() : UserRole(TagCheckerName, 1000);
-
-    private sealed record AdminRole() : UserRole(AdminName, ushort.MaxValue);
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PetIdServer.Application.Common.Services;
@@ -8,6 +9,10 @@ using PetIdServer.Application.Tags;
 using PetIdServer.Application.Tags.Services;
 using PetIdServer.Application.Users;
 using PetIdServer.Application.Users.Services;
+using PetIdServer.Infrastructure.Configuration;
+using PetIdServer.Infrastructure.Configuration.Providers;
+using PetIdServer.Infrastructure.Configuration.Providers.Amazon;
+using PetIdServer.Infrastructure.Exceptions;
 using PetIdServer.Infrastructure.Services;
 using PetIdServer.Persistence;
 using PetIdServer.Persistence.Repositories;
@@ -18,7 +23,8 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        WebApplicationBuilder builder)
+        WebApplicationBuilder builder,
+        IConfiguration configuration)
     {
         // Add infrastructure
         services.AddRepositories()
@@ -31,6 +37,39 @@ public static class ServiceCollectionExtension
         });
 
         builder.AddDbConnection();
+
+        string secretsProvider = configuration.GetValue<string>(SecretsConfig.SecretsProvider) ??
+                                 throw new MisconfigurationException().WithMeta(new
+                                 {
+                                     configuration,
+                                     value = SecretsConfig.SecretsProvider,
+                                     @class = nameof(ServiceCollectionExtension)
+                                 });
+
+
+        if (secretsProvider == SecretsProvider.Local)
+        {
+            builder.Configuration.AddUserSecrets(AssemblyReference.Assembly);
+        }
+        else if (secretsProvider == SecretsProvider.AWS)
+        {
+            string region = configuration.GetValue<string>(AmazonSecretsConfig.AwsRegion) ??
+                            throw new MisconfigurationException().WithMeta(new
+                            {
+                                configuration, value = AmazonSecretsConfig.AwsRegion, @class = nameof(ServiceCollectionExtension)
+                            });
+            string secretName = configuration.GetValue<string>(AmazonSecretsConfig.AwsSecretsManagerSecretName) ??
+                                throw new MisconfigurationException().WithMeta(new
+                                {
+                                    configuration,
+                                    value = AmazonSecretsConfig.AwsSecretsManagerSecretName,
+                                    @class = nameof(ServiceCollectionExtension)
+                                });
+
+            builder.Configuration.AddAmazonSecretsManager(new AmazonSecretsManagerOptions(region, secretName));
+        }
+
+        builder.MapConfigurations();
 
         return services;
     }
@@ -57,9 +96,14 @@ public static class ServiceCollectionExtension
     private static IHostApplicationBuilder AddDbConnection(
         this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDataSource("pet-id");
-        builder.AddNpgsqlDbContext<PetIdContext>("pet-id");
+        builder.AddNpgsqlDataSource("PetIdPostgresDb");
+        builder.AddNpgsqlDbContext<PetIdContext>("PetIdPostgresDb");
 
         return builder;
+    }
+
+    private static void MapConfigurations(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<JwtTokensParameters>(builder.Configuration);
     }
 }

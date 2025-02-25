@@ -20,7 +20,7 @@ public class RequestUser : UserDto
     {
         RequestUser? result = null;
 
-        foreach (Claim? claim in claimsPrincipal.Claims)
+        foreach (Claim claim in claimsPrincipal.Claims)
         {
             if (claim.Type == ClaimTypes.UserData)
             {

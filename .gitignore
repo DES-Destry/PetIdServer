@@ -5,13 +5,9 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea
 
+.env
+
 **/public.pem
 **/private.pem
-
-PetIdServer.RestApi/appsettings.json
-PetIdServer.RestApi/appsettings.Development.json
-
-PetIdServer.AppHost/appsettings.json
-PetIdServer.AppHost/appsettings.Development.json
 
 **/.DS_Store

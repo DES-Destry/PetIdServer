@@ -11,14 +11,15 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddCors(options =>
                              options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-builder.Services.AddAuthentication().AddPetIdAuthSchemas(configuration);
 builder.Services
     .AddEndpointsApiExplorer()
     .AddServerErrorHandling()
     .AddSwagger()
-    .AddInfrastructure(builder)
+    .AddInfrastructure(builder, configuration)
     .AddCarter()
     .AddPetIdAuthPolicies();
+
+builder.Services.AddAuthentication().AddPetIdAuthSchemas(configuration);
 
 WebApplication app = builder.Build();
 

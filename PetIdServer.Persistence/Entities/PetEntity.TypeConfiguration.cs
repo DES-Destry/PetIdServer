@@ -9,13 +9,13 @@ public class PetEntityTypeConfiguration : IEntityTypeConfiguration<PetEntity>
     {
         builder.ToTable("pets").HasKey(pet => pet.Id);
 
-        builder.HasMany<TagEntity>(pet => pet.Tags)
-            .WithOne(tag => tag.Pet)
-            .HasForeignKey(tag => tag.PetId)
+        builder.HasOne(pet => pet.PairedTag)
+            .WithOne(tag => tag.PairedPet)
+            .HasForeignKey<TagEntity>(tag => tag.PetId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<UserEntity>()
+        builder.HasOne(pet => pet.User)
             .WithMany(user => user.Pets)
             .HasForeignKey(user => user.UserId)
             .IsRequired()

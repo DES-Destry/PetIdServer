@@ -10,6 +10,7 @@
   <Project Path="PetIdServer.Core.Common\PetIdServer.Core.Common.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Core\PetIdServer.Core.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Infrastructure\PetIdServer.Infrastructure.csproj" Type="Classic C#" />
+  <Project Path="PetIdServer.Persistence.MigrationRunner\PetIdServer.Persistence.MigrationRunner.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.Persistence\PetIdServer.Persistence.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.RestApi\PetIdServer.RestApi.csproj" Type="Classic C#" />
   <Project Path="PetIdServer.ServiceDefaults\PetIdServer.ServiceDefaults.csproj" Type="Classic C#" />

@@ -9,17 +9,17 @@ public class TagReportEntityTypeConfiguration : IEntityTypeConfiguration<TagRepo
     {
         builder.ToTable("tag_reports").HasKey(report => report.Id);
 
-        builder.HasOne<TagEntity>()
+        builder.HasOne(report => report.CorruptedTag)
             .WithMany(tag => tag.Reports)
             .HasForeignKey(report => report.CorruptedTagId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<UserEntity>()
+        builder.HasOne(report => report.Reporter)
             .WithMany(admin => admin.TagReportsCreated)
             .HasForeignKey(report => report.ReporterId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne<UserEntity>()
+        builder.HasOne(report => report.Resolver)
             .WithMany(admin => admin.TagReportsResolved)
             .HasForeignKey(report => report.ResolverId)
             .OnDelete(DeleteBehavior.NoAction);
