@@ -10,6 +10,7 @@ namespace PetIdServer.Core.Tags;
 
 public sealed class Tag : AggregateRoot<TagId>
 {
+    private readonly List<TagHistoryEntry> _history = [];
     private readonly List<TagReport> _reports = [];
 
     private Tag(int id) : base((TagId)id) { }
@@ -27,15 +28,18 @@ public sealed class Tag : AggregateRoot<TagId>
 
     public DateTime CreatedAt { get; private init; } = DateTime.UtcNow;
 
-    public DateTime? PetAddedAt { get; private set; }
-
     public DateTime? LastScannedAt { get; private set; }
 
     public IReadOnlyList<TagReport> Reports => _reports;
+    public IReadOnlyList<TagHistoryEntry> History => _history;
     public IReadOnlyList<TagFeature> Features { get; private init; } = [];
 
     public static Tag CreateNew(CreationAttributes creationAttributes)
     {
+        ArgumentNullException.ThrowIfNull(creationAttributes);
+        ArgumentException.ThrowIfNullOrWhiteSpace(creationAttributes.HashCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(creationAttributes.PrivateCode);
+
         IEnumerable<TagFeature> features = creationAttributes.Features ?? TagFeature.DefaultSetOfFeatures;
 
         return new Tag(creationAttributes.Id)
@@ -53,9 +57,26 @@ public sealed class Tag : AggregateRoot<TagId>
         PetId? petId,
         IEnumerable<TagFeature> features,
         DateTime createdAt,
-        DateTime? petAddedAt,
         DateTime? lastScannedAt)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(privateCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(hashCode);
+
+        ArgumentNullException.ThrowIfNull(id);
+        ArgumentNullException.ThrowIfNull(features);
+
+        if (controlCode == 0)
+        {
+            throw new ArgumentException("Control code cannot be default value", nameof(controlCode));
+        }
+
+        if (createdAt == default)
+        {
+            throw new ArgumentException("Created at cannot be default value", nameof(createdAt));
+        }
+
+        features ??= TagFeature.DefaultSetOfFeatures;
+
         return new Tag(id)
         {
             PrivateCode = privateCode,
@@ -64,13 +85,14 @@ public sealed class Tag : AggregateRoot<TagId>
             PetId = petId,
             Features = ImmutableList.CreateRange(features),
             CreatedAt = createdAt,
-            PetAddedAt = petAddedAt,
             LastScannedAt = lastScannedAt
         };
     }
 
-    public void Produce()
+    public void ProduceBy(UserId initiatorId)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.Registered)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not ready to produce", new
@@ -79,11 +101,13 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.Produced;
+        SetStatusByAndSave(initiatorId, TagStatus.Produced);
     }
 
-    public void SendToExternalRetailer()
+    public void SendToExternalRetailerBy(UserId initiatorId)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.Produced)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not even produced", new
@@ -92,11 +116,13 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.SentToExternalRetailer;
+        SetStatusByAndSave(initiatorId, TagStatus.SentToExternalRetailer);
     }
 
-    public void SendToStore()
+    public void SendToStore(UserId initiatorId)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.Produced)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not even produced", new
@@ -105,11 +131,13 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.GoingToStore;
+        SetStatusByAndSave(initiatorId, TagStatus.GoingToStore);
     }
 
-    public void ArriveToStore()
+    public void ArriveToStore(UserId initiatorId)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.GoingToStore)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not going to store", new
@@ -118,11 +146,13 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.InStore;
+        SetStatusByAndSave(initiatorId, TagStatus.InStore);
     }
 
-    public void Sell()
+    public void Sell(UserId initiatorId)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.InStore)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not in store", new
@@ -131,11 +161,14 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.Sold;
+        SetStatusByAndSave(initiatorId, TagStatus.Sold);
     }
 
-    public void RestoreAfterPetRemoval(TagStatus status)
+    public void RestoreAfterPetRemoval(UserId initiatorId, TagStatus status)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+        ArgumentNullException.ThrowIfNull(status);
+
         if (status != TagStatus.ClearedByAdmin)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not cleared by admin", new
@@ -144,11 +177,14 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = status;
+        SetStatusByAndSave(initiatorId, status);
     }
 
-    public void RestoreAfterSomethingWentWrong(TagStatus status)
+    public void RestoreAfterSomethingWentWrong(UserId initiatorId, TagStatus status)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+        ArgumentNullException.ThrowIfNull(status);
+
         if (status != TagStatus.Unknown || status != TagStatus.Destroyed)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not unknown or destroyed", new
@@ -157,11 +193,14 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = status;
+        SetStatusByAndSave(initiatorId, status);
     }
 
-    public void PairWithPet(PetId petId)
+    public void PairWithPet(PetId petId, UserId newOwnerId)
     {
+        ArgumentNullException.ThrowIfNull(newOwnerId);
+        ArgumentNullException.ThrowIfNull(petId);
+
         if (IsAlreadyInUse)
         {
             throw new TagAlreadyInUseException($"Tag {Id} is already in use with {PetId}", new
@@ -178,14 +217,14 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = TagStatus.InUse;
-
         PetId = petId;
-        PetAddedAt = DateTime.UtcNow;
+        SetStatusByAndSave(newOwnerId, TagStatus.InUse);
     }
 
-    public void RemovePet(TagStatus? status = null)
+    public void RemovePet(UserId initiatorId, TagStatus? status = null)
     {
+        ArgumentNullException.ThrowIfNull(initiatorId);
+
         if (Status != TagStatus.InUse)
         {
             throw new TagIsNotInAppropriateStatusException($"Tag {Id} is not in use", new
@@ -194,24 +233,27 @@ public sealed class Tag : AggregateRoot<TagId>
             });
         }
 
-        Status = status ?? TagStatus.ClearedByAdmin;
-
         PetId = null;
-        PetAddedAt = null;
+        SetStatusByAndSave(initiatorId, status ?? TagStatus.ClearedByAdmin);
     }
 
-    public void Destroy()
+    public void Destroy(UserId initiatorId)
     {
-        Status = TagStatus.Destroyed;
+        ArgumentNullException.ThrowIfNull(initiatorId);
+        SetStatusByAndSave(initiatorId, TagStatus.Destroyed);
     }
 
     public void ReportBy(UserId reporterId)
     {
+        ArgumentNullException.ThrowIfNull(reporterId);
         _reports.Add(TagReport.CreateNew(new TagReport.CreationAttributes(reporterId)));
     }
 
     public void ResolveReportBy(TagReportId reportId, UserId resolverId)
     {
+        ArgumentNullException.ThrowIfNull(reportId);
+        ArgumentNullException.ThrowIfNull(resolverId);
+
         TagReport report = _reports.FirstOrDefault(report => report.Id == reportId) ??
                            throw new TagReportNotFoundException(new
                            {
@@ -220,6 +262,20 @@ public sealed class Tag : AggregateRoot<TagId>
 
         report.ResolvedBy(resolverId);
     }
+
+    private void SetStatusByAndSave(UserId initiatorId, TagStatus newStatus)
+    {
+        TagHistoryEntry.CreationAttributes entryData = new()
+        {
+            StatusFrom = Status, StatusTo = newStatus, InitiatorId = initiatorId
+        };
+        TagHistoryEntry entry = TagHistoryEntry.CreateNew(entryData);
+
+        Status = newStatus;
+
+        _history.Add(entry);
+    }
+
 
     public record CreationAttributes(
         TagId Id,
