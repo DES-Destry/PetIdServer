@@ -22,12 +22,10 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
 
     static UserRole()
     {
-        s_rolesByName = ImmutableDictionary.CreateRange(StringComparer.OrdinalIgnoreCase, [
-            new KeyValuePair<string, UserRole>(PetOwnerName, PetOwner),
-            new KeyValuePair<string, UserRole>(TagCheckerName, TagChecker),
-            new KeyValuePair<string, UserRole>(AdminName, Admin)
-        ]);
+        s_rolesByName = All.ToImmutableDictionary(r => r.Name, StringComparer.OrdinalIgnoreCase);
     }
+
+    public static IEnumerable<UserRole> All => [PetOwner, TagChecker, TagMaster, Admin];
 
     public int CompareTo(UserRole? other)
     {
@@ -57,15 +55,8 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
     {
         result = null;
 
-        if (string.IsNullOrWhiteSpace(s))
-        {
-            return false;
-        }
-
-        bool returnValue = s_rolesByName.TryGetValue(s, out UserRole? role);
-        result = role;
-
-        return returnValue;
+        return !string.IsNullOrWhiteSpace(s) &&
+               s_rolesByName.TryGetValue(s, out result);
     }
 
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out UserRole result) =>

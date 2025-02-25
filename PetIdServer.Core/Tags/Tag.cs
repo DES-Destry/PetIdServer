@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using PetIdServer.Core.Common;
 using PetIdServer.Core.Pets;
 using PetIdServer.Core.TagReports;
@@ -29,12 +30,17 @@ public sealed class Tag : AggregateRoot<TagId>
     public DateTime? LastScannedAt { get; private set; }
 
     public IReadOnlyList<TagReport> Reports => _reports;
+    public IReadOnlyList<TagFeature> Features { get; private init; } = [];
 
     public static Tag CreateNew(CreationAttributes creationAttributes)
     {
+        IEnumerable<TagFeature> features = creationAttributes.Features ?? TagFeature.DefaultSetOfFeatures;
+
         return new Tag(creationAttributes.Id)
         {
-            PrivateCode = creationAttributes.PrivateCode, HashCode = creationAttributes.HashCode
+            PrivateCode = creationAttributes.PrivateCode,
+            HashCode = creationAttributes.HashCode,
+            Features = ImmutableList.CreateRange(features)
         };
     }
 
@@ -94,5 +100,9 @@ public sealed class Tag : AggregateRoot<TagId>
         report.ResolvedBy(resolverId);
     }
 
-    public record CreationAttributes(TagId Id, string PrivateCode, string HashCode);
+    public record CreationAttributes(
+        TagId Id,
+        string PrivateCode,
+        string HashCode,
+        IEnumerable<TagFeature>? Features = null);
 }
