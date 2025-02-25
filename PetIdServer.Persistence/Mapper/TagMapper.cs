@@ -20,7 +20,6 @@ public static class TagMapper
             (PetId?)entity.PetId,
             features,
             entity.CreatedAt,
-            entity.PetAddedAt,
             entity.LastScannedAt
         );
     }

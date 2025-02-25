@@ -2,6 +2,7 @@ using MediatR;
 using PetIdServer.Application.Common.Dto;
 using PetIdServer.Core.Tags;
 using PetIdServer.Core.Tags.Exceptions;
+using PetIdServer.Core.Users;
 
 namespace PetIdServer.Application.Tags.Commands.Clear;
 
@@ -14,8 +15,7 @@ public class ClearTagCommandHandler(ITagRepository tagRepository) : IRequestHand
         Tag tag = await tagRepository.GetTagById((TagId)request.TagId) ??
                   throw new TagNotFoundException(new
                   {
-                      Command = nameof(ClearTagCommand),
-                      request.TagId
+                      Command = nameof(ClearTagCommand), request.TagId
                   });
 
         if (tag.IsAlreadyInUse && tag.Reports.All(report => report.IsResolved))
@@ -30,7 +30,7 @@ public class ClearTagCommandHandler(ITagRepository tagRepository) : IRequestHand
             });
         }
 
-        tag.RemovePet();
+        tag.RemovePet(new UserId(request.AdminId));
 
         await tagRepository.UpdateTag(tag);
         return VoidResponseDto.Executed;
