@@ -15,7 +15,20 @@ public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagEntity>
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
 
+        builder.HasMany(tag => tag.Features)
+            .WithOne(feature => feature.Tag)
+            .HasForeignKey(feature => feature.TagId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(tag => tag.History)
+            .WithOne(entry => entry.RelatedTag)
+            .HasForeignKey(entry => entry.TagId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Navigation(tag => tag.PairedPet).AutoInclude();
+        builder.Navigation(tag => tag.Features).AutoInclude();
 
         builder.Property(tag => tag.Id)
             .HasColumnName("id")

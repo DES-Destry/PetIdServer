@@ -10,7 +10,8 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
     private const string TagMasterName = nameof(TagMaster);
     private const string AdminName = nameof(Admin);
 
-    private static readonly ImmutableDictionary<string, UserRole> s_rolesByName;
+    private static readonly ImmutableDictionary<string, UserRole> s_rolesByName =
+        All.ToImmutableDictionary(r => r.Name, StringComparer.OrdinalIgnoreCase);
 
     public static readonly UserRole PetOwner = new(PetOwnerName, 0);
     public static readonly UserRole TagChecker = new(TagCheckerName, 1000);
@@ -20,14 +21,7 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
     public static readonly UserRole LeastPrivileged = PetOwner;
     public static readonly UserRole MostPrivileged = Admin;
 
-    static UserRole()
-    {
-        s_rolesByName = ImmutableDictionary.CreateRange(StringComparer.OrdinalIgnoreCase, [
-            new KeyValuePair<string, UserRole>(PetOwnerName, PetOwner),
-            new KeyValuePair<string, UserRole>(TagCheckerName, TagChecker),
-            new KeyValuePair<string, UserRole>(AdminName, Admin)
-        ]);
-    }
+    public static IEnumerable<UserRole> All => [PetOwner, TagChecker, TagMaster, Admin];
 
     public int CompareTo(UserRole? other)
     {
@@ -55,21 +49,18 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
         IFormatProvider? provider,
         [MaybeNullWhen(false)] out UserRole result)
     {
-        result = null;
-
-        if (string.IsNullOrWhiteSpace(s))
+        if (!string.IsNullOrWhiteSpace(s))
         {
-            return false;
+            return s_rolesByName.TryGetValue(s.Trim(), out result);
         }
 
-        bool returnValue = s_rolesByName.TryGetValue(s, out UserRole? role);
-        result = role;
-
-        return returnValue;
+        result = null;
+        return false;
     }
 
-    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out UserRole result) =>
-        TryParse(s, null, out result);
+    public static bool TryParse(
+        [NotNullWhen(true)] string? s,
+        [MaybeNullWhen(false)] out UserRole result) => TryParse(s, null, out result);
 
 
     public bool HasPermissionsOf(UserRole role) => Level == role.Level || Level == MostPrivileged.Level;

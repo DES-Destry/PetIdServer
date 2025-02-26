@@ -19,7 +19,9 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
 
         string privateCode = await codeDecoder.EncodePublicCode(request.Code);
 
-        Tag.CreationAttributes creationAttributes = new((TagId)request.Id, privateCode, hashCode);
+        IEnumerable<TagFeature>? features = request.Features?.Select(feature => TagFeature.Parse(feature));
+
+        Tag.CreationAttributes creationAttributes = new((TagId)request.Id, privateCode, hashCode, features);
         Tag tag = Tag.CreateNew(creationAttributes);
 
         await tagRepository.CreateTag(tag);
@@ -36,8 +38,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         {
             throw new TagAlreadyInUseException("Tag with such Id is already exists", new
             {
-                Command = nameof(CreateTagCommand),
-                TagId = id
+                Command = nameof(CreateTagCommand), TagId = id
             });
         }
 
@@ -45,8 +46,7 @@ public class CreateTagCommandHandler(ITagRepository tagRepository, ICodeDecoder 
         {
             throw new TagAlreadyInUseException("Tag with such hash code is already exists", new
             {
-                Command = nameof(CreateTagCommand),
-                TagId = id
+                Command = nameof(CreateTagCommand), TagId = id
             });
         }
     }

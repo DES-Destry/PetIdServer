@@ -21,6 +21,24 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .OnDelete(DeleteBehavior.SetNull);
 
+        builder.HasMany(user => user.TagReportsCreated)
+            .WithOne(report => report.Reporter)
+            .HasForeignKey(report => report.Reporter)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(user => user.TagReportsResolved)
+            .WithOne(report => report.Resolver)
+            .HasForeignKey(report => report.Resolver)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(user => user.TagActions)
+            .WithOne(action => action.Initiator)
+            .HasForeignKey(action => action.InitiatorId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.Navigation(user => user.Contacts).AutoInclude();
         builder.Navigation(user => user.Pets).AutoInclude();
 

@@ -10,14 +10,15 @@ public static class PetMapper
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        return Pet.CreateFromPersistence((PetId)entity.Id,
-                                         (UserId)entity.UserId,
-                                         entity.Name,
-                                         entity.Type,
-                                         entity.Sex,
-                                         entity.IsCastrated,
-                                         entity.PhotoId,
-                                         entity.Description);
+        return Pet.CreateFromPersistence(
+            (PetId)entity.Id,
+            (UserId)entity.UserId,
+            entity.Name,
+            entity.Type,
+            entity.Sex,
+            entity.IsCastrated,
+            entity.PhotoId,
+            entity.Description);
     }
 
     public static PetEntity ToEntity(this Pet pet)

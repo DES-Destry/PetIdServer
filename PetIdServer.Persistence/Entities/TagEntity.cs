@@ -11,6 +11,8 @@ public class TagEntity
     public DateTime? PetAddedAt { get; init; }
     public DateTime? LastScannedAt { get; init; }
 
-    public PetEntity? PairedPet { get; set; } = null;
-    public ICollection<TagReportEntity> Reports { get; } = [];
+    public PetEntity? PairedPet { get; set; }
+    public ICollection<TagReportEntity> Reports { get; init; } = [];
+    public ICollection<TagHistoryEntryEntity> History { get; init; } = [];
+    public ICollection<TagFeatureEntity> Features { get; init; } = [];
 }

@@ -22,8 +22,7 @@ public class User : AggregateRoot<UserId>
 
     public IReadOnlyList<UserContact> Contacts => _contacts.Select(contact => new UserContact
     {
-        ContactType = contact.Key,
-        Contact = contact.Value
+        ContactType = contact.Key, Contact = contact.Value
     }).ToArray();
 
     public static User CreateNew(CreationAttributes creationAttributes)
@@ -43,7 +42,7 @@ public class User : AggregateRoot<UserId>
         string? address,
         string? description,
         UserRole role,
-        IList<UserContact> contacts)
+        IEnumerable<UserContact> contacts)
     {
         return new User(name)
         {

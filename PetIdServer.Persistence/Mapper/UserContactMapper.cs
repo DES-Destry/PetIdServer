@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using PetIdServer.Core.Users;
 using PetIdServer.Persistence.Entities;
 
@@ -6,25 +5,24 @@ namespace PetIdServer.Persistence.Mapper;
 
 public static class UserContactMapper
 {
-    [return: NotNullIfNotNull("entity")]
-    public static UserContact? ToCore(this UserContactEntity? entity) => entity is null
-        ? null
-        : new UserContact
-        {
-            ContactType = entity.ContactType,
-            Contact = entity.Contact
-        };
+    public static UserContact ToCore(this UserContactEntity entity)
+    {
+        ArgumentNullException.ThrowIfNull(entity);
 
-    public static UserContactEntity ToEntity(this UserContact? contact, UserId? contactOwnerId)
+        return new UserContact
+        {
+            ContactType = entity.ContactType, Contact = entity.Contact
+        };
+    }
+
+    public static UserContactEntity ToEntity(this UserContact? contact, User? contactOwner)
     {
         ArgumentNullException.ThrowIfNull(contact);
-        ArgumentNullException.ThrowIfNull(contactOwnerId);
+        ArgumentNullException.ThrowIfNull(contactOwner);
 
         return new UserContactEntity
         {
-            UserId = contactOwnerId,
-            ContactType = contact.ContactType,
-            Contact = contact.Contact
+            UserId = contactOwner.Id, ContactType = contact.ContactType, Contact = contact.Contact
         };
     }
 }

@@ -18,6 +18,8 @@ public static class CoreExceptionCode
 
     public const string TagNotFound = DefaultScope + "TAG_NOT_FOUND";
     public const string TagAlreadyInUse = DefaultScope + "TAG_ALREADY_IN_USE";
+    public const string TagIsNotReadyToPair = DefaultScope + "TAG_IS_NOT_READY_TO_PAIR";
+    public const string TagIsNotInAppropriateStatus = DefaultScope + "TAG_IS_NOT_IN_APPROPRIATE_STATUS";
     public const string TagAlreadyExists = DefaultScope + "TAG_ALREADY_EXISTS";
     public const string TagCannotBeCleared = DefaultScope + "TAG_CANNOT_BE_CLEARED";
 

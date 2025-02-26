@@ -6,5 +6,4 @@ public record TagForAdminDto(
     string ControlCode,
     bool IsAlreadyInUse,
     DateTime CreatedAt,
-    DateTime? PetAddedAt,
     DateTime? LastScannedAt);
