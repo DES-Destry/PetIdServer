@@ -13,5 +13,6 @@ public class TagEntity
 
     public PetEntity? PairedPet { get; set; }
     public ICollection<TagReportEntity> Reports { get; } = [];
+    public ICollection<TagHistoryEntryEntity> History { get; } = [];
     public ICollection<TagFeatureEntity> Features { get; init; } = [];
 }

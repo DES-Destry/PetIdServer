@@ -15,4 +15,5 @@ public class UserEntity
 
     public ICollection<TagReportEntity> TagReportsCreated { get; init; } = [];
     public ICollection<TagReportEntity> TagReportsResolved { get; init; } = [];
+    public ICollection<TagHistoryEntryEntity> TagActions { get; init; } = [];
 }

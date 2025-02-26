@@ -10,7 +10,7 @@ public class TagHistoryEntry : Entity<TagHistoryEntryId>
     public required TagStatus StatusFrom { get; init; }
     public required TagStatus StatusTo { get; init; }
 
-    public required UserId InitiatorId { get; init; }
+    public UserId? InitiatorId { get; init; }
 
     public DateTime ChangedAt { get; private init; } = DateTime.UtcNow;
 
