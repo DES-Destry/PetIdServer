@@ -57,11 +57,6 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .HasMaxLength(320);
 
-        builder.Property(user => user.Role)
-            .HasColumnName("role")
-            .IsRequired()
-            .HasMaxLength(32);
-
         builder.Property(user => user.Password)
             .HasColumnName("password")
             .HasMaxLength(1024);

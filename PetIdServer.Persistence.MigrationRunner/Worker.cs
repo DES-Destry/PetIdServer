@@ -78,7 +78,7 @@ public class Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IH
                                "dev.andrey.kirik@gmail.com",
                                "Andrey Kirik",
                                null,
-                               UserRole.MostPrivileged));
+                               [UserRole.MostPrivileged]));
 
         initialAdmin.Update(new User.UpdateAttributes
         {
