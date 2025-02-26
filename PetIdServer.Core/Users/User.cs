@@ -5,9 +5,9 @@ namespace PetIdServer.Core.Users;
 public sealed class User : AggregateRoot<UserId>
 {
     private Dictionary<string, string> _contacts = [];
-    private List<UserRole> _roles = [];
+    private HashSet<UserRole> _roles = [];
 
-    private User(string name) : base((UserId)Guid.NewGuid())
+    private User(string name) : base((UserId)Guid.CreateVersion7())
     {
         Name = name;
     }
@@ -19,7 +19,7 @@ public sealed class User : AggregateRoot<UserId>
     public string Name { get; private set; }
     public string? Address { get; private set; }
     public string? Description { get; private set; }
-    public IReadOnlyList<UserRole> Roles => _roles;
+    public IReadOnlySet<UserRole> Roles => _roles;
 
     public IReadOnlyList<UserContact> Contacts => _contacts.Select(contact => new UserContact
     {
@@ -32,7 +32,7 @@ public sealed class User : AggregateRoot<UserId>
         {
             Email = creationAttributes.Email,
             Password = creationAttributes.Password,
-            _roles = creationAttributes.Roles?.ToList() ?? (List<UserRole>) [UserRole.LeastPrivileged]
+            _roles = creationAttributes.Roles?.ToHashSet() ?? (HashSet<UserRole>) [UserRole.LeastPrivileged]
         };
     }
 
@@ -52,7 +52,7 @@ public sealed class User : AggregateRoot<UserId>
             Password = password,
             Address = address,
             Description = description,
-            _roles = roles.ToList(),
+            _roles = roles.ToHashSet(),
             _contacts = contacts.ToDictionary(contact => contact.ContactType, contact => contact.Contact)
         };
     }

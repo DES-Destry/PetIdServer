@@ -32,7 +32,7 @@ public sealed class Tag : AggregateRoot<TagId>
 
     public IReadOnlyList<TagReport> Reports => _reports;
     public IReadOnlyList<TagHistoryEntry> History => _history;
-    public IReadOnlyList<TagFeature> Features { get; private init; } = [];
+    public IReadOnlySet<TagFeature> Features { get; private init; } = ImmutableHashSet<TagFeature>.Empty;
 
     public static Tag CreateNew(CreationAttributes creationAttributes)
     {
@@ -48,7 +48,7 @@ public sealed class Tag : AggregateRoot<TagId>
         {
             PrivateCode = creationAttributes.PrivateCode,
             HashCode = creationAttributes.HashCode,
-            Features = ImmutableList.CreateRange(features)
+            Features = ImmutableHashSet.CreateRange(features)
         };
     }
 
@@ -88,7 +88,7 @@ public sealed class Tag : AggregateRoot<TagId>
             HashCode = hashCode,
             ControlCode = controlCode,
             PetId = petId,
-            Features = ImmutableList.CreateRange(features),
+            Features = ImmutableHashSet.CreateRange(features),
             _history = history.ToList(),
             _reports = reports.ToList(),
             CreatedAt = createdAt,
