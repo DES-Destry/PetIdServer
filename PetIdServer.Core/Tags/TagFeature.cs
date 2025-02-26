@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PetIdServer.Core.Tags;
 
+[DebuggerDisplay("{Value}")]
 public sealed record TagFeature(string Value) : IParsable<TagFeature>
 {
     private static readonly ImmutableDictionary<string, TagFeature> s_tagFeaturesByName =
@@ -46,4 +48,6 @@ public sealed record TagFeature(string Value) : IParsable<TagFeature>
     public static bool TryParse(
         [NotNullWhen(true)] string? s,
         [MaybeNullWhen(false)] out TagFeature result) => TryParse(s, null, out result);
+
+    public override string ToString() => Value;
 }

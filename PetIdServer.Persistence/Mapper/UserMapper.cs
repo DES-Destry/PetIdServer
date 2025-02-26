@@ -9,16 +9,17 @@ public static class UserMapper
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        IList<UserContact> contacts = entity.Contacts.Select(contact => contact.ToCore()).ToList();
+        IEnumerable<UserContact> contacts = entity.Contacts.Select(UserContactMapper.ToCore);
 
-        return User.CreateFromPersistence((UserId)entity.Id,
-                                          entity.Email,
-                                          PasswordHash.FromHash(entity.Password),
-                                          entity.Name,
-                                          entity.Address,
-                                          entity.Description,
-                                          UserRole.Parse(entity.Role),
-                                          contacts);
+        return User.CreateFromPersistence(
+            (UserId)entity.Id,
+            entity.Email,
+            PasswordHash.FromHash(entity.Password),
+            entity.Name,
+            entity.Address,
+            entity.Description,
+            UserRole.Parse(entity.Role),
+            contacts);
     }
 
     public static UserEntity ToEntity(this User user)
@@ -34,7 +35,7 @@ public static class UserMapper
             Password = user.Password,
             Address = user.Address,
             Description = user.Description,
-            Contacts = user.Contacts.Select(contact => contact.ToEntity(user.Id)).ToList()
+            Contacts = user.Contacts.Select(contact => contact.ToEntity(user)).ToList()
         };
     }
 }

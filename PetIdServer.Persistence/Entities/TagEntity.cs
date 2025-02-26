@@ -12,7 +12,7 @@ public class TagEntity
     public DateTime? LastScannedAt { get; init; }
 
     public PetEntity? PairedPet { get; set; }
-    public ICollection<TagReportEntity> Reports { get; } = [];
-    public ICollection<TagHistoryEntryEntity> History { get; } = [];
+    public ICollection<TagReportEntity> Reports { get; init; } = [];
+    public ICollection<TagHistoryEntryEntity> History { get; init; } = [];
     public ICollection<TagFeatureEntity> Features { get; init; } = [];
 }

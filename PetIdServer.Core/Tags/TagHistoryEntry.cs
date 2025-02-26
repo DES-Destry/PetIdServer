@@ -27,7 +27,7 @@ public class TagHistoryEntry : Entity<TagHistoryEntryId>
     public static TagHistoryEntry CreateFromPersistence(TagHistoryEntryId id,
         TagStatus statusFrom,
         TagStatus statusTo,
-        UserId initiatorId,
+        UserId? initiatorId,
         DateTime changedAt)
     {
         return new TagHistoryEntry

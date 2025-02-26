@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PetIdServer.Core.Tags;
 
+[DebuggerDisplay("{Value}")]
 public sealed record TagStatus(string Value) : IParsable<TagStatus>
 {
     public static readonly TagStatus Registered = new("Registered");
@@ -41,7 +43,7 @@ public sealed record TagStatus(string Value) : IParsable<TagStatus>
         Unknown
     ];
 
-    public static TagStatus Parse(string s, IFormatProvider? provider)
+    public static TagStatus Parse(string s, IFormatProvider? provider = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(s);
 
@@ -70,4 +72,6 @@ public sealed record TagStatus(string Value) : IParsable<TagStatus>
     public static bool TryParse(
         [NotNullWhen(true)] string? s,
         [MaybeNullWhen(false)] out TagStatus result) => TryParse(s, null, out result);
+
+    public override string ToString() => Value;
 }

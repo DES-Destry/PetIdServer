@@ -10,8 +10,8 @@ namespace PetIdServer.Core.Tags;
 
 public sealed class Tag : AggregateRoot<TagId>
 {
-    private readonly List<TagHistoryEntry> _history = [];
-    private readonly List<TagReport> _reports = [];
+    private List<TagHistoryEntry> _history = [];
+    private List<TagReport> _reports = [];
 
     private Tag(int id) : base((TagId)id) { }
     public required string PrivateCode { get; init; }
@@ -57,7 +57,9 @@ public sealed class Tag : AggregateRoot<TagId>
         string hashCode,
         long controlCode,
         PetId? petId,
+        IEnumerable<TagReport> reports,
         IEnumerable<TagFeature> features,
+        IEnumerable<TagHistoryEntry> history,
         DateTime createdAt,
         DateTime? lastScannedAt)
     {
@@ -66,6 +68,7 @@ public sealed class Tag : AggregateRoot<TagId>
 
         ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(features);
+        ArgumentNullException.ThrowIfNull(history);
 
         if (controlCode == 0)
         {
@@ -77,7 +80,7 @@ public sealed class Tag : AggregateRoot<TagId>
             throw new ArgumentException("Created at cannot be default value", nameof(createdAt));
         }
 
-        features ??= TagFeature.DefaultSetOfFeatures;
+        features ??= [];
 
         return new Tag(id)
         {
@@ -86,6 +89,8 @@ public sealed class Tag : AggregateRoot<TagId>
             ControlCode = controlCode,
             PetId = petId,
             Features = ImmutableList.CreateRange(features),
+            _history = history.ToList(),
+            _reports = reports.ToList(),
             CreatedAt = createdAt,
             LastScannedAt = lastScannedAt
         };
