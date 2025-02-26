@@ -18,6 +18,7 @@ public class CreatePetCommandHandler(IPetRepository petRepository)
             request.Type,
             request.Sex,
             request.IsCastrated,
+            request.CanGoOutside,
             request.PhotoId,
             request.Description);
 

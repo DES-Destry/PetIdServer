@@ -11,5 +11,6 @@ public class CreatePetCommand : IRequest<VoidResponseDto>
     public string? Description { get; init; }
     public required bool Sex { get; init; }
     public required bool IsCastrated { get; init; }
+    public required bool CanGoOutside { get; init; }
     public Guid PhotoId { get; init; }
 }
