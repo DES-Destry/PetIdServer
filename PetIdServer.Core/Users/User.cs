@@ -2,9 +2,10 @@ using PetIdServer.Core.Common;
 
 namespace PetIdServer.Core.Users;
 
-public class User : AggregateRoot<UserId>
+public sealed class User : AggregateRoot<UserId>
 {
     private Dictionary<string, string> _contacts = [];
+    private List<UserRole> _roles = [];
 
     private User(string name) : base((UserId)Guid.NewGuid())
     {
@@ -18,7 +19,7 @@ public class User : AggregateRoot<UserId>
     public string Name { get; private set; }
     public string? Address { get; private set; }
     public string? Description { get; private set; }
-    public required UserRole Role { get; init; }
+    public IReadOnlyList<UserRole> Roles => _roles;
 
     public IReadOnlyList<UserContact> Contacts => _contacts.Select(contact => new UserContact
     {
@@ -31,7 +32,7 @@ public class User : AggregateRoot<UserId>
         {
             Email = creationAttributes.Email,
             Password = creationAttributes.Password,
-            Role = creationAttributes.Role ?? UserRole.LeastPrivileged
+            _roles = creationAttributes.Roles?.ToList() ?? (List<UserRole>) [UserRole.LeastPrivileged]
         };
     }
 
@@ -41,7 +42,7 @@ public class User : AggregateRoot<UserId>
         string name,
         string? address,
         string? description,
-        UserRole role,
+        IEnumerable<UserRole> roles,
         IEnumerable<UserContact> contacts)
     {
         return new User(name)
@@ -51,7 +52,7 @@ public class User : AggregateRoot<UserId>
             Password = password,
             Address = address,
             Description = description,
-            Role = role,
+            _roles = roles.ToList(),
             _contacts = contacts.ToDictionary(contact => contact.ContactType, contact => contact.Contact)
         };
     }
@@ -93,13 +94,13 @@ public class User : AggregateRoot<UserId>
         _contacts.Remove(type);
     }
 
-    public bool HasPermissionsOf(UserRole role) => role.HasPermissionsOf(Role);
+    public bool HasPermissionsOf(UserRole targetRole) => _roles.Any(userRole => userRole.HasPermissionsOf(targetRole));
 
     public record CreationAttributes(
         string Email,
         string Name,
         PasswordHash? Password = null,
-        UserRole? Role = null
+        IEnumerable<UserRole>? Roles = null
     );
 
     public record UpdateAttributes
