@@ -17,6 +17,8 @@ public static class PetMapper
             entity.Type,
             entity.Sex,
             entity.IsCastrated,
+            entity.CanGoOutside,
+            entity.IsLost,
             entity.PhotoId,
             entity.Description);
     }
@@ -33,6 +35,8 @@ public static class PetMapper
             Name = pet.Name,
             Sex = pet.Sex,
             IsCastrated = pet.IsCastrated,
+            CanGoOutside = pet.CanGoOutside,
+            IsLost = pet.IsLost,
             PhotoId = pet.PhotoId,
             Description = pet.Description
         };

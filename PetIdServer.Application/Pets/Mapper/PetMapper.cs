@@ -11,6 +11,7 @@ public static class PetMapper
         {
             Description = dto.Description,
             IsCastrated = dto.IsCastrated,
+            CanGoOutside = dto.CanGoOutside,
             Name = dto.Name,
             Sex = dto.Sex,
             Type = dto.Type

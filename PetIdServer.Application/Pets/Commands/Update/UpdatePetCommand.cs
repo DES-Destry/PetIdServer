@@ -10,5 +10,6 @@ public class UpdatePetCommand : IRequest<VoidResponseDto>
     public string? Name { get; init; }
     public bool? Sex { get; init; }
     public bool? IsCastrated { get; init; }
+    public bool? CanGoOutside { get; init; }
     public string? Description { get; init; }
 }
