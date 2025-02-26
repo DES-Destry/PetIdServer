@@ -19,6 +19,7 @@ public class PetIdContext(DbContextOptions<PetIdContext> options) : DbContext(op
 
         new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserEntity>());
         new UserContactEntityTypeConfiguration().Configure(modelBuilder.Entity<UserContactEntity>());
+        new UserRoleEntityTypeConfiguration().Configure(modelBuilder.Entity<UserRoleEntity>());
 
         new PetEntityTypeConfiguration().Configure(modelBuilder.Entity<PetEntity>());
 

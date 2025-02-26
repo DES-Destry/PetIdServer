@@ -10,6 +10,7 @@ public static class UserMapper
         ArgumentNullException.ThrowIfNull(entity);
 
         IEnumerable<UserContact> contacts = entity.Contacts.Select(UserContactMapper.ToCore);
+        IEnumerable<UserRole> roles = entity.Roles.Select(UserRoleMapper.ToCore);
 
         return User.CreateFromPersistence(
             (UserId)entity.Id,
@@ -18,7 +19,7 @@ public static class UserMapper
             entity.Name,
             entity.Address,
             entity.Description,
-            UserRole.Parse(entity.Role),
+            roles,
             contacts);
     }
 
@@ -26,16 +27,19 @@ public static class UserMapper
     {
         ArgumentNullException.ThrowIfNull(user);
 
+        ICollection<UserContactEntity> contacts = user.Contacts.Select(contact => contact.ToEntity(user)).ToList();
+        ICollection<UserRoleEntity> roles = user.Roles.Select(role => role.ToEntity(user)).ToList();
+
         return new UserEntity
         {
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Role = user.Role.ToString(),
             Password = user.Password,
             Address = user.Address,
             Description = user.Description,
-            Contacts = user.Contacts.Select(contact => contact.ToEntity(user)).ToList()
+            Contacts = contacts,
+            Roles = roles
         };
     }
 }
