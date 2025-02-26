@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text.Json;
 using PetIdServer.Application.Users.Dto;
+using PetIdServer.Infrastructure.Services;
 
 namespace PetIdServer.RestApi.Binding;
 
@@ -22,7 +23,7 @@ public class RequestUser : UserDto
 
         foreach (Claim claim in claimsPrincipal.Claims)
         {
-            if (claim.Type == ClaimTypes.UserData)
+            if (claim.Type == PetIdClaimTypes.UserJson)
             {
                 result = JsonSerializer.Deserialize<RequestUser>(claim.Value) ??
                          throw new ArgumentException(nameof(claim));

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetIdServer.Application.Users.Dto;
 using PetIdServer.Application.Users.Dto.Tokens;
 using PetIdServer.Application.Users.Services;
+using PetIdServer.Core.Users;
 using PetIdServer.Core.Users.Exceptions.Auth;
 using PetIdServer.Infrastructure.Configuration;
 
@@ -28,16 +29,6 @@ public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserToke
     private Lazy<Task<TokenValidationParameters>> RefreshTokenSoftValidationParametersLoader =>
         new(() => CreateTokenValidationParameters(TokenType.Access, true));
 
-    public async Task<TokenPairDto> GenerateTokens(UserDto user)
-    {
-        string accessToken = await GenerateAccessToken(user);
-        string refreshToken = await GenerateRefreshToken(accessToken);
-        return new TokenPairDto
-        {
-            AccessToken = accessToken, RefreshToken = refreshToken
-        };
-    }
-
     public async Task<TokenPairDto> RefreshTokens(string refreshToken)
     {
         string accessToken = await GetAccessTokenFromRefreshToken(refreshToken);
@@ -49,6 +40,27 @@ public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserToke
     {
         await ValidateAccessToken(accessToken);
         return DeserializeUserFromToken(accessToken);
+    }
+
+    public async Task<UserRole> GetPermissionsFromToken(string accessToken)
+    {
+        await ValidateAccessToken(accessToken);
+        JwtSecurityToken jwtToken = _tokenHandler.ReadJwtToken(accessToken) ??
+                                    throw new ArgumentException("Access token invalid format", nameof(accessToken));
+
+        return UserRole.Parse(jwtToken.Claims.First(claim => claim.Type == PetIdClaimTypes.WithPermissionsOf).Value);
+    }
+
+    public async Task<TokenPairDto> GenerateTokens(UserDto user, UserRole? withPermissionsOf = null)
+    {
+        withPermissionsOf ??= UserRole.LeastPrivileged;
+
+        string accessToken = await GenerateAccessToken(user, withPermissionsOf);
+        string refreshToken = await GenerateRefreshToken(accessToken);
+        return new TokenPairDto
+        {
+            AccessToken = accessToken, RefreshToken = refreshToken
+        };
     }
 
     // -------------------------------------------------
@@ -85,12 +97,16 @@ public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserToke
         return await Task.FromResult(tokenDescriptor);
     }
 
-    private async Task<string> GenerateAccessToken(UserDto user)
+    private async Task<string> GenerateAccessToken(UserDto user, UserRole withPermissionsOf)
     {
         string userJson = JsonSerializer.Serialize(user) ??
                           throw new ArgumentException("Cannot make JSON from object", nameof(user));
 
-        List<Claim> claims = [new(ClaimTypes.Email, user.Email), new(ClaimTypes.UserData, userJson)];
+        List<Claim> claims =
+        [
+            new(PetIdClaimTypes.UserJson, userJson),
+            new(PetIdClaimTypes.WithPermissionsOf, withPermissionsOf.ToString())
+        ];
         SecurityTokenDescriptor tokenDescriptor = await GetTokenParametersForGenerating(claims, TokenType.Access);
 
         SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -99,7 +115,7 @@ public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserToke
 
     private async Task<string> GenerateRefreshToken(string accessToken)
     {
-        List<Claim> claims = [new(ClaimTypes.Hash, accessToken)];
+        List<Claim> claims = [new(PetIdClaimTypes.Token, accessToken)];
         SecurityTokenDescriptor tokenDescriptor = await GetTokenParametersForGenerating(claims, TokenType.Refresh);
 
         SecurityToken? token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -112,8 +128,8 @@ public class UserTokenService(IOptions<JwtTokensParameters> options) : IUserToke
 
     private static string GetPayloadFromToken(JwtSecurityToken jwtSecurityToken, TokenType tokenType) => tokenType switch
     {
-        TokenType.Access => jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.UserData).Value,
-        TokenType.Refresh => jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.Hash).Value,
+        TokenType.Access => jwtSecurityToken.Claims.First(claim => claim.Type == PetIdClaimTypes.UserJson).Value,
+        TokenType.Refresh => jwtSecurityToken.Claims.First(claim => claim.Type == PetIdClaimTypes.Token).Value,
         _ => throw new ArgumentException("There's access and refresh tokens only!", nameof(tokenType))
     };
 
