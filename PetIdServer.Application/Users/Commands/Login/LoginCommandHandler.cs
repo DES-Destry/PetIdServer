@@ -50,8 +50,7 @@ public class LoginCommandHandler(
                                                 });
         }
 
-        // TODO: generate token with permissions of request.WithPermissionsOf
-        TokenPairDto tokenPair = await userTokenService.GenerateTokens(userCandidate);
+        TokenPairDto tokenPair = await userTokenService.GenerateTokens(userCandidate, requestedRole);
         return new LoginResponseDto
         {
             AccessToken = tokenPair.AccessToken, RefreshToken = tokenPair.RefreshToken, UserId = userCandidate.Id
