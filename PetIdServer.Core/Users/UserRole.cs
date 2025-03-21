@@ -1,17 +1,16 @@
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PetIdServer.Core.Users;
 
-public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>, IParsable<UserRole>
+public sealed record UserRole : IComparable<UserRole>, IParsable<UserRole>
 {
     private const string PetOwnerName = nameof(PetOwner);
     private const string TagCheckerName = nameof(TagChecker);
     private const string TagMasterName = nameof(TagMaster);
     private const string AdminName = nameof(Admin);
 
-    private static readonly ImmutableDictionary<string, UserRole> s_rolesByName =
-        All.ToImmutableDictionary(r => r.Name, StringComparer.OrdinalIgnoreCase);
+    private static readonly IList<UserRole> s_allRoles = [];
+    private static readonly Dictionary<string, UserRole> s_rolesByName = new(StringComparer.OrdinalIgnoreCase);
 
     public static readonly UserRole PetOwner = new(PetOwnerName, 0);
     public static readonly UserRole TagChecker = new(TagCheckerName, 1000);
@@ -21,7 +20,19 @@ public sealed record UserRole(string Name, ushort Level) : IComparable<UserRole>
     public static readonly UserRole LeastPrivileged = PetOwner;
     public static readonly UserRole MostPrivileged = Admin;
 
-    public static IEnumerable<UserRole> All => [PetOwner, TagChecker, TagMaster, Admin];
+    private UserRole(string name, ushort level)
+    {
+        Name = name;
+        Level = level;
+
+        s_allRoles.Add(this);
+        s_rolesByName.Add(name, this);
+    }
+
+    public string Name { get; }
+    public ushort Level { get; }
+
+    public static IEnumerable<UserRole> All => s_allRoles;
 
     public int CompareTo(UserRole? other)
     {

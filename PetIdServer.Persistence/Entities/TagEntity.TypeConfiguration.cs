@@ -49,6 +49,11 @@ public class TagEntityTypeConfiguration : IEntityTypeConfiguration<TagEntity>
             .HasColumnName("control_code")
             .IsRequired();
 
+        builder.Property(tag => tag.Status)
+            .HasColumnName("status")
+            .IsRequired()
+            .HasMaxLength(32);
+
         builder.Property(tag => tag.PetId)
             .HasColumnName("pet_id");
 

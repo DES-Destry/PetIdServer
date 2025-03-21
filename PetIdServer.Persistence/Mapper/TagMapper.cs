@@ -39,6 +39,7 @@ public static class TagMapper
             Code = tag.PrivateCode,
             HashCode = tag.HashCode,
             ControlCode = tag.ControlCode,
+            Status = tag.Status.ToString(),
             PetId = tag.PetId,
             Reports = tag.Reports.Select(report => report.ToEntity(tag)).ToList(),
             Features = tag.Features.Select(feature => feature.ToEntity(tag)).ToList(),

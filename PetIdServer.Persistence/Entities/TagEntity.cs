@@ -6,6 +6,7 @@ public class TagEntity
     public required string Code { get; init; }
     public required string HashCode { get; init; }
     public required long ControlCode { get; init; }
+    public required string Status { get; init; }
     public Guid? PetId { get; init; }
     public required DateTime CreatedAt { get; init; }
     public DateTime? PetAddedAt { get; init; }

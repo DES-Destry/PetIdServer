@@ -1,12 +1,13 @@
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PetIdServer.Core.Tags;
 
 [DebuggerDisplay("{Value}")]
-public sealed record TagStatus(string Value) : IParsable<TagStatus>
+public sealed record TagStatus : IParsable<TagStatus>
 {
+    private static readonly Dictionary<string, TagStatus> s_tagStatusesByName = new(StringComparer.OrdinalIgnoreCase);
+
     public static readonly TagStatus Registered = new("Registered");
     public static readonly TagStatus Produced = new("Produced");
 
@@ -19,29 +20,21 @@ public sealed record TagStatus(string Value) : IParsable<TagStatus>
     public static readonly TagStatus ClearedByAdmin = new("ClearedByAdmin");
     public static readonly TagStatus InUse = new("InUse");
 
-    private static readonly ImmutableDictionary<string, TagStatus> s_tagStatusesByName =
-        All.ToImmutableDictionary(status => status.Value, StringComparer.OrdinalIgnoreCase);
+    public static readonly TagStatus Destroyed = new("Destroyed");
+    public static readonly TagStatus Unknown = new("Unknown");
 
-    public static TagStatus Destroyed => new("Destroyed");
-    public static TagStatus Unknown => new("Unknown");
+    private TagStatus(string value)
+    {
+        Value = value;
+        s_tagStatusesByName.Add(value, this);
+    }
+
+    public string Value { get; init; }
 
     public static TagStatus Initial => Registered;
 
     public static IEnumerable<TagStatus> ReadyToSell => [InStore];
     public static IEnumerable<TagStatus> ReadyToUse => [SentToExternalRetailer, Sold];
-
-    public static IEnumerable<TagStatus> All =>
-    [
-        Registered,
-        Produced,
-        SentToExternalRetailer,
-        GoingToStore,
-        InStore,
-        Sold,
-        InUse,
-        Destroyed,
-        Unknown
-    ];
 
     public static TagStatus Parse(string s, IFormatProvider? provider = null)
     {
